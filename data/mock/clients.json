@@ -1,0 +1,223 @@
+[
+  {
+    "id": "cl_ahmed_store",
+    "name": { "ar": "أحمد ستور", "en": "Ahmed Store" },
+    "business_name": { "ar": "متجر أحمد للأحذية", "en": "Ahmed Shoes Store" },
+    "phone_primary": "+201012000001",
+    "email": "contact@ahmed-store.com",
+    "pickup_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "المعادي",
+      "street": "شارع 9، المعادي",
+      "building": "12",
+      "landmark": "بجوار مترو المعادي",
+      "full_address_ar": "شارع 9، المعادي، القاهرة — بجوار مترو المعادي",
+      "full_address_en": "9th Street, Maadi, Cairo — next to Maadi metro"
+    },
+    "preferred_branch_id": "br_cairo_hq",
+    "payment_terms": { "method": "bank_transfer", "frequency": "weekly" },
+    "total_orders": 142,
+    "total_cod_owed": 4825000,
+    "is_active": true,
+    "created_at": "2025-11-20T08:00:00Z",
+    "updated_at": "2026-04-20T08:00:00Z"
+  },
+  {
+    "id": "cl_nour_fashion",
+    "name": { "ar": "نور فاشون", "en": "Nour Fashion" },
+    "business_name": { "ar": "نور فاشون للملابس النسائية", "en": "Nour Fashion" },
+    "phone_primary": "+201112000002",
+    "email": "info@nourfashion.eg",
+    "pickup_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "مدينة نصر",
+      "street": "شارع عباس العقاد",
+      "landmark": "أمام سيتي ستارز",
+      "full_address_ar": "شارع عباس العقاد، مدينة نصر — أمام سيتي ستارز",
+      "full_address_en": "Abbas El Akkad, Nasr City — opposite City Stars"
+    },
+    "preferred_branch_id": "br_cairo_hq",
+    "payment_terms": { "method": "instapay", "frequency": "bi_weekly" },
+    "total_orders": 89,
+    "total_cod_owed": 2135000,
+    "is_active": true,
+    "created_at": "2025-12-05T08:00:00Z",
+    "updated_at": "2026-04-18T08:00:00Z"
+  },
+  {
+    "id": "cl_tech_hub",
+    "name": { "ar": "تك هاب", "en": "Tech Hub" },
+    "business_name": { "ar": "تك هاب للإلكترونيات", "en": "Tech Hub Electronics" },
+    "phone_primary": "+201212000003",
+    "email": "sales@techhub.eg",
+    "pickup_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة الجديدة",
+      "district": "التجمع الخامس",
+      "street": "شارع التسعين الشمالي",
+      "building": "B-45",
+      "landmark": "داخل داون تاون مول",
+      "full_address_ar": "التسعين الشمالي، التجمع الخامس — داون تاون مول",
+      "full_address_en": "North 90th, 5th Settlement — Downtown Mall"
+    },
+    "preferred_branch_id": "br_tagamoa",
+    "payment_terms": { "method": "bank_transfer", "frequency": "monthly", "bank_account": "••••-3421" },
+    "total_orders": 56,
+    "total_cod_owed": 11480000,
+    "is_active": true,
+    "created_at": "2026-01-15T08:00:00Z",
+    "updated_at": "2026-04-15T08:00:00Z"
+  },
+  {
+    "id": "cl_layla_boutique",
+    "name": { "ar": "بوتيك ليلى", "en": "Layla Boutique" },
+    "phone_primary": "+201512000004",
+    "pickup_address": {
+      "governorate_id": "gov_gz",
+      "city": "الجيزة",
+      "district": "الدقي",
+      "street": "شارع التحرير",
+      "landmark": "فوق بنك مصر",
+      "full_address_ar": "شارع التحرير، الدقي، الجيزة — فوق بنك مصر",
+      "full_address_en": "Tahrir St, Dokki, Giza — above Banque Misr"
+    },
+    "preferred_branch_id": "br_cairo_hq",
+    "payment_terms": { "method": "vodafone_cash", "frequency": "weekly" },
+    "total_orders": 34,
+    "total_cod_owed": 980000,
+    "is_active": true,
+    "created_at": "2026-02-10T08:00:00Z",
+    "updated_at": "2026-04-20T08:00:00Z"
+  },
+  {
+    "id": "cl_omar_pharma",
+    "name": { "ar": "صيدلية عمر", "en": "Omar Pharma" },
+    "business_name": { "ar": "صيدلية عمر السلسلة", "en": "Omar Pharma Chain" },
+    "phone_primary": "+201012000005",
+    "email": "orders@omarpharma.eg",
+    "pickup_address": {
+      "governorate_id": "gov_gz",
+      "city": "6 أكتوبر",
+      "district": "الحي المتميز",
+      "street": "الشارع الرئيسي",
+      "landmark": "بجوار ماكدونالدز",
+      "full_address_ar": "الحي المتميز، 6 أكتوبر — بجوار ماكدونالدز",
+      "full_address_en": "Premium District, 6 October — next to McDonald's"
+    },
+    "preferred_branch_id": "br_october",
+    "payment_terms": { "method": "bank_transfer", "frequency": "immediate" },
+    "total_orders": 210,
+    "total_cod_owed": 3420000,
+    "is_active": true,
+    "created_at": "2025-11-01T08:00:00Z",
+    "updated_at": "2026-04-22T08:00:00Z"
+  },
+  {
+    "id": "cl_sara_electronics",
+    "name": { "ar": "سارة للإلكترونيات", "en": "Sara Electronics" },
+    "phone_primary": "+201112000006",
+    "pickup_address": {
+      "governorate_id": "gov_alx",
+      "city": "الإسكندرية",
+      "district": "سموحة",
+      "street": "شارع فوزي معاذ",
+      "landmark": "قرب سيدي جابر",
+      "full_address_ar": "فوزي معاذ، سموحة، الإسكندرية — قرب سيدي جابر",
+      "full_address_en": "Fawzy Moaz, Smouha, Alexandria — near Sidi Gaber"
+    },
+    "preferred_branch_id": "br_alex",
+    "payment_terms": { "method": "instapay", "frequency": "weekly" },
+    "total_orders": 76,
+    "total_cod_owed": 5620000,
+    "is_active": true,
+    "created_at": "2026-02-20T08:00:00Z",
+    "updated_at": "2026-04-22T08:00:00Z"
+  },
+  {
+    "id": "cl_karim_home",
+    "name": { "ar": "كريم هوم", "en": "Karim Home" },
+    "business_name": { "ar": "كريم هوم للأثاث", "en": "Karim Home Furniture" },
+    "phone_primary": "+201212000007",
+    "pickup_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "مصر الجديدة",
+      "street": "شارع الهرم",
+      "landmark": "ميدان روكسي",
+      "full_address_ar": "شارع الهرم، مصر الجديدة — ميدان روكسي",
+      "full_address_en": "El Haram St, Heliopolis — Roxy Square"
+    },
+    "preferred_branch_id": "br_cairo_hq",
+    "payment_terms": { "method": "bank_transfer", "frequency": "monthly" },
+    "total_orders": 22,
+    "total_cod_owed": 890000,
+    "is_active": true,
+    "created_at": "2026-03-01T08:00:00Z",
+    "updated_at": "2026-04-18T08:00:00Z"
+  },
+  {
+    "id": "cl_mariam_cosmetics",
+    "name": { "ar": "مريم كوزمتكس", "en": "Mariam Cosmetics" },
+    "phone_primary": "+201512000008",
+    "pickup_address": {
+      "governorate_id": "gov_gz",
+      "city": "الجيزة",
+      "district": "المهندسين",
+      "street": "شارع جامعة الدول العربية",
+      "landmark": "بجوار محطة مترو البحوث",
+      "full_address_ar": "جامعة الدول، المهندسين، الجيزة — مترو البحوث",
+      "full_address_en": "League of Arab States, Mohandessin — next to Bohooth metro"
+    },
+    "preferred_branch_id": "br_cairo_hq",
+    "payment_terms": { "method": "vodafone_cash", "frequency": "weekly" },
+    "total_orders": 112,
+    "total_cod_owed": 1245000,
+    "is_active": true,
+    "created_at": "2025-12-10T08:00:00Z",
+    "updated_at": "2026-04-22T08:00:00Z"
+  },
+  {
+    "id": "cl_hassan_kitchen",
+    "name": { "ar": "حسن للمطابخ", "en": "Hassan Kitchens" },
+    "phone_primary": "+201012000009",
+    "pickup_address": {
+      "governorate_id": "gov_qly",
+      "city": "القليوبية",
+      "district": "بنها",
+      "street": "شارع المحافظة",
+      "landmark": "أمام المحكمة",
+      "full_address_ar": "شارع المحافظة، بنها — أمام المحكمة",
+      "full_address_en": "Governorate St, Banha — in front of the courthouse"
+    },
+    "preferred_branch_id": "br_cairo_hq",
+    "payment_terms": { "method": "cash", "frequency": "immediate" },
+    "total_orders": 18,
+    "total_cod_owed": 0,
+    "is_active": true,
+    "created_at": "2026-03-20T08:00:00Z",
+    "updated_at": "2026-04-10T08:00:00Z"
+  },
+  {
+    "id": "cl_mona_bags",
+    "name": { "ar": "منى باجز", "en": "Mona Bags" },
+    "phone_primary": "+201112000010",
+    "pickup_address": {
+      "governorate_id": "gov_alx",
+      "city": "الإسكندرية",
+      "district": "العجمي",
+      "street": "البيطاش",
+      "landmark": "قرب البحر",
+      "full_address_ar": "البيطاش، العجمي، الإسكندرية",
+      "full_address_en": "Bitash, Agamy, Alexandria"
+    },
+    "preferred_branch_id": "br_alex",
+    "payment_terms": { "method": "fawry", "frequency": "weekly" },
+    "total_orders": 45,
+    "total_cod_owed": 720000,
+    "is_active": true,
+    "created_at": "2026-03-05T08:00:00Z",
+    "updated_at": "2026-04-21T08:00:00Z"
+  }
+]

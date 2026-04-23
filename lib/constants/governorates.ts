@@ -1,0 +1,36 @@
+import type { Governorate } from '@/lib/types/governorate';
+
+/** All 27 Egyptian governorates. Seed data, also used as reference list. */
+export const GOVERNORATES: Governorate[] = [
+  { id: 'gov_c', code: 'C', name: { ar: 'القاهرة', en: 'Cairo' }, is_active: true, display_order: 1 },
+  { id: 'gov_gz', code: 'GZ', name: { ar: 'الجيزة', en: 'Giza' }, is_active: true, display_order: 2 },
+  { id: 'gov_alx', code: 'ALX', name: { ar: 'الإسكندرية', en: 'Alexandria' }, is_active: true, display_order: 3 },
+  { id: 'gov_qly', code: 'QLY', name: { ar: 'القليوبية', en: 'Qalyubia' }, is_active: true, display_order: 4 },
+  { id: 'gov_dk', code: 'DK', name: { ar: 'الدقهلية', en: 'Dakahlia' }, is_active: true, display_order: 5 },
+  { id: 'gov_shr', code: 'SHR', name: { ar: 'الشرقية', en: 'Sharqia' }, is_active: true, display_order: 6 },
+  { id: 'gov_mnf', code: 'MNF', name: { ar: 'المنوفية', en: 'Menoufia' }, is_active: true, display_order: 7 },
+  { id: 'gov_ghr', code: 'GHR', name: { ar: 'الغربية', en: 'Gharbia' }, is_active: true, display_order: 8 },
+  { id: 'gov_kfs', code: 'KFS', name: { ar: 'كفر الشيخ', en: 'Kafr El Sheikh' }, is_active: true, display_order: 9 },
+  { id: 'gov_bh', code: 'BH', name: { ar: 'البحيرة', en: 'Beheira' }, is_active: true, display_order: 10 },
+  { id: 'gov_dmt', code: 'DMT', name: { ar: 'دمياط', en: 'Damietta' }, is_active: true, display_order: 11 },
+  { id: 'gov_psd', code: 'PSD', name: { ar: 'بورسعيد', en: 'Port Said' }, is_active: true, display_order: 12 },
+  { id: 'gov_ism', code: 'ISM', name: { ar: 'الإسماعيلية', en: 'Ismailia' }, is_active: true, display_order: 13 },
+  { id: 'gov_sz', code: 'SZ', name: { ar: 'السويس', en: 'Suez' }, is_active: true, display_order: 14 },
+  { id: 'gov_nsi', code: 'NSI', name: { ar: 'شمال سيناء', en: 'North Sinai' }, is_active: false, display_order: 15 },
+  { id: 'gov_ssi', code: 'SSI', name: { ar: 'جنوب سيناء', en: 'South Sinai' }, is_active: true, display_order: 16 },
+  { id: 'gov_mtr', code: 'MTR', name: { ar: 'مطروح', en: 'Matrouh' }, is_active: true, display_order: 17 },
+  { id: 'gov_bns', code: 'BNS', name: { ar: 'بني سويف', en: 'Beni Suef' }, is_active: true, display_order: 18 },
+  { id: 'gov_fym', code: 'FYM', name: { ar: 'الفيوم', en: 'Faiyum' }, is_active: true, display_order: 19 },
+  { id: 'gov_mny', code: 'MNY', name: { ar: 'المنيا', en: 'Minya' }, is_active: true, display_order: 20 },
+  { id: 'gov_asy', code: 'ASY', name: { ar: 'أسيوط', en: 'Asyut' }, is_active: true, display_order: 21 },
+  { id: 'gov_nvl', code: 'NVL', name: { ar: 'الوادي الجديد', en: 'New Valley' }, is_active: false, display_order: 22 },
+  { id: 'gov_rds', code: 'RDS', name: { ar: 'البحر الأحمر', en: 'Red Sea' }, is_active: true, display_order: 23 },
+  { id: 'gov_shg', code: 'SHG', name: { ar: 'سوهاج', en: 'Sohag' }, is_active: true, display_order: 24 },
+  { id: 'gov_qn', code: 'QN', name: { ar: 'قنا', en: 'Qena' }, is_active: true, display_order: 25 },
+  { id: 'gov_lxr', code: 'LXR', name: { ar: 'الأقصر', en: 'Luxor' }, is_active: true, display_order: 26 },
+  { id: 'gov_asw', code: 'ASW', name: { ar: 'أسوان', en: 'Aswan' }, is_active: true, display_order: 27 },
+];
+
+export function findGovernorate(id: string): Governorate | undefined {
+  return GOVERNORATES.find((g) => g.id === id);
+}

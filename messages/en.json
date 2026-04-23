@@ -1,0 +1,381 @@
+{
+  "brand": {
+    "name": "TWINJO",
+    "tagline": "Shipping & Delivery System"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "pickup": "Pick Up",
+    "finance": "Finance Driver",
+    "cod": "COD Clients",
+    "branches": "Branches",
+    "stock": "Stock / Warehouse",
+    "prices": "Price List",
+    "returns": "Returns",
+    "provinces": "Governorates"
+  },
+  "topbar": {
+    "toggleSidebar": "Toggle sidebar",
+    "branchAll": "All branches",
+    "branchLabel": "Branch",
+    "userInitial": "N",
+    "searchPlaceholder": "Search…"
+  },
+  "locale": {
+    "switchTo": "عربي",
+    "switchLabel": "Change language"
+  },
+  "common": {
+    "actions": "Actions",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submit": "Submit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loading": "Loading…",
+    "search": "Search",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "retry": "Try again",
+    "reset": "Reset",
+    "apply": "Apply",
+    "filter": "Filter",
+    "columns": "Columns",
+    "addNew": "New",
+    "viewDetails": "Details",
+    "required": "Required",
+    "optional": "Optional",
+    "empty": "No data",
+    "emptySub": "No matching records found.",
+    "errorTitle": "Something went wrong",
+    "errorSub": "We couldn't load the data. Try again.",
+    "confirmTitle": "Are you sure?",
+    "createdAt": "Created",
+    "updatedAt": "Updated",
+    "total": "Total",
+    "notes": "Notes",
+    "page": "Page",
+    "of": "of",
+    "results": "results"
+  },
+  "vehicles": {
+    "tagamoa_van": "Tagamoa Van",
+    "october_van": "October Van",
+    "motorcycle": "Motorcycle"
+  },
+  "statuses": {
+    "order": {
+      "pending": "Pending",
+      "dispatched": "Dispatched",
+      "out_for_delivery": "Out for delivery",
+      "delivered": "Delivered",
+      "partially_delivered": "Partially delivered",
+      "returned": "Returned",
+      "cancelled": "Cancelled",
+      "refused": "Refused"
+    },
+    "stock": {
+      "available": "Available",
+      "locked": "Locked",
+      "in_transit": "In transit",
+      "reserved": "Reserved"
+    },
+    "finance": {
+      "pending": "Pending",
+      "reconciled": "Reconciled",
+      "approved": "Approved",
+      "paid_out": "Paid out",
+      "disputed": "Disputed"
+    },
+    "cod": {
+      "pending": "Pending",
+      "scheduled": "Scheduled",
+      "paid": "Paid",
+      "disputed": "Disputed"
+    }
+  },
+  "paymentMethods": {
+    "cash": "Cash",
+    "bank_transfer": "Bank transfer",
+    "instapay": "InstaPay",
+    "vodafone_cash": "Vodafone Cash",
+    "fawry": "Fawry"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Operational overview",
+    "kpi": {
+      "orders": "Total Orders",
+      "collected": "Collected COD",
+      "pending": "Pending COD",
+      "locked": "Locked Stock",
+      "units": "Total Units",
+      "drivers": "Active Drivers"
+    },
+    "recentPickups": "Recent Pick Ups",
+    "lockedWarehouse": "⚠ Locked Warehouse Items",
+    "lockedAlert": "Current system has locked warehouse items — urgent resolution required. Flagged on April 2 meeting."
+  },
+  "pickup": {
+    "title": "Pick Up",
+    "subtitle": "Create and manage orders and driver dispatch",
+    "columns": {
+      "code": "ID",
+      "client": "Client",
+      "recipient": "Recipient",
+      "phone": "Phone",
+      "address": "Address",
+      "weight": "Weight",
+      "status": "Status",
+      "branch": "Branch",
+      "lastActivity": "Last activity",
+      "referenceCode": "Reference",
+      "vehicle": "Vehicle",
+      "dispatch": "Dispatch",
+      "cod": "COD",
+      "actions": "Actions"
+    },
+    "filters": {
+      "status": "Status",
+      "date": "Date",
+      "lastActivity": "Last activity",
+      "search": "Search code or phone…",
+      "referenceCode": "Reference code",
+      "collection": "Collection",
+      "collected": "Collected",
+      "not_collected": "Not collected",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "custom": "Custom"
+    },
+    "dispatch": {
+      "button": "Dispatch",
+      "modalTitle": "Select vehicle",
+      "done": "✓ Dispatched",
+      "confirmTitle": "Confirm dispatch",
+      "confirmBody": "The driver will be notified via WhatsApp and the app.",
+      "toast": "Dispatched to driver via App & WhatsApp ✓"
+    },
+    "create": {
+      "title": "New pickup",
+      "client": "Client",
+      "branch": "Branch",
+      "branchRequired": "Branch is required — cannot save without it",
+      "recipientName": "Recipient name",
+      "recipientPhone": "Phone",
+      "phoneHint": "Starts with 010 / 011 / 012 / 015",
+      "address": "Address",
+      "governorate": "Governorate",
+      "city": "City / Markaz",
+      "district": "District",
+      "street": "Street",
+      "landmark": "Landmark",
+      "weight": "Weight (kg)",
+      "pieces": "Piece count",
+      "cod": "COD amount (EGP)",
+      "shipping": "Shipping fee (EGP)",
+      "referenceCode": "Merchant reference",
+      "description": "Item description",
+      "fragile": "Fragile",
+      "allowOpen": "Allow package open",
+      "internalNotes": "Internal notes",
+      "saved": "Pickup saved ✓"
+    },
+    "detail": {
+      "pageTitle": "Pickup details",
+      "timeline": "Timeline",
+      "recipient": "Recipient",
+      "package": "Package",
+      "money": "Amounts",
+      "dispatch": "Dispatch",
+      "mapPlaceholder": "Map preview (coming soon)"
+    },
+    "errors": {
+      "invalidPhone": "Invalid Egyptian mobile number",
+      "cannotDispatch": "Pickup is not in a dispatchable state"
+    }
+  },
+  "finance": {
+    "title": "Finance Driver",
+    "subtitle": "Reconcile cash collected by drivers",
+    "kpi": {
+      "totalToCollect": "Total to Collect",
+      "collected": "Collected",
+      "balance": "Balance Due"
+    },
+    "columns": {
+      "driver": "Driver",
+      "driverCode": "Code",
+      "branch": "Branch",
+      "shiftDate": "Shift date",
+      "orders": "Orders",
+      "delivered": "Delivered",
+      "returned": "Returned",
+      "totalCod": "Total COD",
+      "cashCollected": "Cash Collected",
+      "variance": "Variance",
+      "status": "Status",
+      "action": "Action"
+    },
+    "actions": {
+      "reconcile": "Reconcile",
+      "approve": "Approve",
+      "payOut": "Pay out",
+      "settled": "✓ Settled",
+      "markDisputed": "Mark disputed"
+    },
+    "reconcile": {
+      "title": "Reconcile shift",
+      "expectedCash": "Expected cash",
+      "actualCash": "Actual cash counted",
+      "variance": "Variance",
+      "notes": "Notes",
+      "varianceLargeWarning": "⚠ Large variance — additional review required",
+      "submitted": "Reconciliation saved ✓"
+    },
+    "dualControl": {
+      "title": "Dual-control required",
+      "body": "The reconciler cannot approve their own shift. Pick a different user."
+    }
+  },
+  "cod": {
+    "title": "COD Clients",
+    "subtitle": "Track and pay out merchant COD balances",
+    "kpi": {
+      "due": "Due to Clients",
+      "paid": "Already Paid",
+      "pending": "Pending Clients"
+    },
+    "columns": {
+      "client": "Client",
+      "code": "ID",
+      "phone": "Phone",
+      "amount": "COD Amount",
+      "orders": "Orders",
+      "status": "Status",
+      "method": "Method",
+      "dueDate": "Due date",
+      "action": "Action"
+    },
+    "actions": {
+      "pay": "Pay client",
+      "schedule": "Schedule",
+      "paid": "Paid"
+    },
+    "payout": {
+      "title": "Pay out client dues",
+      "summary": "Client summary",
+      "method": "Payment method",
+      "reference": "Reference number",
+      "amount": "Amount",
+      "notes": "Notes",
+      "sendWhatsapp": "Send WhatsApp confirmation to client",
+      "whatsappPreview": "WhatsApp message preview",
+      "paid": "Paid + WhatsApp sent ✓"
+    }
+  },
+  "stock": {
+    "title": "Stock / Warehouse",
+    "subtitle": "Multi-branch inventory with locked-state resolution",
+    "kpi": {
+      "totalSkus": "Total SKUs",
+      "available": "Available",
+      "locked": "Locked",
+      "lockedNeedsAction": "⚠ Needs action",
+      "totalUnits": "Total Units"
+    },
+    "columns": {
+      "sku": "SKU",
+      "name": "Item",
+      "branch": "Branch",
+      "quantity": "Qty",
+      "status": "Status",
+      "lockReason": "Lock reason",
+      "lastMovement": "Last movement",
+      "action": "Action"
+    },
+    "actions": {
+      "transfer": "Transfer",
+      "unlock": "Unlock",
+      "receive": "Receive"
+    },
+    "unlock": {
+      "title": "Unlock item",
+      "reasonDisplay": "Current lock reason",
+      "unlockReason": "Reason to unlock",
+      "approver": "Manager approval",
+      "unlocked": "Item unlocked ✓"
+    },
+    "transfer": {
+      "title": "Transfer item",
+      "fromBranch": "From branch",
+      "toBranch": "To branch",
+      "quantity": "Quantity",
+      "arrival": "Expected arrival",
+      "driver": "Driver",
+      "sameBranchError": "Destination must differ from source",
+      "insufficientQty": "Quantity exceeds available stock",
+      "transferred": "Transfer created ✓"
+    }
+  },
+  "branches": {
+    "title": "Branches",
+    "subtitle": "Multi-location branch management",
+    "stats": {
+      "orders": "Orders",
+      "stock": "Stock",
+      "locked": "Locked"
+    },
+    "editTitle": "Edit branch",
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameEn": "Name (English)",
+      "city": "City",
+      "governorate": "Governorate",
+      "address": "Address",
+      "phone": "Phone",
+      "manager": "Manager",
+      "isActive": "Active",
+      "coverage": "Coverage areas"
+    }
+  },
+  "prices": {
+    "title": "Price List",
+    "subtitle": "Per-zone, per-weight shipping prices",
+    "comingSoon": "In development — coming in Phase 2"
+  },
+  "returns": {
+    "title": "Returns",
+    "subtitle": "Merchant returns management",
+    "comingSoon": "In development — coming in Phase 2"
+  },
+  "provinces": {
+    "title": "Governorates",
+    "subtitle": "Supported Egyptian governorates",
+    "columns": {
+      "nameAr": "Arabic name",
+      "nameEn": "English name",
+      "code": "Code",
+      "coverage": "Coverage"
+    }
+  },
+  "feedback": {
+    "buttonLabel": "Feedback",
+    "formTitle": "Share your feedback",
+    "submit": "Send",
+    "messageLabel": "Your comment",
+    "messagePlaceholder": "Write your comment here…",
+    "nameLabel": "Name (optional)",
+    "emailLabel": "Email (optional)",
+    "success": "Thanks — your feedback was recorded ✓",
+    "devRibbon": "Feedback mode ON",
+    "pinTooltip": "Leave a comment on this element"
+  }
+}

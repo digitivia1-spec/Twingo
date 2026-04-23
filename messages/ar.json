@@ -1,0 +1,381 @@
+{
+  "brand": {
+    "name": "توينجو",
+    "tagline": "نظام الشحن والتوصيل"
+  },
+  "nav": {
+    "dashboard": "الرئيسية",
+    "pickup": "البيك اب",
+    "finance": "تحصيل المندوبين",
+    "cod": "سداد مستحقات العملاء",
+    "branches": "الفروع",
+    "stock": "المخزن",
+    "prices": "قائمة الأسعار",
+    "returns": "تسليم المرتجعات",
+    "provinces": "المحافظات"
+  },
+  "topbar": {
+    "toggleSidebar": "إظهار / إخفاء القائمة",
+    "branchAll": "كل الفروع",
+    "branchLabel": "الفرع",
+    "userInitial": "ن",
+    "searchPlaceholder": "بحث…"
+  },
+  "locale": {
+    "switchTo": "EN",
+    "switchLabel": "تغيير اللغة"
+  },
+  "common": {
+    "actions": "إجراءات",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "submit": "تأكيد",
+    "close": "إغلاق",
+    "confirm": "متابعة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "loading": "جاري التحميل…",
+    "search": "بحث",
+    "all": "الكل",
+    "none": "لا يوجد",
+    "yes": "نعم",
+    "no": "لا",
+    "back": "رجوع",
+    "retry": "إعادة المحاولة",
+    "reset": "إعادة",
+    "apply": "تطبيق",
+    "filter": "تصفية",
+    "columns": "الأعمدة",
+    "addNew": "إضافة",
+    "viewDetails": "التفاصيل",
+    "required": "مطلوب",
+    "optional": "اختياري",
+    "empty": "لا توجد بيانات",
+    "emptySub": "لم يتم العثور على سجلات مطابقة.",
+    "errorTitle": "حدث خطأ",
+    "errorSub": "تعذر تحميل البيانات — حاول مرة أخرى.",
+    "confirmTitle": "هل أنت متأكد؟",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تعديل",
+    "total": "الإجمالي",
+    "notes": "ملاحظات",
+    "page": "صفحة",
+    "of": "من",
+    "results": "نتيجة"
+  },
+  "vehicles": {
+    "tagamoa_van": "عربية التجمع",
+    "october_van": "عربية أكتوبر",
+    "motorcycle": "موتوسيكل"
+  },
+  "statuses": {
+    "order": {
+      "pending": "قيد الانتظار",
+      "dispatched": "تم الإرسال",
+      "out_for_delivery": "قيد التسليم",
+      "delivered": "تم التسليم",
+      "partially_delivered": "تسليم جزئي",
+      "returned": "مرتجع",
+      "cancelled": "ملغى",
+      "refused": "مرفوض"
+    },
+    "stock": {
+      "available": "متاح",
+      "locked": "مقفول",
+      "in_transit": "في الطريق",
+      "reserved": "محجوز"
+    },
+    "finance": {
+      "pending": "قيد التسوية",
+      "reconciled": "تمت المطابقة",
+      "approved": "معتمد",
+      "paid_out": "مدفوع",
+      "disputed": "متنازع عليه"
+    },
+    "cod": {
+      "pending": "معلق",
+      "scheduled": "مجدول",
+      "paid": "مدفوع",
+      "disputed": "متنازع عليه"
+    }
+  },
+  "paymentMethods": {
+    "cash": "نقدي",
+    "bank_transfer": "تحويل بنكي",
+    "instapay": "إنستاباي",
+    "vodafone_cash": "فودافون كاش",
+    "fawry": "فوري"
+  },
+  "dashboard": {
+    "title": "الرئيسية",
+    "subtitle": "نظرة عامة على العمليات",
+    "kpi": {
+      "orders": "إجمالي الأوردرات",
+      "collected": "COD المحصّل",
+      "pending": "COD غير مسدّد",
+      "locked": "مخزون مقفول",
+      "units": "إجمالي الوحدات",
+      "drivers": "مندوبين نشطين"
+    },
+    "recentPickups": "آخر البيك اب",
+    "lockedWarehouse": "⚠ مخزن مقفول",
+    "lockedAlert": "النظام الحالي به مخزن مقفول — يحتاج حل عاجل. تم رصده في اجتماع 2 أبريل."
+  },
+  "pickup": {
+    "title": "البيك اب",
+    "subtitle": "إنشاء وإدارة الأوردرات والإرسال للمندوبين",
+    "columns": {
+      "code": "الكود",
+      "client": "العميل",
+      "recipient": "المستلم",
+      "phone": "الهاتف",
+      "address": "العنوان",
+      "weight": "الوزن",
+      "status": "الحالة",
+      "branch": "الفرع",
+      "lastActivity": "آخر حركة",
+      "referenceCode": "كود مرجعي",
+      "vehicle": "الوسيلة",
+      "dispatch": "الإرسال",
+      "cod": "COD",
+      "actions": "إجراءات"
+    },
+    "filters": {
+      "status": "الحالة",
+      "date": "التاريخ",
+      "lastActivity": "آخر حركة",
+      "search": "بحث بالكود أو الهاتف…",
+      "referenceCode": "كود مرجعي",
+      "collection": "التحصيل",
+      "collected": "تم التحصيل",
+      "not_collected": "لم يتم",
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "thisWeek": "هذا الأسبوع",
+      "thisMonth": "هذا الشهر",
+      "custom": "مخصص"
+    },
+    "dispatch": {
+      "button": "إرسال",
+      "modalTitle": "اختر الوسيلة",
+      "done": "✓ تم الإرسال",
+      "confirmTitle": "تأكيد الإرسال",
+      "confirmBody": "سيتم إبلاغ المندوب عبر الواتساب والتطبيق.",
+      "toast": "تم الإرسال للمندوب عبر التطبيق والواتساب ✓"
+    },
+    "create": {
+      "title": "بيك اب جديد",
+      "client": "العميل",
+      "branch": "الفرع",
+      "branchRequired": "الفرع مطلوب — لا يمكن الحفظ بدونه",
+      "recipientName": "اسم المستلم",
+      "recipientPhone": "الهاتف",
+      "phoneHint": "يبدأ بـ 010 / 011 / 012 / 015",
+      "address": "العنوان",
+      "governorate": "المحافظة",
+      "city": "المدينة / المركز",
+      "district": "المنطقة",
+      "street": "الشارع",
+      "landmark": "علامة مميزة",
+      "weight": "الوزن (كجم)",
+      "pieces": "عدد القطع",
+      "cod": "مبلغ COD (ج.م)",
+      "shipping": "رسوم الشحن (ج.م)",
+      "referenceCode": "كود مرجعي للتاجر",
+      "description": "وصف المحتوى",
+      "fragile": "هش",
+      "allowOpen": "السماح بفتح الطرد",
+      "internalNotes": "ملاحظات داخلية",
+      "saved": "تم حفظ البيك اب ✓"
+    },
+    "detail": {
+      "pageTitle": "تفاصيل البيك اب",
+      "timeline": "السجل الزمني",
+      "recipient": "المستلم",
+      "package": "الطرد",
+      "money": "الحسابات",
+      "dispatch": "الإرسال",
+      "mapPlaceholder": "معاينة الخريطة (قيد التطوير)"
+    },
+    "errors": {
+      "invalidPhone": "رقم موبايل مصري غير صحيح",
+      "cannotDispatch": "هذا البيك اب ليس في حالة تسمح بالإرسال"
+    }
+  },
+  "finance": {
+    "title": "تحصيل المندوبين",
+    "subtitle": "تسوية النقدية المحصّلة عبر المندوبين",
+    "kpi": {
+      "totalToCollect": "إجمالي المطلوب",
+      "collected": "تم التحصيل",
+      "balance": "المتبقي"
+    },
+    "columns": {
+      "driver": "المندوب",
+      "driverCode": "كود المندوب",
+      "branch": "الفرع",
+      "shiftDate": "تاريخ الوردية",
+      "orders": "الأوردرات",
+      "delivered": "مُسلّمة",
+      "returned": "مرتجعة",
+      "totalCod": "إجمالي COD",
+      "cashCollected": "المحصّل نقداً",
+      "variance": "الفرق",
+      "status": "الحالة",
+      "action": "الإجراء"
+    },
+    "actions": {
+      "reconcile": "تسوية",
+      "approve": "اعتماد",
+      "payOut": "دفع",
+      "settled": "✓ تمت التسوية",
+      "markDisputed": "متنازع عليه"
+    },
+    "reconcile": {
+      "title": "تسوية الوردية",
+      "expectedCash": "المتوقع نقداً",
+      "actualCash": "المحصّل فعلاً",
+      "variance": "الفرق",
+      "notes": "ملاحظات",
+      "varianceLargeWarning": "⚠ فرق كبير — يجب مراجعة إضافية",
+      "submitted": "تم تسجيل التسوية ✓"
+    },
+    "dualControl": {
+      "title": "تحكم ثنائي",
+      "body": "لا يمكن للمُسوِّي أن يعتمد وردية نفسه. اختر مستخدماً آخر."
+    }
+  },
+  "cod": {
+    "title": "سداد مستحقات العملاء",
+    "subtitle": "تتبع وسداد ما يستحق للتجار من تحصيل COD",
+    "kpi": {
+      "due": "مستحق للعملاء",
+      "paid": "تم السداد",
+      "pending": "عملاء معلقون"
+    },
+    "columns": {
+      "client": "العميل",
+      "code": "كود",
+      "phone": "الهاتف",
+      "amount": "مبلغ COD",
+      "orders": "عدد الأوردرات",
+      "status": "الحالة",
+      "method": "طريقة الدفع",
+      "dueDate": "تاريخ الاستحقاق",
+      "action": "إجراء"
+    },
+    "actions": {
+      "pay": "سداد للعميل",
+      "schedule": "جدولة",
+      "paid": "تم السداد"
+    },
+    "payout": {
+      "title": "سداد مستحقات العميل",
+      "summary": "ملخص العميل",
+      "method": "طريقة الدفع",
+      "reference": "رقم المرجع",
+      "amount": "المبلغ",
+      "notes": "ملاحظات",
+      "sendWhatsapp": "إرسال تأكيد واتساب للعميل",
+      "whatsappPreview": "معاينة رسالة الواتساب",
+      "paid": "تم السداد + إرسال الواتساب ✓"
+    }
+  },
+  "stock": {
+    "title": "المخزن",
+    "subtitle": "إدارة المخزون متعدد الفروع — مع معالجة حالة \"مقفول\"",
+    "kpi": {
+      "totalSkus": "إجمالي الأصناف",
+      "available": "متاح",
+      "locked": "مقفول",
+      "lockedNeedsAction": "⚠ تحتاج إجراء",
+      "totalUnits": "إجمالي الوحدات"
+    },
+    "columns": {
+      "sku": "الكود",
+      "name": "الصنف",
+      "branch": "الفرع",
+      "quantity": "الكمية",
+      "status": "الحالة",
+      "lockReason": "سبب الإقفال",
+      "lastMovement": "آخر حركة",
+      "action": "الإجراء"
+    },
+    "actions": {
+      "transfer": "نقل",
+      "unlock": "فتح",
+      "receive": "استلام"
+    },
+    "unlock": {
+      "title": "فتح الصنف",
+      "reasonDisplay": "سبب الإقفال الحالي",
+      "unlockReason": "سبب الفتح",
+      "approver": "المدير المعتمد",
+      "unlocked": "تم فتح الصنف ✓"
+    },
+    "transfer": {
+      "title": "نقل صنف",
+      "fromBranch": "من فرع",
+      "toBranch": "إلى فرع",
+      "quantity": "الكمية",
+      "arrival": "تاريخ الوصول المتوقع",
+      "driver": "المندوب",
+      "sameBranchError": "يجب اختيار فرع مختلف",
+      "insufficientQty": "الكمية المطلوبة أكبر من المتاح",
+      "transferred": "تم إنشاء النقل ✓"
+    }
+  },
+  "branches": {
+    "title": "الفروع",
+    "subtitle": "إدارة الفروع متعددة المواقع",
+    "stats": {
+      "orders": "أوردرات",
+      "stock": "مخزون",
+      "locked": "مقفول"
+    },
+    "editTitle": "تعديل بيانات الفرع",
+    "form": {
+      "nameAr": "الاسم (بالعربية)",
+      "nameEn": "الاسم (بالإنجليزية)",
+      "city": "المدينة",
+      "governorate": "المحافظة",
+      "address": "العنوان",
+      "phone": "الهاتف",
+      "manager": "المدير",
+      "isActive": "مفعّل",
+      "coverage": "مناطق التغطية"
+    }
+  },
+  "prices": {
+    "title": "قائمة الأسعار",
+    "subtitle": "أسعار الشحن لكل محافظة ووزن",
+    "comingSoon": "قيد التطوير — سيتم إضافته في المرحلة الثانية"
+  },
+  "returns": {
+    "title": "تسليم المرتجعات",
+    "subtitle": "إدارة المرتجعات إلى التجار",
+    "comingSoon": "قيد التطوير — سيتم إضافته في المرحلة الثانية"
+  },
+  "provinces": {
+    "title": "المحافظات",
+    "subtitle": "قائمة المحافظات المصرية المدعومة",
+    "columns": {
+      "nameAr": "الاسم عربي",
+      "nameEn": "الاسم إنجليزي",
+      "code": "الكود",
+      "coverage": "التغطية"
+    }
+  },
+  "feedback": {
+    "buttonLabel": "ملاحظات",
+    "formTitle": "شاركنا ملاحظاتك",
+    "submit": "إرسال",
+    "messageLabel": "ملاحظتك",
+    "messagePlaceholder": "اكتب ملاحظتك هنا…",
+    "nameLabel": "الاسم (اختياري)",
+    "emailLabel": "الإيميل (اختياري)",
+    "success": "تم استلام ملاحظتك ✓ شكراً لك",
+    "devRibbon": "وضع التعليقات مفعّل",
+    "pinTooltip": "اكتب ملاحظة على هذا العنصر"
+  }
+}

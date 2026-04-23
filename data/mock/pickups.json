@@ -1,0 +1,904 @@
+[
+  {
+    "id": "pk_1041",
+    "code": "PK-1041",
+    "reference_code": "AHM-2410",
+    "client_id": "cl_ahmed_store",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "سلمى حسن", "en": "Salma Hassan" },
+      "phone_primary": "+201012345678"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "الزمالك",
+      "street": "شارع 26 يوليو",
+      "landmark": "أمام فندق ماريوت",
+      "full_address_ar": "26 يوليو، الزمالك — أمام فندق ماريوت",
+      "full_address_en": "26 July St, Zamalek — opposite Marriott"
+    },
+    "description": { "ar": "حذاء رياضي — مقاس 40", "en": "Running shoes — size 40" },
+    "weight_kg": 1.2,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 85000,
+    "shipping_fee": 6500,
+    "status": "pending",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T09:15:00Z", "note": "تم الاستلام من العميل" }
+    ],
+    "created_at": "2026-04-22T09:15:00Z",
+    "updated_at": "2026-04-22T09:15:00Z"
+  },
+  {
+    "id": "pk_1042",
+    "code": "PK-1042",
+    "reference_code": "NF-559",
+    "client_id": "cl_nour_fashion",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "هبة عادل", "en": "Heba Adel" },
+      "phone_primary": "+201112345679"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "مدينة نصر",
+      "street": "شارع الطيران",
+      "landmark": "برج الصفا",
+      "full_address_ar": "شارع الطيران، مدينة نصر — برج الصفا",
+      "full_address_en": "Tayaran St, Nasr City — Safa Tower"
+    },
+    "description": { "ar": "فستان صيفي × 2", "en": "Summer dresses × 2" },
+    "weight_kg": 0.8,
+    "pieces_count": 2,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 145000,
+    "shipping_fee": 5500,
+    "status": "pending",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T10:30:00Z" }
+    ],
+    "created_at": "2026-04-22T10:30:00Z",
+    "updated_at": "2026-04-22T10:30:00Z"
+  },
+  {
+    "id": "pk_1043",
+    "code": "PK-1043",
+    "reference_code": "TH-8821",
+    "client_id": "cl_tech_hub",
+    "branch_id": "br_tagamoa",
+    "recipient": {
+      "name": { "ar": "أحمد كمال", "en": "Ahmed Kamal" },
+      "phone_primary": "+201212345680",
+      "phone_secondary": "+201512345680"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة الجديدة",
+      "district": "التجمع الخامس",
+      "street": "النرجس",
+      "landmark": "كمبوند الياسمين، فيلا 45",
+      "full_address_ar": "النرجس، التجمع الخامس — كمبوند الياسمين فيلا ٤٥",
+      "full_address_en": "Narges, 5th Settlement — Yasmin Compound Villa 45"
+    },
+    "description": { "ar": "لاب توب — HP Pavilion", "en": "Laptop — HP Pavilion" },
+    "weight_kg": 2.5,
+    "pieces_count": 1,
+    "is_fragile": true,
+    "allow_open_package": false,
+    "cod_amount": 2850000,
+    "shipping_fee": 12000,
+    "status": "pending",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T14:00:00Z" }
+    ],
+    "created_at": "2026-04-22T14:00:00Z",
+    "updated_at": "2026-04-22T14:00:00Z"
+  },
+  {
+    "id": "pk_1044",
+    "code": "PK-1044",
+    "client_id": "cl_mariam_cosmetics",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "دعاء سمير", "en": "Doaa Samir" },
+      "phone_primary": "+201512345681"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_gz",
+      "city": "الجيزة",
+      "district": "فيصل",
+      "street": "شارع الملك فيصل",
+      "landmark": "قرب كوبري الجامعة",
+      "full_address_ar": "شارع الملك فيصل، الجيزة — قرب كوبري الجامعة",
+      "full_address_en": "King Faisal St, Giza — near University Bridge"
+    },
+    "description": { "ar": "مستحضرات تجميل", "en": "Cosmetics bundle" },
+    "weight_kg": 0.5,
+    "pieces_count": 4,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 62000,
+    "shipping_fee": 4500,
+    "status": "pending",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-23T07:45:00Z" }
+    ],
+    "created_at": "2026-04-23T07:45:00Z",
+    "updated_at": "2026-04-23T07:45:00Z"
+  },
+  {
+    "id": "pk_1031",
+    "code": "PK-1031",
+    "reference_code": "AHM-2405",
+    "client_id": "cl_ahmed_store",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "محمود عصام", "en": "Mahmoud Essam" },
+      "phone_primary": "+201012345682"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "المعادي",
+      "street": "شارع 9",
+      "full_address_ar": "شارع 9، المعادي",
+      "full_address_en": "9th Street, Maadi"
+    },
+    "description": { "ar": "حذاء كلاسيك", "en": "Classic shoes" },
+    "weight_kg": 1.4,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 125000,
+    "shipping_fee": 6500,
+    "status": "dispatched",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_ahmed",
+    "dispatched_at": "2026-04-22T08:30:00Z",
+    "expected_delivery_date": "2026-04-23",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-21T16:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-22T08:30:00Z", "user_id": "u_nagui", "note": "إرسال عبر عربية التجمع" }
+    ],
+    "created_at": "2026-04-21T16:00:00Z",
+    "updated_at": "2026-04-22T08:30:00Z"
+  },
+  {
+    "id": "pk_1032",
+    "code": "PK-1032",
+    "client_id": "cl_omar_pharma",
+    "branch_id": "br_october",
+    "recipient": {
+      "name": { "ar": "د. عادل سعيد", "en": "Dr. Adel Saeed" },
+      "phone_primary": "+201212345683"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_gz",
+      "city": "6 أكتوبر",
+      "district": "الحي الثاني عشر",
+      "street": "الشارع السابع",
+      "landmark": "أمام مدرسة النيل",
+      "full_address_ar": "الحي 12، 6 أكتوبر — أمام مدرسة النيل",
+      "full_address_en": "District 12, 6 October — opposite Nile School"
+    },
+    "description": { "ar": "أدوية موصوفة — يستلم شخصياً", "en": "Prescription meds — personal receipt" },
+    "weight_kg": 0.3,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 48500,
+    "shipping_fee": 4000,
+    "status": "dispatched",
+    "vehicle_type": "motorcycle",
+    "driver_id": "u_drv_omar",
+    "dispatched_at": "2026-04-23T09:00:00Z",
+    "expected_delivery_date": "2026-04-23",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T18:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-23T09:00:00Z", "user_id": "u_karim_oct" }
+    ],
+    "created_at": "2026-04-22T18:00:00Z",
+    "updated_at": "2026-04-23T09:00:00Z"
+  },
+  {
+    "id": "pk_1033",
+    "code": "PK-1033",
+    "reference_code": "NF-551",
+    "client_id": "cl_nour_fashion",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "أميرة حسام", "en": "Amira Hossam" },
+      "phone_primary": "+201112345684"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "الشيخ زايد",
+      "street": "الحي الأول",
+      "full_address_ar": "الحي الأول، الشيخ زايد",
+      "full_address_en": "First District, Sheikh Zayed"
+    },
+    "description": { "ar": "حقيبة يد", "en": "Handbag" },
+    "weight_kg": 0.6,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 195000,
+    "shipping_fee": 6000,
+    "status": "dispatched",
+    "vehicle_type": "october_van",
+    "driver_id": "u_drv_mostafa",
+    "dispatched_at": "2026-04-23T08:15:00Z",
+    "expected_delivery_date": "2026-04-23",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T14:30:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-23T08:15:00Z", "user_id": "u_mohamed_tag" }
+    ],
+    "created_at": "2026-04-22T14:30:00Z",
+    "updated_at": "2026-04-23T08:15:00Z"
+  },
+  {
+    "id": "pk_1034",
+    "code": "PK-1034",
+    "client_id": "cl_layla_boutique",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "رنا وليد", "en": "Rana Walid" },
+      "phone_primary": "+201512345685"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_gz",
+      "city": "الجيزة",
+      "district": "الدقي",
+      "street": "شارع مصدق",
+      "full_address_ar": "شارع مصدق، الدقي",
+      "full_address_en": "Mosadak St, Dokki"
+    },
+    "description": { "ar": "فستان سهرة", "en": "Evening dress" },
+    "weight_kg": 1.0,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 345000,
+    "shipping_fee": 6500,
+    "status": "dispatched",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_ahmed",
+    "dispatched_at": "2026-04-22T11:00:00Z",
+    "expected_delivery_date": "2026-04-23",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-21T18:30:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-22T11:00:00Z" }
+    ],
+    "created_at": "2026-04-21T18:30:00Z",
+    "updated_at": "2026-04-22T11:00:00Z"
+  },
+  {
+    "id": "pk_1020",
+    "code": "PK-1020",
+    "client_id": "cl_tech_hub",
+    "branch_id": "br_tagamoa",
+    "recipient": {
+      "name": { "ar": "شريف محسن", "en": "Sherif Mohsen" },
+      "phone_primary": "+201212345686"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "مدينة نصر",
+      "street": "شارع مصطفى النحاس",
+      "full_address_ar": "شارع مصطفى النحاس، مدينة نصر",
+      "full_address_en": "Mostafa El Nahas, Nasr City"
+    },
+    "description": { "ar": "سماعات بلوتوث", "en": "Bluetooth headphones" },
+    "weight_kg": 0.4,
+    "pieces_count": 1,
+    "is_fragile": true,
+    "allow_open_package": false,
+    "cod_amount": 125000,
+    "shipping_fee": 5500,
+    "status": "out_for_delivery",
+    "vehicle_type": "october_van",
+    "driver_id": "u_drv_mostafa",
+    "dispatched_at": "2026-04-23T07:30:00Z",
+    "expected_delivery_date": "2026-04-23",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T13:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-23T07:30:00Z" },
+      { "status": "out_for_delivery", "timestamp": "2026-04-23T10:15:00Z" }
+    ],
+    "created_at": "2026-04-22T13:00:00Z",
+    "updated_at": "2026-04-23T10:15:00Z"
+  },
+  {
+    "id": "pk_1021",
+    "code": "PK-1021",
+    "client_id": "cl_ahmed_store",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "كريم ياسر", "en": "Karim Yasser" },
+      "phone_primary": "+201012345687"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "الهرم",
+      "street": "ميدان الرماية",
+      "full_address_ar": "ميدان الرماية، الهرم",
+      "full_address_en": "Remaya Sq, Haram"
+    },
+    "description": { "ar": "حذاء رياضي × 2", "en": "Sport shoes × 2" },
+    "weight_kg": 2.1,
+    "pieces_count": 2,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 170000,
+    "shipping_fee": 7000,
+    "status": "out_for_delivery",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_ahmed",
+    "dispatched_at": "2026-04-23T07:45:00Z",
+    "expected_delivery_date": "2026-04-23",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T11:15:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-23T07:45:00Z" },
+      { "status": "out_for_delivery", "timestamp": "2026-04-23T09:30:00Z" }
+    ],
+    "created_at": "2026-04-22T11:15:00Z",
+    "updated_at": "2026-04-23T09:30:00Z"
+  },
+  {
+    "id": "pk_1022",
+    "code": "PK-1022",
+    "client_id": "cl_sara_electronics",
+    "branch_id": "br_alex",
+    "recipient": {
+      "name": { "ar": "مصطفى الفخراني", "en": "Mostafa El Fakharany" },
+      "phone_primary": "+201112345688"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_alx",
+      "city": "الإسكندرية",
+      "district": "ميامي",
+      "street": "طريق الكورنيش",
+      "full_address_ar": "الكورنيش، ميامي، الإسكندرية",
+      "full_address_en": "Corniche, Miami, Alexandria"
+    },
+    "description": { "ar": "مكنسة كهربائية", "en": "Vacuum cleaner" },
+    "weight_kg": 5.8,
+    "pieces_count": 1,
+    "is_fragile": true,
+    "allow_open_package": false,
+    "cod_amount": 485000,
+    "shipping_fee": 9500,
+    "status": "out_for_delivery",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_hassan",
+    "dispatched_at": "2026-04-23T08:00:00Z",
+    "expected_delivery_date": "2026-04-23",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-22T16:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-23T08:00:00Z" },
+      { "status": "out_for_delivery", "timestamp": "2026-04-23T11:00:00Z" }
+    ],
+    "created_at": "2026-04-22T16:00:00Z",
+    "updated_at": "2026-04-23T11:00:00Z"
+  },
+  {
+    "id": "pk_0991",
+    "code": "PK-0991",
+    "client_id": "cl_ahmed_store",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "منى علي", "en": "Mona Ali" },
+      "phone_primary": "+201012345689"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "المعادي",
+      "street": "شارع 231",
+      "full_address_ar": "شارع 231، المعادي",
+      "full_address_en": "231 St, Maadi"
+    },
+    "description": { "ar": "حذاء نسائي", "en": "Women's shoes" },
+    "weight_kg": 0.9,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 95000,
+    "shipping_fee": 6000,
+    "status": "delivered",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_ahmed",
+    "dispatched_at": "2026-04-20T08:00:00Z",
+    "expected_delivery_date": "2026-04-21",
+    "delivered_at": "2026-04-21T14:30:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-19T14:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-20T08:00:00Z" },
+      { "status": "out_for_delivery", "timestamp": "2026-04-21T10:00:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-21T14:30:00Z" }
+    ],
+    "created_at": "2026-04-19T14:00:00Z",
+    "updated_at": "2026-04-21T14:30:00Z"
+  },
+  {
+    "id": "pk_0992",
+    "code": "PK-0992",
+    "client_id": "cl_nour_fashion",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "حنان سليم", "en": "Hanan Selim" },
+      "phone_primary": "+201112345690"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "مدينة نصر",
+      "street": "حي السفارات",
+      "full_address_ar": "حي السفارات، مدينة نصر",
+      "full_address_en": "Embassies District, Nasr City"
+    },
+    "description": { "ar": "طقم ملابس", "en": "Clothing set" },
+    "weight_kg": 1.1,
+    "pieces_count": 3,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 220000,
+    "shipping_fee": 6000,
+    "status": "delivered",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_ahmed",
+    "dispatched_at": "2026-04-20T08:30:00Z",
+    "delivered_at": "2026-04-21T12:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-19T17:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-20T08:30:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-21T12:00:00Z" }
+    ],
+    "created_at": "2026-04-19T17:00:00Z",
+    "updated_at": "2026-04-21T12:00:00Z"
+  },
+  {
+    "id": "pk_0993",
+    "code": "PK-0993",
+    "client_id": "cl_tech_hub",
+    "branch_id": "br_tagamoa",
+    "recipient": {
+      "name": { "ar": "وائل فتحي", "en": "Wael Fathy" },
+      "phone_primary": "+201212345691"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة الجديدة",
+      "district": "الرحاب",
+      "street": "المجموعة 53",
+      "full_address_ar": "المجموعة 53، الرحاب",
+      "full_address_en": "Group 53, Rehab"
+    },
+    "description": { "ar": "شاشة ساوند بار", "en": "Soundbar" },
+    "weight_kg": 4.2,
+    "pieces_count": 1,
+    "is_fragile": true,
+    "allow_open_package": false,
+    "cod_amount": 1250000,
+    "shipping_fee": 10000,
+    "status": "delivered",
+    "vehicle_type": "october_van",
+    "driver_id": "u_drv_mostafa",
+    "dispatched_at": "2026-04-19T09:00:00Z",
+    "delivered_at": "2026-04-20T11:30:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-18T16:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-19T09:00:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-20T11:30:00Z" }
+    ],
+    "created_at": "2026-04-18T16:00:00Z",
+    "updated_at": "2026-04-20T11:30:00Z"
+  },
+  {
+    "id": "pk_0994",
+    "code": "PK-0994",
+    "client_id": "cl_omar_pharma",
+    "branch_id": "br_october",
+    "recipient": {
+      "name": { "ar": "إيمان حافظ", "en": "Eman Hafez" },
+      "phone_primary": "+201512345692"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_gz",
+      "city": "6 أكتوبر",
+      "district": "الحي السادس",
+      "street": "شارع 200",
+      "full_address_ar": "شارع 200، الحي السادس، 6 أكتوبر",
+      "full_address_en": "200 St, District 6, 6 October"
+    },
+    "description": { "ar": "أدوية مزمنة", "en": "Chronic meds" },
+    "weight_kg": 0.5,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 72000,
+    "shipping_fee": 4000,
+    "status": "delivered",
+    "vehicle_type": "motorcycle",
+    "driver_id": "u_drv_omar",
+    "dispatched_at": "2026-04-22T09:30:00Z",
+    "delivered_at": "2026-04-22T15:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-21T18:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-22T09:30:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-22T15:00:00Z" }
+    ],
+    "created_at": "2026-04-21T18:00:00Z",
+    "updated_at": "2026-04-22T15:00:00Z"
+  },
+  {
+    "id": "pk_0995",
+    "code": "PK-0995",
+    "client_id": "cl_mariam_cosmetics",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "سلوى عبد القادر", "en": "Salwa Abdelqader" },
+      "phone_primary": "+201012345693"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_gz",
+      "city": "الجيزة",
+      "district": "المهندسين",
+      "street": "شارع شهاب",
+      "full_address_ar": "شارع شهاب، المهندسين",
+      "full_address_en": "Shehab St, Mohandessin"
+    },
+    "description": { "ar": "مستحضرات تجميل", "en": "Makeup set" },
+    "weight_kg": 0.4,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 58500,
+    "shipping_fee": 4500,
+    "status": "delivered",
+    "vehicle_type": "motorcycle",
+    "driver_id": "u_drv_sami",
+    "dispatched_at": "2026-04-22T10:00:00Z",
+    "delivered_at": "2026-04-22T13:20:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-21T19:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-22T10:00:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-22T13:20:00Z" }
+    ],
+    "created_at": "2026-04-21T19:00:00Z",
+    "updated_at": "2026-04-22T13:20:00Z"
+  },
+  {
+    "id": "pk_0996",
+    "code": "PK-0996",
+    "client_id": "cl_sara_electronics",
+    "branch_id": "br_alex",
+    "recipient": {
+      "name": { "ar": "أحمد رياض", "en": "Ahmed Riyad" },
+      "phone_primary": "+201112345694"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_alx",
+      "city": "الإسكندرية",
+      "district": "سيدي بشر",
+      "street": "شارع خالد بن الوليد",
+      "full_address_ar": "خالد بن الوليد، سيدي بشر، الإسكندرية",
+      "full_address_en": "Khaled Ben El Waleed, Sidi Bishr, Alexandria"
+    },
+    "description": { "ar": "خلاط كهربائي", "en": "Blender" },
+    "weight_kg": 3.1,
+    "pieces_count": 1,
+    "is_fragile": true,
+    "allow_open_package": false,
+    "cod_amount": 285000,
+    "shipping_fee": 7500,
+    "status": "delivered",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_hassan",
+    "dispatched_at": "2026-04-21T08:15:00Z",
+    "delivered_at": "2026-04-21T17:45:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-20T14:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-21T08:15:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-21T17:45:00Z" }
+    ],
+    "created_at": "2026-04-20T14:00:00Z",
+    "updated_at": "2026-04-21T17:45:00Z"
+  },
+  {
+    "id": "pk_0997",
+    "code": "PK-0997",
+    "client_id": "cl_ahmed_store",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "هشام مرزوق", "en": "Hesham Marzouk" },
+      "phone_primary": "+201012345695"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "حدائق القبة",
+      "street": "شارع المطرية",
+      "full_address_ar": "المطرية، حدائق القبة",
+      "full_address_en": "Matareya, Hadayek El Qoba"
+    },
+    "description": { "ar": "حذاء جلد طبيعي", "en": "Genuine leather shoes" },
+    "weight_kg": 1.3,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 180000,
+    "shipping_fee": 6500,
+    "status": "delivered",
+    "vehicle_type": "motorcycle",
+    "driver_id": "u_drv_sami",
+    "dispatched_at": "2026-04-21T09:00:00Z",
+    "delivered_at": "2026-04-21T13:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-20T16:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-21T09:00:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-21T13:00:00Z" }
+    ],
+    "created_at": "2026-04-20T16:00:00Z",
+    "updated_at": "2026-04-21T13:00:00Z"
+  },
+  {
+    "id": "pk_0998",
+    "code": "PK-0998",
+    "client_id": "cl_karim_home",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "ياسمين هاني", "en": "Yasmin Hany" },
+      "phone_primary": "+201212345696"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "مصر الجديدة",
+      "street": "شارع البارودي",
+      "full_address_ar": "شارع البارودي، مصر الجديدة",
+      "full_address_en": "El Baroody St, Heliopolis"
+    },
+    "description": { "ar": "كرسي مكتبي", "en": "Office chair" },
+    "weight_kg": 12.0,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 680000,
+    "shipping_fee": 15000,
+    "status": "delivered",
+    "vehicle_type": "october_van",
+    "driver_id": "u_drv_amr",
+    "dispatched_at": "2026-04-19T10:00:00Z",
+    "delivered_at": "2026-04-19T18:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-18T12:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-19T10:00:00Z" },
+      { "status": "delivered", "timestamp": "2026-04-19T18:00:00Z" }
+    ],
+    "created_at": "2026-04-18T12:00:00Z",
+    "updated_at": "2026-04-19T18:00:00Z"
+  },
+  {
+    "id": "pk_0981",
+    "code": "PK-0981",
+    "client_id": "cl_tech_hub",
+    "branch_id": "br_tagamoa",
+    "recipient": {
+      "name": { "ar": "باسم خالد", "en": "Basem Khaled" },
+      "phone_primary": "+201512345697"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "التجمع الخامس",
+      "street": "ميدان الأمل",
+      "full_address_ar": "ميدان الأمل، التجمع",
+      "full_address_en": "Amal Sq, 5th Settlement"
+    },
+    "description": { "ar": "تابلت — 10 إنش", "en": "Tablet — 10 inch" },
+    "weight_kg": 1.1,
+    "pieces_count": 2,
+    "is_fragile": true,
+    "allow_open_package": false,
+    "cod_amount": 890000,
+    "shipping_fee": 8000,
+    "status": "partially_delivered",
+    "vehicle_type": "october_van",
+    "driver_id": "u_drv_mostafa",
+    "dispatched_at": "2026-04-18T09:00:00Z",
+    "delivered_at": "2026-04-18T16:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-17T15:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-18T09:00:00Z" },
+      { "status": "partially_delivered", "timestamp": "2026-04-18T16:00:00Z", "note": "تسليم قطعة واحدة فقط — الثانية مرتجعة" }
+    ],
+    "created_at": "2026-04-17T15:00:00Z",
+    "updated_at": "2026-04-18T16:00:00Z"
+  },
+  {
+    "id": "pk_0982",
+    "code": "PK-0982",
+    "client_id": "cl_nour_fashion",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "شيرين عزت", "en": "Shereen Ezzat" },
+      "phone_primary": "+201112345698"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "مدينة نصر",
+      "street": "حي العاشر",
+      "full_address_ar": "حي العاشر، مدينة نصر",
+      "full_address_en": "10th District, Nasr City"
+    },
+    "description": { "ar": "ملابس × 4", "en": "Clothes × 4" },
+    "weight_kg": 1.6,
+    "pieces_count": 4,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 415000,
+    "shipping_fee": 6500,
+    "status": "partially_delivered",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_ahmed",
+    "dispatched_at": "2026-04-17T09:30:00Z",
+    "delivered_at": "2026-04-17T15:30:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-16T18:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-17T09:30:00Z" },
+      { "status": "partially_delivered", "timestamp": "2026-04-17T15:30:00Z", "note": "قطعتان مرتجعتان — مقاس غلط" }
+    ],
+    "created_at": "2026-04-16T18:00:00Z",
+    "updated_at": "2026-04-17T15:30:00Z"
+  },
+  {
+    "id": "pk_0961",
+    "code": "PK-0961",
+    "client_id": "cl_layla_boutique",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "داليا سمير", "en": "Dalia Samir" },
+      "phone_primary": "+201512345699"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_gz",
+      "city": "الجيزة",
+      "district": "العجوزة",
+      "street": "شارع سوريا",
+      "full_address_ar": "شارع سوريا، العجوزة",
+      "full_address_en": "Syria St, Agouza"
+    },
+    "description": { "ar": "فستان مناسبات", "en": "Evening gown" },
+    "weight_kg": 1.4,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 720000,
+    "shipping_fee": 7000,
+    "status": "returned",
+    "vehicle_type": "tagamoa_van",
+    "driver_id": "u_drv_ahmed",
+    "dispatched_at": "2026-04-15T09:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-14T14:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-15T09:00:00Z" },
+      { "status": "returned", "timestamp": "2026-04-15T17:00:00Z", "note": "رفض العميل — اللون غير مطابق" }
+    ],
+    "created_at": "2026-04-14T14:00:00Z",
+    "updated_at": "2026-04-15T17:00:00Z"
+  },
+  {
+    "id": "pk_0962",
+    "code": "PK-0962",
+    "client_id": "cl_mona_bags",
+    "branch_id": "br_alex",
+    "recipient": {
+      "name": { "ar": "نور الدين حسن", "en": "Nour El Din Hassan" },
+      "phone_primary": "+201112345700"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_alx",
+      "city": "الإسكندرية",
+      "district": "محرم بك",
+      "street": "شارع الإقبال",
+      "full_address_ar": "الإقبال، محرم بك",
+      "full_address_en": "Eqbal St, Moharam Bek"
+    },
+    "description": { "ar": "حقيبة يد نسائية", "en": "Handbag" },
+    "weight_kg": 0.6,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 165000,
+    "shipping_fee": 5500,
+    "status": "returned",
+    "vehicle_type": "motorcycle",
+    "driver_id": "u_drv_hassan",
+    "dispatched_at": "2026-04-16T10:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-15T12:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-16T10:00:00Z" },
+      { "status": "returned", "timestamp": "2026-04-16T18:00:00Z", "note": "العميل غير موجود — جولة فاشلة ثالثة" }
+    ],
+    "created_at": "2026-04-15T12:00:00Z",
+    "updated_at": "2026-04-16T18:00:00Z"
+  },
+  {
+    "id": "pk_0963",
+    "code": "PK-0963",
+    "client_id": "cl_ahmed_store",
+    "branch_id": "br_cairo_hq",
+    "recipient": {
+      "name": { "ar": "محمد عادل", "en": "Mohamed Adel" },
+      "phone_primary": "+201012345701"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة",
+      "district": "حلوان",
+      "street": "شارع المدارس",
+      "full_address_ar": "شارع المدارس، حلوان",
+      "full_address_en": "Schools St, Helwan"
+    },
+    "description": { "ar": "حذاء رياضي", "en": "Sport shoes" },
+    "weight_kg": 1.0,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": true,
+    "cod_amount": 110000,
+    "shipping_fee": 6500,
+    "status": "cancelled",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-20T10:00:00Z" },
+      { "status": "cancelled", "timestamp": "2026-04-20T14:30:00Z", "note": "إلغاء من العميل قبل الإرسال" }
+    ],
+    "created_at": "2026-04-20T10:00:00Z",
+    "updated_at": "2026-04-20T14:30:00Z"
+  },
+  {
+    "id": "pk_0964",
+    "code": "PK-0964",
+    "client_id": "cl_tech_hub",
+    "branch_id": "br_tagamoa",
+    "recipient": {
+      "name": { "ar": "أيمن سعد", "en": "Ayman Saad" },
+      "phone_primary": "+201212345702"
+    },
+    "delivery_address": {
+      "governorate_id": "gov_c",
+      "city": "القاهرة الجديدة",
+      "district": "الشروق",
+      "street": "الحي الأول",
+      "full_address_ar": "الحي الأول، الشروق",
+      "full_address_en": "1st District, Shorouk"
+    },
+    "description": { "ar": "ماوس لاسلكي", "en": "Wireless mouse" },
+    "weight_kg": 0.2,
+    "pieces_count": 1,
+    "is_fragile": false,
+    "allow_open_package": false,
+    "cod_amount": 32000,
+    "shipping_fee": 4000,
+    "status": "refused",
+    "vehicle_type": "motorcycle",
+    "driver_id": "u_drv_sami",
+    "dispatched_at": "2026-04-19T10:00:00Z",
+    "status_history": [
+      { "status": "pending", "timestamp": "2026-04-18T16:00:00Z" },
+      { "status": "dispatched", "timestamp": "2026-04-19T10:00:00Z" },
+      { "status": "refused", "timestamp": "2026-04-19T14:00:00Z", "note": "العميل رفض الاستلام — المنتج غير مطابق للوصف" }
+    ],
+    "created_at": "2026-04-18T16:00:00Z",
+    "updated_at": "2026-04-19T14:00:00Z"
+  }
+]

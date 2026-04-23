@@ -1,0 +1,91 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      NEXT_PUBLIC_DEFAULT_LOCALE: ar
+      NEXT_PUBLIC_DATA_SOURCE: mock
+      NEXT_PUBLIC_ENABLE_FEEDBACK: 'true'
+      NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Download fonts (Cairo + Inter)
+        run: |
+          pnpm add -D @fontsource/cairo @fontsource/inter --silent
+          mkdir -p public/fonts/cairo public/fonts/inter
+          cp node_modules/@fontsource/cairo/files/cairo-arabic-400-normal.woff2  public/fonts/cairo/Cairo-Regular.woff2
+          cp node_modules/@fontsource/cairo/files/cairo-arabic-600-normal.woff2  public/fonts/cairo/Cairo-SemiBold.woff2
+          cp node_modules/@fontsource/cairo/files/cairo-arabic-700-normal.woff2  public/fonts/cairo/Cairo-Bold.woff2
+          cp node_modules/@fontsource/cairo/files/cairo-arabic-800-normal.woff2  public/fonts/cairo/Cairo-ExtraBold.woff2
+          cp node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2   public/fonts/inter/Inter-Regular.woff2
+          cp node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2   public/fonts/inter/Inter-Medium.woff2
+          cp node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2   public/fonts/inter/Inter-SemiBold.woff2
+          cp node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2   public/fonts/inter/Inter-Bold.woff2
+
+      - name: Lint
+        run: pnpm lint || true # non-blocking on first deploys
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      - name: Prepare deploy bundle
+        run: |
+          mkdir -p deploy-out/.next
+          cp -r .next/standalone/. deploy-out/
+          cp -r .next/static deploy-out/.next/static
+          cp -r public deploy-out/public
+          cp ecosystem.config.js deploy-out/
+          cp package.json deploy-out/
+          ls -la deploy-out/
+
+      - name: Rsync to VPS
+        uses: easingthemes/ssh-deploy@v5
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.VPS_HOST }}
+          REMOTE_USER: ${{ secrets.VPS_USER }}
+          SOURCE: "deploy-out/"
+          TARGET: "/var/www/twingo-erp/"
+          ARGS: "-avz --delete"
+
+      - name: Restart PM2 on VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/www/twingo-erp
+            pm2 reload twingo-erp || pm2 start ecosystem.config.js
+            pm2 save

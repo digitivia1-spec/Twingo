@@ -1,0 +1,16 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "Literal[value=/\\b(ml-|mr-|pl-|pr-|text-left|text-right|left-|right-|rounded-l-|rounded-r-|border-l|border-r|float-left|float-right)\\b/]",
+        "message": "Do not use physical CSS properties. Use logical ones: ms-/me-/ps-/pe-/text-start/text-end/start-/end-/rounded-s-/rounded-e-/border-s/border-e/float-start/float-end."
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ]
+  }
+}

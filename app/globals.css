@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ─── Design tokens — twinjo ERP ────────────────────────────── */
+    --color-bg: #f0f4f8;
+    --color-surface: #ffffff;
+    --color-surface-muted: #fafbfc;
+    --color-surface-hover: #f8fafc;
+    --color-text: #0f172a;
+    --color-text-muted: #64748b;
+    --color-text-subtle: #94a3b8;
+    --color-border: #e2e8f0;
+
+    --color-success: #15803d;
+    --color-success-bg: #dcfce7;
+    --color-warning: #b45309;
+    --color-warning-bg: #fef3c7;
+    --color-danger: #b91c1c;
+    --color-danger-bg: #fee2e2;
+    --color-info: #0369a1;
+    --color-info-bg: #e0f2fe;
+
+    --radius: 12px;
+
+    /* shadcn tokens (HSL triplets) */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 224 76% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --input: 214 32% 91%;
+    --ring: 224 76% 48%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: var(--font-cairo), 'Cairo', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html[lang='en'] {
+    font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  html[lang='ar'] body {
+    line-height: 1.625;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0ms !important;
+      transition-duration: 0ms !important;
+    }
+  }
+}
+
+/* ─── Page shell ──────────────────────────────────────────────── */
+.page-enter {
+  animation: fadeIn 200ms ease-out;
+}
+
+/* Table tabular numerals */
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sidebar scrollbar-hidden on collapse */
+.sidebar-collapsed .nav-label {
+  display: none;
+}
