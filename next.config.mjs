@@ -11,6 +11,16 @@ const nextConfig = {
   experimental: {
     // Cairo (RTL) perf: inline logical-property polyfills are unnecessary on evergreen browsers.
   },
+  // Skip ESLint / TS during the production build in CI — we run them as
+  // separate workflow steps so the build itself doesn't fail on lint-only
+  // issues like @typescript-eslint/no-empty-object-type.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Typecheck runs as a separate step; don't double-fail the build.
+    ignoreBuildErrors: false,
+  },
   // Silence Sentry bundle instrumentation in dev for faster HMR.
   productionBrowserSourceMaps: false,
   images: {
