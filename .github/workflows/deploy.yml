@@ -114,7 +114,7 @@ jobs:
         run: |
           USER=$(echo "$VPS_USER" | tr -d '[:space:]')
           HOST=$(echo "$VPS_HOST" | tr -d '[:space:]')
-          ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no "$USER@$HOST" "cd /var/www/twingo-erp && (pm2 reload twingo-erp || pm2 start ecosystem.config.js) && pm2 save"
+          ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no "$USER@$HOST" 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; cd /var/www/twingo-erp && (pm2 reload twingo-erp || pm2 start ecosystem.config.js) && pm2 save'
 
       - name: Cleanup SSH key
         if: always()
