@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       .filter(Boolean);
     const emailFrom =
       process.env.FEEDBACK_EMAIL_FROM ??
-      'Twinjo Feedback <feedback@digitivia.com>';
+      'Twinjo Demo <noreply@digitivia.com>';
 
     if (resendKey && emailTo.length > 0) {
       const r = await fetch('https://api.resend.com/emails', {

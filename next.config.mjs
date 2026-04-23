@@ -21,8 +21,8 @@ const nextConfig = {
 };
 
 const sentryOptions = {
-  org: process.env.SENTRY_ORG || 'digitivia',
-  project: process.env.SENTRY_PROJECT || 'twinjo-erp-demo',
+  org: process.env.SENTRY_ORG || 'digitivia-pt',
+  project: process.env.SENTRY_PROJECT || 'twingo-demo',
   silent: !process.env.CI,
   widenClientFileUpload: true,
   tunnelRoute: '/monitoring',

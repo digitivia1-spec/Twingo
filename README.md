@@ -159,9 +159,9 @@ This repo is **deploy-ready** — the only things it can't do from inside a sess
 ### A · Provision the Hetzner CX22 VPS (~15 min)
 
 1. Sign in at **https://console.hetzner.cloud**.
-2. **Settings → Security → SSH Keys → Add SSH key.** Paste the output of `cat ~/.ssh/id_ed25519_hetzner.pub` (generate one with `ssh-keygen -t ed25519 -C "nagui@digitivia" -f ~/.ssh/id_ed25519_hetzner` if you don't have one yet). Name it `nagui-laptop`.
+2. **Settings → Security → SSH Keys → Add SSH key.** Paste the output of `cat ~/.ssh/id_ed25519_hetzner.pub` (generate one with `ssh-keygen -t ed25519 -C "digitivia-demo" -f ~/.ssh/id_ed25519_hetzner` if you don't have one yet). Name it `nagui-laptop`.
 3. **New project → `digitivia-demos` → Add server** with:
-   - Location: **Falkenstein (fsn1)** — ~60ms RTT to Cairo
+   - Location: **Nuremberg (nbg1)** — ~70ms RTT to Cairo (Germany; similar latency to Falkenstein, negligible for back-office ERP)
    - Image: **Debian 12**
    - Type: **Shared vCPU → CX22** (€3.80/mo, 2 vCPU / 4 GB / 40 GB SSD / 20 TB traffic)
    - SSH keys: ✓ the one you just added
@@ -243,8 +243,8 @@ sudo certbot renew --dry-run   # verify auto-renewal works
 ### F · Sentry project (~5 min)
 
 1. Sign up at https://sentry.io (free tier is fine).
-2. **Create Project → Next.js → `twinjo-erp-demo`**. Copy the **DSN**.
-3. **Alerts → Create Alert → Issues → "A new issue is created" with tag filter `feedback:true` → Send email to `nagui@digitivia.com`** (and anyone else on the team). Name it `Twinjo ERP — Client Feedback`.
+2. **Create Project → Next.js → `twingo-demo`**. Copy the **DSN**.
+3. **Alerts → Create Alert → Issues → "A new issue is created" with tag filter `feedback:true` → Send email to `a.nagui@digitivia.com`**. Sender will be `no-reply@sentry.io`. Name the rule `Twinjo ERP — Client Feedback`.
 4. (Optional) **Settings → Integrations → Webhooks → Add** with URL `https://twingo-demo.digitivia.com/api/feedback`, event `issue.created`. If you add a webhook secret, put it in `SENTRY_WEBHOOK_SECRET` on the VPS.
 
 ### G · GitHub secrets (~3 min)
@@ -258,7 +258,8 @@ Go to `https://github.com/<org>/Twingo/settings/secrets/actions` and add:
 | `VPS_SSH_KEY` | Contents of a deploy-only SSH key (generate with `ssh-keygen -t ed25519 -C "gh-deploy"`, then `ssh-copy-id -i deploy_key.pub nagui@HETZNER_IP`) |
 | `NEXT_PUBLIC_SENTRY_DSN` | From Sentry |
 | `SENTRY_ORG` | e.g. `digitivia` |
-| `SENTRY_PROJECT` | `twinjo-erp-demo` |
+| `SENTRY_ORG` | `digitivia-pt` |
+| `SENTRY_PROJECT` | `twingo-demo` |
 | `SENTRY_AUTH_TOKEN` | Sentry → Settings → Auth Tokens → Create (scope `project:releases`) |
 
 ### H · Put the runtime env on the VPS (~2 min)
@@ -274,8 +275,8 @@ NEXT_PUBLIC_SENTRY_DSN=https://xxx@oYYY.ingest.sentry.io/ZZZ
 SENTRY_WEBHOOK_SECRET=
 # Optional Resend relay:
 RESEND_API_KEY=
-FEEDBACK_EMAIL_TO=nagui@digitivia.com,feedback@digitivia.com
-FEEDBACK_EMAIL_FROM=Twinjo Feedback <feedback@digitivia.com>
+FEEDBACK_EMAIL_TO=a.nagui@digitivia.com
+FEEDBACK_EMAIL_FROM=Twinjo Demo <noreply@digitivia.com>
 EOF
 ```
 
