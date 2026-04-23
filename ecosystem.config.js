@@ -15,10 +15,18 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
-        HOSTNAME: '127.0.0.1',
+        // 0.0.0.0 (not 127.0.0.1) — prevents Next.js from emitting redirects
+        // with "localhost:3000" as the canonical host when behind Nginx.
+        HOSTNAME: '0.0.0.0',
         NEXT_PUBLIC_DEFAULT_LOCALE: 'ar',
         NEXT_PUBLIC_DATA_SOURCE: 'mock',
         NEXT_PUBLIC_ENABLE_FEEDBACK: 'true',
+        // Fixes Next.js 15 "https://localhost:3000" self-fetch bug when
+        // running behind an HTTPS-terminating reverse proxy (Nginx + Certbot).
+        // Without this, internal RSC/middleware fetches use the external
+        // scheme (https) against the internal host (localhost:3000) which
+        // is plain HTTP → EPROTO SSL mismatch.
+        __NEXT_PRIVATE_ORIGIN: 'http://127.0.0.1:3000',
       },
       out_file: '/var/log/twingo-erp/out.log',
       error_file: '/var/log/twingo-erp/error.log',
