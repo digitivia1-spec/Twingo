@@ -84,12 +84,20 @@ jobs:
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/twingo-erp/
 
       - name: Copy .env.local to VPS (if provided via secret)
-        if: ${{ secrets.VPS_ENV_LOCAL != '' }}
+        env:
+          VPS_ENV_LOCAL: ${{ secrets.VPS_ENV_LOCAL }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
         run: |
-          echo "${{ secrets.VPS_ENV_LOCAL }}" | \
-            ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-            "cat > /var/www/twingo-erp/.env.local && chmod 600 /var/www/twingo-erp/.env.local"
+          if [ -n "$VPS_ENV_LOCAL" ]; then
+            echo "$VPS_ENV_LOCAL" | \
+              ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no \
+              "$VPS_USER@$VPS_HOST" \
+              "cat > /var/www/twingo-erp/.env.local && chmod 600 /var/www/twingo-erp/.env.local"
+            echo ".env.local written"
+          else
+            echo "VPS_ENV_LOCAL secret not set — skipping"
+          fi
 
       - name: Restart PM2 on VPS
         run: |
