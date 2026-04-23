@@ -35,7 +35,6 @@ export function FeedbackBootstrap() {
 
       feedback.attachTo(document.body, {
         formTitle: t('formTitle'),
-        buttonLabel: t('buttonLabel'),
         submitButtonLabel: t('submit'),
         messageLabel: t('messageLabel'),
         messagePlaceholder: t('messagePlaceholder'),
