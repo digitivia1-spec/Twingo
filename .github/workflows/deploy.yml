@@ -18,9 +18,13 @@ jobs:
       NEXT_PUBLIC_DATA_SOURCE: mock
       NEXT_PUBLIC_ENABLE_FEEDBACK: 'true'
       NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
-      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      # Intentionally NOT passing SENTRY_AUTH_TOKEN here — the Sentry build
+      # wrapper in next.config.mjs is skipped when the token is absent, so
+      # we avoid the "Project not found" sentry-cli failure. Runtime Sentry
+      # (DSN above) still works; only source-map upload is skipped.
+      # SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      # SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      # SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
