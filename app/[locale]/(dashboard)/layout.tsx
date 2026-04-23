@@ -1,5 +1,10 @@
 import { Sidebar } from '@/components/layout/Sidebar';
 
+// Every dashboard route reads URL query params (branch, status, page, etc).
+// Mark the whole segment as dynamic so Next.js doesn't try to prerender
+// pages that use useSearchParams on the server.
+export const dynamic = 'force-dynamic';
+
 export default function DashboardLayout({
   children,
 }: {
