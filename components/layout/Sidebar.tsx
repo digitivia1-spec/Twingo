@@ -126,18 +126,18 @@ function LocaleToggle({ collapsed }: { collapsed: boolean }) {
   const locale = useLocale();
   const pathname = usePathname();
   const otherLocale = locale === 'ar' ? 'en' : 'ar';
-  const href = otherLocale === 'en' ? `/en${pathname}` : pathname;
   return (
     <FeedbackPin elementId="sidebar.locale" className="block">
-      <a
-        href={href}
+      <Link
+        href={pathname}
+        locale={otherLocale}
         className={cn(
           'flex items-center justify-center gap-2 rounded-lg bg-[#1e293b] px-2.5 py-1.5 text-[11px] font-bold text-white/80 hover:bg-[#334155] hover:text-white',
         )}
         aria-label={t('switchLabel')}
       >
         {!collapsed ? t('switchTo') : t('switchTo').slice(0, 2)}
-      </a>
+      </Link>
     </FeedbackPin>
   );
 }
