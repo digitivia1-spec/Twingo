@@ -1,4 +1,8 @@
-import type { OrderStatus, VehicleType } from '@/lib/types/enums';
+import type {
+  OrderStatus,
+  PickupReviewStatus,
+  VehicleType,
+} from '@/lib/types/enums';
 import type { Pickup } from '@/lib/types/pickup';
 import type { Paginated } from '@/lib/types/shared';
 import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
@@ -15,6 +19,12 @@ export interface PickupFilters {
   collection?: 'collected' | 'not_collected';
   client_id?: string;
   driver_id?: string;
+  /**
+   * Filter by review state. Defaults to "exclude pending_review" so
+   * unapproved merchant submissions don't show up in the main list.
+   * Pass 'pending_review' to drive the New Orders queue.
+   */
+  review_status?: PickupReviewStatus | 'all';
   page?: number;
   page_size?: number;
   sort_by?: keyof Pickup;
@@ -38,10 +48,28 @@ export interface PickupRepository {
     user_id?: string,
   ): Promise<Pickup>;
   cancel(id: string, reason: string, user_id?: string): Promise<Pickup>;
+  /** Approve a merchant-submitted pickup so it becomes dispatchable. */
+  approveReview(id: string, reviewed_by: string): Promise<Pickup>;
+  /** Reject a merchant-submitted pickup. */
+  rejectReview(
+    id: string,
+    reviewed_by: string,
+    reason: string,
+  ): Promise<Pickup>;
   softDelete(id: string): Promise<void>;
 }
 
 function matchesFilters(pickup: Pickup, f: PickupFilters): boolean {
+  // Review-status gate: by default, omit pickups awaiting ops review from
+  // every list except the explicit New Orders queue.
+  const requestedReview = f.review_status ?? 'default';
+  const actualReview = pickup.review_status ?? 'approved';
+  if (requestedReview === 'default') {
+    if (actualReview === 'pending_review' || actualReview === 'rejected')
+      return false;
+  } else if (requestedReview !== 'all' && actualReview !== requestedReview) {
+    return false;
+  }
   if (f.status && f.status.length > 0 && !f.status.includes(pickup.status))
     return false;
   if (f.branch_id && pickup.branch_id !== f.branch_id) return false;
@@ -157,6 +185,50 @@ const mock: PickupRepository = {
     return latency(pickup);
   },
 
+  async approveReview(id, reviewed_by) {
+    const pickup = store.pickups.find((p) => p.id === id);
+    if (!pickup) throw new Error(`Pickup not found: ${id}`);
+    if (pickup.review_status !== 'pending_review') {
+      throw new Error(
+        `Pickup ${id} is not pending review (current: ${pickup.review_status ?? 'approved'}).`,
+      );
+    }
+    pickup.review_status = 'approved';
+    pickup.reviewed_at = nowIso();
+    pickup.reviewed_by = reviewed_by;
+    pickup.updated_at = nowIso();
+    pickup.status_history.push({
+      status: pickup.status,
+      timestamp: nowIso(),
+      user_id: reviewed_by,
+      note: 'Approved by ops',
+    });
+    return latency(pickup);
+  },
+
+  async rejectReview(id, reviewed_by, reason) {
+    const pickup = store.pickups.find((p) => p.id === id);
+    if (!pickup) throw new Error(`Pickup not found: ${id}`);
+    if (pickup.review_status !== 'pending_review') {
+      throw new Error(
+        `Pickup ${id} is not pending review (current: ${pickup.review_status ?? 'approved'}).`,
+      );
+    }
+    pickup.review_status = 'rejected';
+    pickup.reviewed_at = nowIso();
+    pickup.reviewed_by = reviewed_by;
+    pickup.rejection_reason = reason;
+    pickup.status = 'cancelled';
+    pickup.updated_at = nowIso();
+    pickup.status_history.push({
+      status: 'cancelled',
+      timestamp: nowIso(),
+      user_id: reviewed_by,
+      note: `Rejected by ops: ${reason}`,
+    });
+    return latency(pickup);
+  },
+
   async softDelete(id) {
     const pickup = store.pickups.find((p) => p.id === id);
     if (!pickup) throw new Error(`Pickup not found: ${id}`);
@@ -172,6 +244,8 @@ const supabase: PickupRepository = {
   async update() { throw NOT_IMPLEMENTED; },
   async dispatch() { throw NOT_IMPLEMENTED; },
   async cancel() { throw NOT_IMPLEMENTED; },
+  async approveReview() { throw NOT_IMPLEMENTED; },
+  async rejectReview() { throw NOT_IMPLEMENTED; },
   async softDelete() { throw NOT_IMPLEMENTED; },
 };
 

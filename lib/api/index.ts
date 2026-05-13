@@ -8,4 +8,5 @@ export { stock } from './stock';
 export { prices } from './prices';
 export { returns } from './returns';
 export { governorates } from './governorates';
+export { cashRequests } from './cash-requests';
 export { DATA_SOURCE } from './source';

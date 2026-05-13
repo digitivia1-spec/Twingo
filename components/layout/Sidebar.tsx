@@ -10,6 +10,13 @@ import {
   Tag,
   Undo2,
   Map,
+  Store,
+  Bike,
+  Users,
+  Search,
+  Inbox,
+  UserPlus,
+  HandCoins,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -23,6 +30,12 @@ import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 const NAV = [
   { key: 'dashboard', href: '/', icon: Home },
   { key: 'pickup', href: '/pickup', icon: PackageCheck },
+  { key: 'newOrders', href: '/new-orders', icon: Inbox },
+  { key: 'pendingClients', href: '/clients/pending', icon: UserPlus },
+  { key: 'cashRequests', href: '/cash-requests', icon: HandCoins },
+  { key: 'clients', href: '/clients', icon: Store },
+  { key: 'drivers', href: '/drivers', icon: Bike },
+  { key: 'users', href: '/users', icon: Users },
   { key: 'finance', href: '/finance', icon: Banknote },
   { key: 'cod', href: '/cod', icon: Wallet },
   { key: 'branches', href: '/branches', icon: Building2 },
@@ -30,6 +43,7 @@ const NAV = [
   { key: 'prices', href: '/prices', icon: Tag },
   { key: 'returns', href: '/returns', icon: Undo2 },
   { key: 'provinces', href: '/provinces', icon: Map },
+  { key: 'track', href: '/track', icon: Search },
 ] as const;
 
 export function Sidebar() {

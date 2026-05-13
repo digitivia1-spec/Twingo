@@ -6,13 +6,20 @@
   "nav": {
     "dashboard": "Dashboard",
     "pickup": "Pick Up",
+    "newOrders": "New Orders",
+    "pendingClients": "Pending Merchants",
+    "cashRequests": "Cash Requests",
+    "clients": "Merchants",
+    "drivers": "Drivers",
+    "users": "Staff",
     "finance": "Finance Driver",
     "cod": "COD Clients",
     "branches": "Branches",
     "stock": "Stock / Warehouse",
     "prices": "Price List",
     "returns": "Returns",
-    "provinces": "Governorates"
+    "provinces": "Governorates",
+    "track": "Track Shipment"
   },
   "topbar": {
     "toggleSidebar": "Toggle sidebar",
@@ -365,6 +372,295 @@
       "code": "Code",
       "coverage": "Coverage"
     }
+  },
+  "clients": {
+    "title": "Merchants",
+    "subtitle": "Active merchants, COD owed, and shipping rates",
+    "kpi": {
+      "total": "Active merchants",
+      "totalOrders": "Total orders",
+      "codOwed": "Total COD owed",
+      "newThisMonth": "Onboarded recently"
+    },
+    "columns": {
+      "name": "Merchant",
+      "businessName": "Business",
+      "phone": "Phone",
+      "email": "Email",
+      "branch": "Preferred branch",
+      "orders": "Orders",
+      "codOwed": "COD owed",
+      "frequency": "Payout cadence",
+      "method": "Method",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by name or phone…",
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "frequency": {
+      "immediate": "Immediate",
+      "weekly": "Weekly",
+      "bi_weekly": "Bi-weekly",
+      "monthly": "Monthly"
+    },
+    "actions": {
+      "viewOrders": "Orders",
+      "viewBalance": "Balance",
+      "shippingRates": "Rates"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+  "drivers": {
+    "title": "Drivers",
+    "subtitle": "Fleet roster, vehicles, and recent shifts",
+    "kpi": {
+      "total": "Total drivers",
+      "active": "Active",
+      "shiftsToday": "Shifts today",
+      "varianceFlagged": "Variance flagged"
+    },
+    "columns": {
+      "code": "Code",
+      "name": "Name",
+      "phone": "Phone",
+      "vehicle": "Vehicle",
+      "branch": "Branch",
+      "lastShift": "Last shift",
+      "delivered": "Delivered",
+      "variance": "Variance",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by name or code…",
+      "all": "All vehicles"
+    },
+    "actions": {
+      "viewShifts": "Shifts",
+      "viewProfile": "Profile"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "noShift": "No shifts yet"
+  },
+  "users": {
+    "title": "Staff",
+    "subtitle": "Back-office users by role",
+    "kpi": {
+      "total": "Total staff",
+      "active": "Active"
+    },
+    "columns": {
+      "name": "Name",
+      "role": "Role",
+      "phone": "Phone",
+      "email": "Email",
+      "branch": "Branch",
+      "status": "Status"
+    },
+    "filters": {
+      "search": "Search by name…",
+      "allRoles": "All roles"
+    },
+    "roles": {
+      "super_admin": "Super admin",
+      "admin": "Admin",
+      "manager": "Manager",
+      "warehouse": "Warehouse",
+      "driver": "Driver",
+      "finance": "Finance"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+  "track": {
+    "title": "Track a shipment",
+    "subtitle": "Enter the AWB to view live status",
+    "placeholder": "AWB code (e.g. PK-1024)",
+    "submit": "Track",
+    "notFound": "We couldn't find a shipment with this code.",
+    "notFoundHint": "Double-check the code on your AWB sticker, or contact the merchant.",
+    "result": {
+      "code": "AWB",
+      "status": "Current status",
+      "recipient": "Delivered to",
+      "phone": "Phone",
+      "destination": "Destination",
+      "weight": "Weight",
+      "pieces": "Pieces",
+      "expected": "Expected delivery",
+      "merchant": "Sent by",
+      "timeline": "Status timeline",
+      "support": "Need help? Contact the merchant or call us."
+    },
+    "branding": {
+      "trustedBy": "Trusted Egyptian last-mile delivery",
+      "operatorSince": "Cairo · Delta · Alex · Upper Egypt"
+    }
+  },
+  "newOrders": {
+    "title": "New Orders",
+    "subtitle": "Merchant-submitted pickups awaiting ops review",
+    "kpi": {
+      "pending": "Pending review",
+      "today": "Submitted today",
+      "merchants": "Merchants this week",
+      "value": "Total COD value"
+    },
+    "columns": {
+      "code": "AWB",
+      "merchant": "Merchant",
+      "source": "Source",
+      "type": "Type",
+      "recipient": "Recipient",
+      "phone": "Phone",
+      "destination": "Destination",
+      "cod": "COD",
+      "submitted": "Submitted",
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by AWB, merchant, or phone…"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "approved": "Approved ✓",
+      "rejected": "Rejected"
+    },
+    "rejectModal": {
+      "title": "Reject submission",
+      "reason": "Reason for rejection",
+      "reasonPlaceholder": "Why is this submission being rejected? The merchant will see this.",
+      "submit": "Reject submission",
+      "rejected": "Submission rejected"
+    },
+    "approved": "Approved — ready to dispatch",
+    "empty": "No new orders awaiting review.",
+    "emptySub": "Merchants haven't submitted any new orders. Pull again in a bit."
+  },
+  "sources": {
+    "admin_create": "Created in office",
+    "merchant_portal": "Merchant portal",
+    "csv_import": "CSV bulk",
+    "shopify": "Shopify",
+    "zamit": "Zamit",
+    "api": "API"
+  },
+  "orderTypes": {
+    "forward": "Forward",
+    "exchange": "Exchange",
+    "refund": "Refund",
+    "pickup": "Pickup",
+    "return_to_shipper": "Return to shipper",
+    "damage": "Damage",
+    "lost": "Lost",
+    "transit": "Transit",
+    "partial_receive": "Partial receive",
+    "return_warehouse": "Return to warehouse",
+    "item_with_driver": "Item with driver",
+    "partial_returned": "Partial returned"
+  },
+  "pendingClients": {
+    "title": "Pending Merchants",
+    "subtitle": "Merchant onboarding queue",
+    "kpi": {
+      "pending": "Awaiting approval",
+      "today": "Submitted today",
+      "thisWeek": "This week"
+    },
+    "columns": {
+      "name": "Merchant",
+      "businessName": "Business",
+      "phone": "Phone",
+      "email": "Email",
+      "branch": "Preferred branch",
+      "submitted": "Submitted",
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by name, phone, or email…"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "rejectModal": {
+      "title": "Reject merchant",
+      "reason": "Reason for rejection",
+      "reasonPlaceholder": "Why is this merchant being rejected? They'll be notified.",
+      "submit": "Reject merchant",
+      "rejected": "Merchant rejected"
+    },
+    "approved": "Approved — merchant activated",
+    "empty": "No merchants are awaiting approval.",
+    "emptySub": "All caught up. New signups will appear here."
+  },
+  "cashRequests": {
+    "title": "Cash Requests",
+    "subtitle": "Merchant-initiated payout requests",
+    "kpi": {
+      "pending": "Pending",
+      "approved": "Approved (unpaid)",
+      "paidThisMonth": "Paid this month",
+      "totalRequested": "Total pending value"
+    },
+    "columns": {
+      "code": "Ref",
+      "merchant": "Merchant",
+      "amount": "Amount",
+      "method": "Method",
+      "comment": "Comment",
+      "status": "Status",
+      "submitted": "Submitted",
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by ref or merchant…",
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "paid": "Paid",
+      "rejected": "Rejected"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "paid": "Paid"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "markPaid": "Mark paid"
+    },
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "rejectModal": {
+      "title": "Reject cash request",
+      "reason": "Reason",
+      "reasonPlaceholder": "Why is this request being rejected? The merchant will see this.",
+      "submit": "Reject"
+    },
+    "payModal": {
+      "title": "Mark as paid",
+      "method": "Payment method",
+      "reference": "Reference number",
+      "submit": "Mark paid",
+      "paid": "Marked paid ✓"
+    },
+    "empty": "No cash requests yet."
   },
   "feedback": {
     "buttonLabel": "Feedback",

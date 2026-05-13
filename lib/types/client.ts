@@ -1,4 +1,4 @@
-import type { PaymentMethod } from './enums';
+import type { ClientApprovalStatus, PaymentMethod } from './enums';
 import type {
   AuditFields,
   Bilingual,
@@ -28,5 +28,15 @@ export interface Client extends AuditFields, SoftDelete {
   /** piasters (EGP × 100) */
   total_cod_owed: number;
   is_active: boolean;
+  /**
+   * Onboarding gate. Existing seed data is treated as 'approved' when the
+   * field is missing (see API helpers). New self-signups via the merchant
+   * portal start as 'pending' and surface in the Un-approved Clients queue.
+   */
+  approval_status?: ClientApprovalStatus;
+  approval_requested_at?: string;
+  approved_at?: string;
+  approved_by?: string;
+  rejection_reason?: string;
   notes?: string;
 }

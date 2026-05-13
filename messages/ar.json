@@ -6,13 +6,20 @@
   "nav": {
     "dashboard": "الرئيسية",
     "pickup": "البيك اب",
+    "newOrders": "طلبات جديدة",
+    "pendingClients": "تجار قيد التفعيل",
+    "cashRequests": "طلبات صرف",
+    "clients": "التجار",
+    "drivers": "المندوبين",
+    "users": "الموظفين",
     "finance": "تحصيل المندوبين",
     "cod": "سداد مستحقات العملاء",
     "branches": "الفروع",
     "stock": "المخزن",
     "prices": "قائمة الأسعار",
     "returns": "تسليم المرتجعات",
-    "provinces": "المحافظات"
+    "provinces": "المحافظات",
+    "track": "تتبع شحنة"
   },
   "topbar": {
     "toggleSidebar": "إظهار / إخفاء القائمة",
@@ -365,6 +372,295 @@
       "code": "الكود",
       "coverage": "التغطية"
     }
+  },
+  "clients": {
+    "title": "التجار",
+    "subtitle": "التجار النشطون والمستحقات وأسعار الشحن",
+    "kpi": {
+      "total": "تجار نشطون",
+      "totalOrders": "إجمالي الطلبات",
+      "codOwed": "إجمالي المستحقات",
+      "newThisMonth": "تم تفعيلهم حديثاً"
+    },
+    "columns": {
+      "name": "التاجر",
+      "businessName": "الاسم التجاري",
+      "phone": "الهاتف",
+      "email": "البريد",
+      "branch": "الفرع المفضل",
+      "orders": "الطلبات",
+      "codOwed": "المستحقات",
+      "frequency": "دورة الصرف",
+      "method": "وسيلة الدفع",
+      "status": "الحالة",
+      "actions": "إجراءات"
+    },
+    "filters": {
+      "search": "ابحث بالاسم أو الهاتف…",
+      "all": "الكل",
+      "active": "نشط",
+      "inactive": "متوقف"
+    },
+    "frequency": {
+      "immediate": "فوري",
+      "weekly": "أسبوعي",
+      "bi_weekly": "كل أسبوعين",
+      "monthly": "شهري"
+    },
+    "actions": {
+      "viewOrders": "الطلبات",
+      "viewBalance": "الرصيد",
+      "shippingRates": "الأسعار"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "متوقف"
+    }
+  },
+  "drivers": {
+    "title": "المندوبين",
+    "subtitle": "قائمة المندوبين والمركبات وآخر شيفت",
+    "kpi": {
+      "total": "إجمالي المندوبين",
+      "active": "نشطون",
+      "shiftsToday": "شيفتات اليوم",
+      "varianceFlagged": "فروق محتاجة مراجعة"
+    },
+    "columns": {
+      "code": "الكود",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "vehicle": "المركبة",
+      "branch": "الفرع",
+      "lastShift": "آخر شيفت",
+      "delivered": "تم التسليم",
+      "variance": "الفرق",
+      "status": "الحالة",
+      "actions": "إجراءات"
+    },
+    "filters": {
+      "search": "ابحث بالاسم أو الكود…",
+      "all": "كل المركبات"
+    },
+    "actions": {
+      "viewShifts": "الشيفتات",
+      "viewProfile": "الملف"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "متوقف"
+    },
+    "noShift": "لا يوجد شيفت بعد"
+  },
+  "users": {
+    "title": "الموظفين",
+    "subtitle": "موظفو الباك أوفيس حسب الدور الوظيفي",
+    "kpi": {
+      "total": "إجمالي الموظفين",
+      "active": "نشطون"
+    },
+    "columns": {
+      "name": "الاسم",
+      "role": "الدور",
+      "phone": "الهاتف",
+      "email": "البريد",
+      "branch": "الفرع",
+      "status": "الحالة"
+    },
+    "filters": {
+      "search": "ابحث بالاسم…",
+      "allRoles": "كل الأدوار"
+    },
+    "roles": {
+      "super_admin": "أدمن رئيسي",
+      "admin": "أدمن",
+      "manager": "مدير",
+      "warehouse": "مخزن",
+      "driver": "مندوب",
+      "finance": "حسابات"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "متوقف"
+    }
+  },
+  "track": {
+    "title": "تتبع شحنة",
+    "subtitle": "أدخل رقم البوليصة للاطلاع على حالة الشحنة",
+    "placeholder": "رقم البوليصة (مثال: PK-1024)",
+    "submit": "تتبع",
+    "notFound": "لم يتم العثور على شحنة بهذا الرقم.",
+    "notFoundHint": "تأكد من الرقم الموجود على ملصق البوليصة أو تواصل مع التاجر.",
+    "result": {
+      "code": "رقم البوليصة",
+      "status": "الحالة الحالية",
+      "recipient": "المُسلَّم إلى",
+      "phone": "الهاتف",
+      "destination": "العنوان",
+      "weight": "الوزن",
+      "pieces": "عدد القطع",
+      "expected": "موعد التسليم المتوقع",
+      "merchant": "المُرسِل",
+      "timeline": "تاريخ الحالة",
+      "support": "تحتاج مساعدة؟ تواصل مع التاجر أو اتصل بنا."
+    },
+    "branding": {
+      "trustedBy": "خدمة توصيل آخر ميل في مصر",
+      "operatorSince": "القاهرة · الدلتا · الإسكندرية · الصعيد"
+    }
+  },
+  "newOrders": {
+    "title": "طلبات جديدة",
+    "subtitle": "طلبات من التجار في انتظار مراجعة العمليات",
+    "kpi": {
+      "pending": "في انتظار المراجعة",
+      "today": "تم تقديمها اليوم",
+      "merchants": "تجار هذا الأسبوع",
+      "value": "إجمالي قيمة المستحقات"
+    },
+    "columns": {
+      "code": "البوليصة",
+      "merchant": "التاجر",
+      "source": "المصدر",
+      "type": "النوع",
+      "recipient": "المستلم",
+      "phone": "الهاتف",
+      "destination": "العنوان",
+      "cod": "المستحق",
+      "submitted": "تاريخ التقديم",
+      "actions": "إجراءات"
+    },
+    "filters": {
+      "search": "ابحث بالبوليصة أو التاجر أو الهاتف…"
+    },
+    "actions": {
+      "approve": "موافقة",
+      "reject": "رفض",
+      "approved": "تمت الموافقة ✓",
+      "rejected": "مرفوض"
+    },
+    "rejectModal": {
+      "title": "رفض الطلب",
+      "reason": "سبب الرفض",
+      "reasonPlaceholder": "لماذا يتم رفض هذا الطلب؟ سيظهر السبب للتاجر.",
+      "submit": "تأكيد الرفض",
+      "rejected": "تم رفض الطلب"
+    },
+    "approved": "تمت الموافقة — جاهز للإرسال",
+    "empty": "لا توجد طلبات جديدة في انتظار المراجعة.",
+    "emptySub": "لم يقدّم التجار طلبات جديدة. حاول لاحقاً."
+  },
+  "sources": {
+    "admin_create": "أُنشئ من المكتب",
+    "merchant_portal": "بوابة التاجر",
+    "csv_import": "استيراد CSV",
+    "shopify": "شوبيفاي",
+    "zamit": "زاميت",
+    "api": "API"
+  },
+  "orderTypes": {
+    "forward": "توصيل",
+    "exchange": "استبدال",
+    "refund": "استرداد",
+    "pickup": "استلام",
+    "return_to_shipper": "إرجاع للتاجر",
+    "damage": "تالف",
+    "lost": "مفقود",
+    "transit": "ترانزيت",
+    "partial_receive": "استلام جزئي",
+    "return_warehouse": "إرجاع للمخزن",
+    "item_with_driver": "مع المندوب",
+    "partial_returned": "إرجاع جزئي"
+  },
+  "pendingClients": {
+    "title": "تجار قيد التفعيل",
+    "subtitle": "قائمة طلبات تفعيل التجار",
+    "kpi": {
+      "pending": "في انتظار الموافقة",
+      "today": "تم تقديمها اليوم",
+      "thisWeek": "هذا الأسبوع"
+    },
+    "columns": {
+      "name": "التاجر",
+      "businessName": "الاسم التجاري",
+      "phone": "الهاتف",
+      "email": "البريد",
+      "branch": "الفرع المفضل",
+      "submitted": "تاريخ التقديم",
+      "actions": "إجراءات"
+    },
+    "filters": {
+      "search": "ابحث بالاسم أو الهاتف أو البريد…"
+    },
+    "actions": {
+      "approve": "موافقة",
+      "reject": "رفض"
+    },
+    "rejectModal": {
+      "title": "رفض التاجر",
+      "reason": "سبب الرفض",
+      "reasonPlaceholder": "لماذا يتم رفض هذا التاجر؟ سيتم إخطاره.",
+      "submit": "تأكيد الرفض",
+      "rejected": "تم رفض التاجر"
+    },
+    "approved": "تمت الموافقة — تم تفعيل التاجر",
+    "empty": "لا يوجد تجار في انتظار الموافقة.",
+    "emptySub": "كل شيء على ما يرام. الطلبات الجديدة ستظهر هنا."
+  },
+  "cashRequests": {
+    "title": "طلبات صرف",
+    "subtitle": "طلبات صرف الأرصدة من التجار",
+    "kpi": {
+      "pending": "قيد الانتظار",
+      "approved": "موافق عليها (غير مدفوعة)",
+      "paidThisMonth": "تم صرفها هذا الشهر",
+      "totalRequested": "إجمالي القيمة المطلوبة"
+    },
+    "columns": {
+      "code": "المرجع",
+      "merchant": "التاجر",
+      "amount": "المبلغ",
+      "method": "وسيلة الدفع",
+      "comment": "ملاحظة",
+      "status": "الحالة",
+      "submitted": "تاريخ التقديم",
+      "actions": "إجراءات"
+    },
+    "filters": {
+      "search": "ابحث بالمرجع أو التاجر…",
+      "all": "الكل",
+      "pending": "قيد الانتظار",
+      "approved": "موافق عليها",
+      "paid": "مدفوعة",
+      "rejected": "مرفوضة"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض",
+      "paid": "تم الصرف"
+    },
+    "actions": {
+      "approve": "موافقة",
+      "reject": "رفض",
+      "markPaid": "تعليم كمدفوع"
+    },
+    "approved": "موافق عليه",
+    "rejected": "مرفوض",
+    "rejectModal": {
+      "title": "رفض طلب الصرف",
+      "reason": "السبب",
+      "reasonPlaceholder": "لماذا يتم رفض هذا الطلب؟ سيظهر للتاجر.",
+      "submit": "رفض"
+    },
+    "payModal": {
+      "title": "تعليم كمدفوع",
+      "method": "وسيلة الدفع",
+      "reference": "رقم المرجع",
+      "submit": "تأكيد الصرف",
+      "paid": "تم الصرف ✓"
+    },
+    "empty": "لا توجد طلبات صرف."
   },
   "feedback": {
     "buttonLabel": "ملاحظات",
