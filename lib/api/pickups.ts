@@ -1,9 +1,10 @@
 import type {
   OrderStatus,
+  OrderType,
   PickupReviewStatus,
   VehicleType,
 } from '@/lib/types/enums';
-import type { Pickup } from '@/lib/types/pickup';
+import type { Pickup, PickupReasonCode } from '@/lib/types/pickup';
 import type { Paginated } from '@/lib/types/shared';
 import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
 import { latency, nextSequence, nowIso, store } from './_store';
@@ -19,6 +20,8 @@ export interface PickupFilters {
   collection?: 'collected' | 'not_collected';
   client_id?: string;
   driver_id?: string;
+  /** Filter by one or more order types (forward, exchange, refund, …). */
+  order_type?: OrderType[];
   /**
    * Filter by review state. Defaults to "exclude pending_review" so
    * unapproved merchant submissions don't show up in the main list.
@@ -34,7 +37,7 @@ export interface PickupFilters {
 export type PickupCreateInput = Omit<
   Pickup,
   'id' | 'code' | 'created_at' | 'updated_at' | 'status_history' | 'status'
-> & { status?: OrderStatus };
+> & { status?: OrderStatus; order_type?: OrderType };
 
 export interface PickupRepository {
   list(filters?: PickupFilters): Promise<Paginated<Pickup>>;
@@ -48,6 +51,19 @@ export interface PickupRepository {
     user_id?: string,
   ): Promise<Pickup>;
   cancel(id: string, reason: string, user_id?: string): Promise<Pickup>;
+  /**
+   * Change the pickup's status with a structured reason code. Pushes an
+   * entry onto status_history. Used from the PickupDetail status modal.
+   */
+  changeStatus(
+    id: string,
+    next: OrderStatus,
+    input: {
+      reason_code?: PickupReasonCode;
+      note?: string;
+      user_id?: string;
+    },
+  ): Promise<Pickup>;
   /** Approve a merchant-submitted pickup so it becomes dispatchable. */
   approveReview(id: string, reviewed_by: string): Promise<Pickup>;
   /** Reject a merchant-submitted pickup. */
@@ -72,6 +88,10 @@ function matchesFilters(pickup: Pickup, f: PickupFilters): boolean {
   }
   if (f.status && f.status.length > 0 && !f.status.includes(pickup.status))
     return false;
+  if (f.order_type && f.order_type.length > 0) {
+    const effective = pickup.order_type ?? 'forward';
+    if (!f.order_type.includes(effective)) return false;
+  }
   if (f.branch_id && pickup.branch_id !== f.branch_id) return false;
   if (f.client_id && pickup.client_id !== f.client_id) return false;
   if (f.driver_id && pickup.driver_id !== f.driver_id) return false;
@@ -185,6 +205,27 @@ const mock: PickupRepository = {
     return latency(pickup);
   },
 
+  async changeStatus(id, next, input) {
+    const pickup = store.pickups.find((p) => p.id === id);
+    if (!pickup) throw new Error(`Pickup not found: ${id}`);
+    if (pickup.status === next) {
+      throw new Error(
+        `Pickup ${pickup.code} is already in status "${next}".`,
+      );
+    }
+    pickup.status = next;
+    pickup.updated_at = nowIso();
+    if (next === 'delivered') pickup.delivered_at = nowIso();
+    pickup.status_history.push({
+      status: next,
+      timestamp: nowIso(),
+      user_id: input.user_id,
+      reason_code: input.reason_code,
+      note: input.note,
+    });
+    return latency(pickup);
+  },
+
   async approveReview(id, reviewed_by) {
     const pickup = store.pickups.find((p) => p.id === id);
     if (!pickup) throw new Error(`Pickup not found: ${id}`);
@@ -244,6 +285,7 @@ const supabase: PickupRepository = {
   async update() { throw NOT_IMPLEMENTED; },
   async dispatch() { throw NOT_IMPLEMENTED; },
   async cancel() { throw NOT_IMPLEMENTED; },
+  async changeStatus() { throw NOT_IMPLEMENTED; },
   async approveReview() { throw NOT_IMPLEMENTED; },
   async rejectReview() { throw NOT_IMPLEMENTED; },
   async softDelete() { throw NOT_IMPLEMENTED; },

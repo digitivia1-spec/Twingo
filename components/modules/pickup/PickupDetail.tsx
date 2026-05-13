@@ -1,15 +1,26 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Map as MapIcon, PackageOpen, User, Wallet } from 'lucide-react';
+import {
+  ArrowLeft,
+  CircleDot,
+  Map as MapIcon,
+  PackageOpen,
+  User,
+  Wallet,
+} from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageHeader } from '@/components/shared/PageHeader';
+import { OrderTypeBadge } from '@/components/shared/OrderTypeBadge';
+import { ReasonCodeBadge } from '@/components/shared/ReasonCodeBadge';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { VehicleIcon } from '@/components/shared/VehicleIcon';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
+import { StatusChangeModal } from './StatusChangeModal';
 import { pickups } from '@/lib/api/pickups';
 import { clients } from '@/lib/api/clients';
 import { users } from '@/lib/api/users';
@@ -25,6 +36,7 @@ import { Button } from '@/components/ui/button';
 export function PickupDetail({ id }: { id: string }) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
+  const [changingStatus, setChangingStatus] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ['pickup', id],
@@ -66,12 +78,25 @@ export function PickupDetail({ id }: { id: string }) {
         title={pk.code}
         subtitle={cl ? pickLocale(cl.name, locale) : ''}
         actions={
-          <Link href="../pickup">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" />
-              {t('common.back')}
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <OrderTypeBadge type={pk.order_type} />
+            <FeedbackPin elementId="pickup.detail.changeStatus">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setChangingStatus(true)}
+              >
+                <CircleDot className="h-3.5 w-3.5" />
+                {t('statusChange.trigger')}
+              </Button>
+            </FeedbackPin>
+            <Link href="../pickup">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" />
+                {t('common.back')}
+              </Button>
+            </Link>
+          </div>
         }
       />
 
@@ -200,8 +225,11 @@ export function PickupDetail({ id }: { id: string }) {
               {pk.status_history.map((evt, i) => (
                 <li key={i} className="relative">
                   <span className="absolute start-[-22px] top-1 flex h-3 w-3 -translate-x-1/2 rounded-full bg-primary-700 ring-4 ring-surface" />
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
                     <StatusBadge kind="order" status={evt.status} />
+                    {evt.reason_code && (
+                      <ReasonCodeBadge code={evt.reason_code} />
+                    )}
                     <span className="text-[11px] text-fg-muted">
                       {formatDateTime(evt.timestamp, locale)}
                     </span>
@@ -229,6 +257,12 @@ export function PickupDetail({ id }: { id: string }) {
           </div>
         </CardContent>
       </Card>
+
+      <StatusChangeModal
+        pickup={pk}
+        open={changingStatus}
+        onClose={() => setChangingStatus(false)}
+      />
     </>
   );
 }

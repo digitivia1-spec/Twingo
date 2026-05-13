@@ -21,11 +21,13 @@ import { GOVERNORATES } from '@/lib/constants/governorates';
 import { EGYPTIAN_MOBILE_REGEX, toE164 } from '@/lib/format/phone';
 import { parseEgpToPiasters } from '@/lib/format/currency';
 import { pickLocale } from '@/lib/utils';
+import { ORDER_TYPES, type OrderType } from '@/lib/types/enums';
 import type { Locale } from '@/lib/i18n/config';
 
 const schema = z.object({
   client_id: z.string().min(1),
   branch_id: z.string().min(1, { message: 'branch_required' }),
+  order_type: z.enum(ORDER_TYPES).default('forward'),
   recipient_name: z.string().min(2),
   recipient_phone: z
     .string()
@@ -68,6 +70,7 @@ export function PickupCreate() {
     defaultValues: {
       client_id: '',
       branch_id: '',
+      order_type: 'forward',
       recipient_name: '',
       recipient_phone: '',
       governorate_id: 'gov_c',
@@ -95,6 +98,8 @@ export function PickupCreate() {
       pickups.create({
         client_id: v.client_id,
         branch_id: v.branch_id,
+        order_type: v.order_type as OrderType,
+        submission_source: 'admin_create',
         recipient: {
           name: { ar: v.recipient_name, en: v.recipient_name },
           phone_primary: toE164(v.recipient_phone),
@@ -172,6 +177,18 @@ export function PickupCreate() {
                   {(branchesList ?? []).map((b) => (
                     <option key={b.id} value={b.id}>
                       {pickLocale(b.name, locale)}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            </FeedbackPin>
+
+            <FeedbackPin elementId="pickup.create.field.orderType" className="md:col-span-2">
+              <Field label={t('pickup.create.orderType')} required>
+                <Select {...register('order_type')}>
+                  {ORDER_TYPES.map((ot) => (
+                    <option key={ot} value={ot}>
+                      {t(`orderTypes.${ot}` as const)}
                     </option>
                   ))}
                 </Select>

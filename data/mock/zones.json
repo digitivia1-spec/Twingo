@@ -1,0 +1,57 @@
+[
+  {
+    "id": "zone_cairo_east",
+    "code": "CAE",
+    "name": { "ar": "القاهرة الشرقية", "en": "Cairo East" },
+    "governorate_ids": ["gov_c", "gov_qly"],
+    "branch_ids": ["br_cairo_hq", "br_tagamoa"],
+    "color": "#3b82f6",
+    "is_active": true,
+    "created_at": "2025-11-01T08:00:00Z",
+    "updated_at": "2026-04-15T08:00:00Z"
+  },
+  {
+    "id": "zone_cairo_west",
+    "code": "CAW",
+    "name": { "ar": "القاهرة الغربية", "en": "Cairo West" },
+    "governorate_ids": ["gov_gz", "gov_fym"],
+    "branch_ids": ["br_october"],
+    "color": "#22c55e",
+    "is_active": true,
+    "created_at": "2025-11-01T08:00:00Z",
+    "updated_at": "2026-04-15T08:00:00Z"
+  },
+  {
+    "id": "zone_delta",
+    "code": "DLT",
+    "name": { "ar": "الدلتا", "en": "Delta" },
+    "governorate_ids": ["gov_dk", "gov_ghr", "gov_mnf", "gov_kfs", "gov_dmt"],
+    "branch_ids": ["br_cairo_hq"],
+    "color": "#f59e0b",
+    "is_active": true,
+    "created_at": "2025-12-01T08:00:00Z",
+    "updated_at": "2026-04-20T08:00:00Z"
+  },
+  {
+    "id": "zone_alex_coast",
+    "code": "ALC",
+    "name": { "ar": "الإسكندرية والساحل", "en": "Alex & North Coast" },
+    "governorate_ids": ["gov_alx", "gov_bh", "gov_mtr"],
+    "branch_ids": ["br_alex"],
+    "color": "#06b6d4",
+    "is_active": true,
+    "created_at": "2026-02-01T08:00:00Z",
+    "updated_at": "2026-04-22T08:00:00Z"
+  },
+  {
+    "id": "zone_canal",
+    "code": "CNL",
+    "name": { "ar": "القنال", "en": "Canal" },
+    "governorate_ids": ["gov_psd", "gov_ism", "gov_sz"],
+    "branch_ids": [],
+    "color": "#8b5cf6",
+    "is_active": false,
+    "created_at": "2026-03-01T08:00:00Z",
+    "updated_at": "2026-04-25T08:00:00Z"
+  }
+]

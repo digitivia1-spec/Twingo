@@ -17,8 +17,15 @@
     "branches": "Branches",
     "stock": "Stock / Warehouse",
     "prices": "Price List",
+    "rates": "Merchant Rates",
+    "awbCodes": "AWB Pool",
     "returns": "Returns",
     "provinces": "Governorates",
+    "cities": "Cities",
+    "districts": "Districts",
+    "zones": "Zones",
+    "reports": "Reports",
+    "statusTaxonomy": "Status Taxonomy",
     "track": "Track Shipment"
   },
   "topbar": {
@@ -134,6 +141,7 @@
     "columns": {
       "code": "ID",
       "client": "Client",
+      "type": "Type",
       "recipient": "Recipient",
       "phone": "Phone",
       "address": "Address",
@@ -149,6 +157,8 @@
     },
     "filters": {
       "status": "Status",
+      "type": "Type",
+      "allTypes": "All types",
       "date": "Date",
       "lastActivity": "Last activity",
       "search": "Search code or phone…",
@@ -175,6 +185,7 @@
       "client": "Client",
       "branch": "Branch",
       "branchRequired": "Branch is required — cannot save without it",
+      "orderType": "Order type",
       "recipientName": "Recipient name",
       "recipientPhone": "Phone",
       "phoneHint": "Starts with 010 / 011 / 012 / 015",
@@ -207,6 +218,40 @@
     "errors": {
       "invalidPhone": "Invalid Egyptian mobile number",
       "cannotDispatch": "Pickup is not in a dispatchable state"
+    },
+    "import": {
+      "title": "Bulk pickup import",
+      "subtitle": "Upload a CSV — validation runs locally before any rows hit the API.",
+      "uploadTitle": "CSV file",
+      "uploadHint": "First row must be the header. Required columns: client_id, branch_id, recipient_name, recipient_phone, governorate_id, city, district, street, weight_kg, pieces_count, description.",
+      "upload": "Upload CSV",
+      "downloadSample": "Download sample",
+      "parsedAllValid": "Parsed {count} rows — all valid ✓",
+      "parsedWithErrors": "Parsed {valid}/{total} valid rows",
+      "imported": "Imported {count} pickups ✓",
+      "importedPartial": "Imported {ok}, failed {failed}",
+      "submit": "Import {count} pickups",
+      "summary": {
+        "parsed": "Rows parsed",
+        "valid": "Valid",
+        "errors": "With errors"
+      },
+      "previewTitle": "Preview",
+      "preview": {
+        "status": "Status",
+        "merchant": "Merchant ID",
+        "recipient": "Recipient",
+        "phone": "Phone",
+        "governorate": "Gov ID",
+        "errors": "Errors",
+        "ok": "OK",
+        "fail": "Failed",
+        "truncated": "Showing first {shown} of {total} rows."
+      },
+      "errors": {
+        "emptyFile": "The file is empty or unreadable.",
+        "missingColumns": "Missing required columns"
+      }
     }
   },
   "finance": {
@@ -572,6 +617,35 @@
     "item_with_driver": "Item with driver",
     "partial_returned": "Partial returned"
   },
+  "reasonCodes": {
+    "label": "Reason",
+    "all": "All reasons",
+    "not_home": "Recipient not home",
+    "wrong_number": "Wrong phone number",
+    "address_wrong": "Incorrect address",
+    "customer_refused": "Customer refused",
+    "package_damaged": "Package damaged",
+    "holiday": "Public holiday",
+    "weather": "Weather conditions",
+    "out_of_zone": "Out of coverage zone",
+    "customer_rescheduled": "Customer rescheduled",
+    "merchant_cancelled": "Merchant cancelled",
+    "phone_off": "Phone off / unreachable",
+    "other": "Other"
+  },
+  "statusChange": {
+    "trigger": "Change status",
+    "title": "Change pickup status",
+    "newStatus": "New status",
+    "reason": "Reason",
+    "reasonPlaceholder": "Pick a reason…",
+    "note": "Note (optional)",
+    "notePlaceholder": "Anything else for the record?",
+    "submit": "Save",
+    "saved": "Status updated ✓",
+    "sameStatus": "New status must differ from the current one.",
+    "reasonRequired": "Reason is required for this status."
+  },
   "pendingClients": {
     "title": "Pending Merchants",
     "subtitle": "Merchant onboarding queue",
@@ -661,6 +735,398 @@
       "paid": "Marked paid ✓"
     },
     "empty": "No cash requests yet."
+  },
+  "cities": {
+    "title": "Cities",
+    "subtitle": "Named cities inside each governorate",
+    "kpi": { "total": "Total cities", "active": "Active", "governorates": "Governorates covered" },
+    "columns": {
+      "name": "City",
+      "code": "Code",
+      "governorate": "Governorate",
+      "districts": "Districts",
+      "status": "Status"
+    },
+    "filters": { "search": "Search by city or code…", "allGovernorates": "All governorates" },
+    "status": { "active": "Active", "inactive": "Inactive" }
+  },
+  "districts": {
+    "title": "Districts",
+    "subtitle": "Neighbourhoods inside each city",
+    "kpi": { "total": "Total districts", "active": "Active", "cities": "Cities covered" },
+    "columns": {
+      "name": "District",
+      "code": "Code",
+      "city": "City",
+      "governorate": "Governorate",
+      "status": "Status"
+    },
+    "filters": { "search": "Search by district or code…", "allCities": "All cities" },
+    "status": { "active": "Active", "inactive": "Inactive" }
+  },
+  "zones": {
+    "title": "Delivery Zones",
+    "subtitle": "Coverage areas tied to operating branches",
+    "kpi": { "total": "Total zones", "active": "Active", "branches": "Branches engaged" },
+    "columns": {
+      "name": "Zone",
+      "code": "Code",
+      "governorates": "Governorates",
+      "branches": "Branches",
+      "status": "Status"
+    },
+    "filters": { "search": "Search by zone or code…", "all": "All", "active": "Active", "inactive": "Inactive" },
+    "status": { "active": "Active", "inactive": "Inactive" }
+  },
+  "rates": {
+    "title": "Merchant Rates",
+    "subtitle": "Per-merchant price overrides on a from → to lane",
+    "kpi": {
+      "total": "Total overrides",
+      "active": "Active",
+      "merchants": "Merchants covered",
+      "averagePrice": "Average override"
+    },
+    "columns": {
+      "merchant": "Merchant",
+      "from": "From",
+      "to": "To",
+      "tier": "Weight tier",
+      "basePrice": "Base price",
+      "codPct": "COD %",
+      "fragile": "Fragile +",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by merchant or notes…",
+      "allMerchants": "All merchants",
+      "allFrom": "Any origin",
+      "allTo": "Any destination"
+    },
+    "actions": { "activate": "Activate", "deactivate": "Deactivate" },
+    "status": { "active": "Active", "inactive": "Inactive" },
+    "tier": "{min}–{max} kg",
+    "noNotes": "—"
+  },
+  "awbCodes": {
+    "title": "AWB Pool",
+    "subtitle": "Pre-allocated waybill codes, branch-prefixed",
+    "kpi": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "usedToday": "Used today",
+      "voided": "Voided"
+    },
+    "columns": {
+      "code": "AWB",
+      "branch": "Branch",
+      "status": "Status",
+      "batch": "Batch",
+      "linkedPickup": "Linked pickup",
+      "generated": "Generated",
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by AWB…",
+      "allBranches": "All branches",
+      "all": "All",
+      "available": "Available",
+      "reserved": "Reserved",
+      "used": "Used",
+      "voided": "Voided"
+    },
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "used": "Used",
+      "voided": "Voided"
+    },
+    "actions": {
+      "generate": "Generate batch",
+      "void": "Void"
+    },
+    "generate": {
+      "title": "Generate AWB batch",
+      "branch": "Branch",
+      "count": "Count",
+      "countHint": "Between 1 and 5000. Codes will be branch-prefixed and sequential.",
+      "preview": "Will mint: {from} → {to}",
+      "submit": "Generate",
+      "done": "Batch generated ✓"
+    },
+    "voidModal": {
+      "title": "Void AWB",
+      "reason": "Reason",
+      "reasonPlaceholder": "Why is this code being voided?",
+      "submit": "Void code",
+      "done": "Voided ✓"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Operational dashboards across orders, drivers, and money",
+    "common": { "from": "From", "to": "To" },
+    "orders": {
+      "title": "Orders Report",
+      "subtitle": "Breakdown by status, type, and branch",
+      "kpi": {
+        "total": "Total orders",
+        "delivered": "Delivered",
+        "successRate": "success",
+        "totalCod": "Total COD value",
+        "collectedCod": "Collected COD"
+      },
+      "byStatus": "By status",
+      "byType": "By order type",
+      "byBranch": "By branch"
+    },
+    "drivers": {
+      "title": "Driver Performance",
+      "subtitle": "Per-driver deliveries, success rate, and variance",
+      "kpi": {
+        "drivers": "Active drivers",
+        "totalDeliveries": "Total deliveries",
+        "expectedCash": "Expected cash",
+        "totalVariance": "Total variance"
+      },
+      "columns": {
+        "driver": "Driver",
+        "branch": "Branch",
+        "shifts": "Shifts",
+        "assigned": "Assigned",
+        "delivered": "Delivered",
+        "successRate": "Success rate",
+        "returned": "Returned",
+        "expectedCash": "Expected cash",
+        "variance": "Variance"
+      }
+    },
+    "income": {
+      "title": "Income Report",
+      "subtitle": "Shipping-fee revenue by merchant",
+      "kpi": {
+        "revenue": "Shipping revenue",
+        "orders": "Delivered orders",
+        "codHandled": "COD handled"
+      },
+      "columns": {
+        "merchant": "Merchant",
+        "orders": "Orders",
+        "revenue": "Shipping revenue",
+        "avgPerOrder": "Avg / order",
+        "codHandled": "COD handled"
+      }
+    },
+    "money": {
+      "title": "Money Transaction",
+      "subtitle": "COD collected vs. paid vs. disputed",
+      "kpi": {
+        "collected": "COD collected",
+        "paidOut": "Paid out",
+        "pending": "Pending",
+        "disputed": "Disputed"
+      },
+      "columns": {
+        "code": "Ref",
+        "merchant": "Merchant",
+        "period": "Accrual period",
+        "orders": "Orders",
+        "gross": "Gross COD",
+        "fees": "Fees deducted",
+        "net": "Net due",
+        "status": "Status"
+      }
+    },
+    "history": {
+      "title": "Orders History",
+      "subtitle": "Archive of completed pickups (delivered / returned / cancelled / refused)",
+      "filters": { "search": "Search by AWB, merchant, recipient…" },
+      "columns": {
+        "code": "AWB",
+        "merchant": "Merchant",
+        "type": "Type",
+        "recipient": "Recipient",
+        "phone": "Phone",
+        "cod": "COD",
+        "status": "Status",
+        "closed": "Closed at"
+      }
+    }
+  },
+  "settings": {
+    "statuses": {
+      "title": "Status Taxonomy",
+      "subtitle": "Canonical statuses, reason codes, and the legacy mapping",
+      "canonical": "Canonical statuses",
+      "canonicalNote": "These 8 statuses cover the full pickup lifecycle. Branch context lives on its own field; reason codes carry the disambiguating signal.",
+      "reasons": "Reason codes",
+      "reasonsNote": "Structured reasons attached to status events. Required for terminal statuses (returned, cancelled, refused).",
+      "legacyMap": "Migration map — tuyingo.com (legacy) → Twingo (canonical)",
+      "legacyMapNote": "Used when migrating historical orders. Each legacy label maps to a canonical status plus, where useful, a reason code.",
+      "legacyMapFooter": "Source: walkthrough of tuyingo.com/dashboard/order_status — 47 legacy statuses condensed into 8 + reason codes.",
+      "legacyHeader": "Legacy label",
+      "canonicalHeader": "Canonical status",
+      "reasonHeader": "Reason code"
+    }
+  },
+  "feedback": {
+    "buttonLabel": "Feedback",
+    "formTitle": "Share your feedback",
+    "submit": "Send",
+    "messageLabel": "Your comment",
+    "messagePlaceholder": "Write your comment here…",
+    "nameLabel": "Name (optional)",
+    "emailLabel": "Email (optional)",
+    "success": "Thanks — your feedback was recorded ✓",
+    "devRibbon": "Feedback mode ON",
+    "pinTooltip": "Leave a comment on this element"
+  }
+}
+      "actions": "Actions"
+    },
+    "filters": {
+      "search": "Search by AWB…",
+      "allBranches": "All branches",
+      "all": "All",
+      "available": "Available",
+      "reserved": "Reserved",
+      "used": "Used",
+      "voided": "Voided"
+    },
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "used": "Used",
+      "voided": "Voided"
+    },
+    "actions": {
+      "generate": "Generate batch",
+      "void": "Void"
+    },
+    "generate": {
+      "title": "Generate AWB batch",
+      "branch": "Branch",
+      "count": "Count",
+      "countHint": "Between 1 and 5000. Codes will be branch-prefixed and sequential.",
+      "preview": "Will mint: {from} → {to}",
+      "submit": "Generate",
+      "done": "Batch generated ✓"
+    },
+    "voidModal": {
+      "title": "Void AWB",
+      "reason": "Reason",
+      "reasonPlaceholder": "Why is this code being voided?",
+      "submit": "Void code",
+      "done": "Voided ✓"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Operational dashboards across orders, drivers, and money",
+    "common": { "from": "From", "to": "To" },
+    "orders": {
+      "title": "Orders Report",
+      "subtitle": "Breakdown by status, type, and branch",
+      "kpi": {
+        "total": "Total orders",
+        "delivered": "Delivered",
+        "successRate": "success",
+        "totalCod": "Total COD value",
+        "collectedCod": "Collected COD"
+      },
+      "byStatus": "By status",
+      "byType": "By order type",
+      "byBranch": "By branch"
+    },
+    "drivers": {
+      "title": "Driver Performance",
+      "subtitle": "Per-driver deliveries, success rate, and variance",
+      "kpi": {
+        "drivers": "Active drivers",
+        "totalDeliveries": "Total deliveries",
+        "expectedCash": "Expected cash",
+        "totalVariance": "Total variance"
+      },
+      "columns": {
+        "driver": "Driver",
+        "branch": "Branch",
+        "shifts": "Shifts",
+        "assigned": "Assigned",
+        "delivered": "Delivered",
+        "successRate": "Success rate",
+        "returned": "Returned",
+        "expectedCash": "Expected cash",
+        "variance": "Variance"
+      }
+    },
+    "income": {
+      "title": "Income Report",
+      "subtitle": "Shipping-fee revenue by merchant",
+      "kpi": {
+        "revenue": "Shipping revenue",
+        "orders": "Delivered orders",
+        "codHandled": "COD handled"
+      },
+      "columns": {
+        "merchant": "Merchant",
+        "orders": "Orders",
+        "revenue": "Shipping revenue",
+        "avgPerOrder": "Avg / order",
+        "codHandled": "COD handled"
+      }
+    },
+    "money": {
+      "title": "Money Transaction",
+      "subtitle": "COD collected vs. paid vs. disputed",
+      "kpi": {
+        "collected": "COD collected",
+        "paidOut": "Paid out",
+        "pending": "Pending",
+        "disputed": "Disputed"
+      },
+      "columns": {
+        "code": "Ref",
+        "merchant": "Merchant",
+        "period": "Accrual period",
+        "orders": "Orders",
+        "gross": "Gross COD",
+        "fees": "Fees deducted",
+        "net": "Net due",
+        "status": "Status"
+      }
+    },
+    "history": {
+      "title": "Orders History",
+      "subtitle": "Archive of completed pickups (delivered / returned / cancelled / refused)",
+      "filters": { "search": "Search by AWB, merchant, recipient…" },
+      "columns": {
+        "code": "AWB",
+        "merchant": "Merchant",
+        "type": "Type",
+        "recipient": "Recipient",
+        "phone": "Phone",
+        "cod": "COD",
+        "status": "Status",
+        "closed": "Closed at"
+      }
+    }
+  },
+  "settings": {
+    "statuses": {
+      "title": "Status Taxonomy",
+      "subtitle": "Canonical statuses, reason codes, and the legacy mapping",
+      "canonical": "Canonical statuses",
+      "canonicalNote": "These 8 statuses cover the full pickup lifecycle. Branch context lives on its own field; reason codes carry the disambiguating signal.",
+      "reasons": "Reason codes",
+      "reasonsNote": "Structured reasons attached to status events. Required for terminal statuses (returned, cancelled, refused).",
+      "legacyMap": "Migration map — tuyingo.com (legacy) → Twingo (canonical)",
+      "legacyMapNote": "Used when migrating historical orders. Each legacy label maps to a canonical status plus, where useful, a reason code.",
+      "legacyMapFooter": "Source: walkthrough of tuyingo.com/dashboard/order_status — 47 legacy statuses condensed into 8 + reason codes.",
+      "legacyHeader": "Legacy label",
+      "canonicalHeader": "Canonical status",
+      "reasonHeader": "Reason code"
+    }
   },
   "feedback": {
     "buttonLabel": "Feedback",

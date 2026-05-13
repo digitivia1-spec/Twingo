@@ -8,8 +8,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { DataTable, type DataTableColumn } from '@/components/shared/DataTable';
-import { FilterBar } from '@/components/shared/FilterBar';
+import { FilterBar, FilterPill } from '@/components/shared/FilterBar';
 import { BranchPills } from '@/components/shared/BranchPills';
+import { OrderTypeBadge } from '@/components/shared/OrderTypeBadge';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { VehicleIcon } from '@/components/shared/VehicleIcon';
@@ -19,7 +20,13 @@ import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { DispatchModal } from './DispatchModal';
 import { pickups } from '@/lib/api/pickups';
 import { clients } from '@/lib/api/clients';
-import { ORDER_STATUSES, type OrderStatus, type VehicleType } from '@/lib/types/enums';
+import {
+  ORDER_STATUSES,
+  ORDER_TYPES,
+  type OrderStatus,
+  type OrderType,
+  type VehicleType,
+} from '@/lib/types/enums';
 import type { Pickup } from '@/lib/types/pickup';
 import type { Client } from '@/lib/types/client';
 import type { Locale } from '@/lib/i18n/config';
@@ -38,6 +45,7 @@ export function PickupList() {
   const searchParams = useSearchParams();
   const branchId = searchParams.get('branch') ?? undefined;
   const statusParam = searchParams.get('status');
+  const typeParam = searchParams.get('type');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [dispatchFor, setDispatchFor] = useState<Pickup | null>(null);
@@ -47,12 +55,18 @@ export function PickupList() {
       ? [statusParam as OrderStatus]
       : undefined;
 
+  const typeFilter: OrderType[] | undefined =
+    typeParam && ORDER_TYPES.includes(typeParam as OrderType)
+      ? [typeParam as OrderType]
+      : undefined;
+
   const { data, isLoading } = useQuery({
-    queryKey: ['pickups', { branchId, search, statusFilter, page }],
+    queryKey: ['pickups', { branchId, search, statusFilter, typeFilter, page }],
     queryFn: () =>
       pickups.list({
         branch_id: branchId,
         status: statusFilter,
+        order_type: typeFilter,
         search,
         page,
         page_size: 25,
@@ -96,6 +110,16 @@ export function PickupList() {
     router.push(qs ? `${pathname}?${qs}` : pathname);
   }
 
+  /** Toggle a single-type filter via the URL — clears when re-clicking the active type. */
+  function toggleType(next?: OrderType) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (!next || next === typeFilter?.[0]) params.delete('type');
+    else params.set('type', next);
+    setPage(1);
+    const qs = params.toString();
+    router.push(qs ? `${pathname}?${qs}` : pathname);
+  }
+
   const columns: DataTableColumn<Pickup>[] = [
     {
       id: 'code',
@@ -117,6 +141,12 @@ export function PickupList() {
         const c = clientMap.get(row.client_id);
         return c ? pickLocale(c.name, locale) : '—';
       },
+    },
+    {
+      id: 'type',
+      header: t('pickup.columns.type'),
+      cell: (row) => <OrderTypeBadge type={row.order_type} />,
+      width: '110px',
     },
     {
       id: 'phone',
@@ -228,6 +258,29 @@ export function PickupList() {
       />
 
       <BranchPills elementId="pickup.branchPills" />
+
+      {/* Order-type filter pills — URL-driven so bookmarks survive. */}
+      <FeedbackPin elementId="pickup.typePills">
+        <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
+          <FilterPill
+            elementId="pickup.typePills.all"
+            active={!typeFilter}
+            onClick={() => toggleType(undefined)}
+          >
+            {t('pickup.filters.allTypes')}
+          </FilterPill>
+          {ORDER_TYPES.map((ot) => (
+            <FilterPill
+              key={ot}
+              elementId={`pickup.typePills.${ot}`}
+              active={typeFilter?.[0] === ot}
+              onClick={() => toggleType(ot)}
+            >
+              {t(`orderTypes.${ot}` as const)}
+            </FilterPill>
+          ))}
+        </div>
+      </FeedbackPin>
 
       <FilterBar
         elementId="pickup.filters"

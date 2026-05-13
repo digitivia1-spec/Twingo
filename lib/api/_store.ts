@@ -16,12 +16,21 @@ import pricesSeed from '@/data/mock/prices.json';
 import returnsSeed from '@/data/mock/returns.json';
 import governoratesSeed from '@/data/mock/governorates.json';
 import cashRequestsSeed from '@/data/mock/cash-requests.json';
+import citiesSeed from '@/data/mock/cities.json';
+import districtsSeed from '@/data/mock/districts.json';
+import zonesSeed from '@/data/mock/zones.json';
+import clientRatesSeed from '@/data/mock/client-rates.json';
+import awbCodesSeed from '@/data/mock/awb-codes.json';
 
 import type {
+  AwbCode,
   Branch,
   CashRequest,
+  City,
   Client,
+  ClientShippingRate,
   CodDue,
+  District,
   DriverShift,
   Governorate,
   Pickup,
@@ -30,6 +39,7 @@ import type {
   StockItem,
   StockMovement,
   User,
+  Zone,
 } from '@/lib/types';
 
 /** Module-level, mutable. Keep this process-local. */
@@ -46,6 +56,11 @@ export const store = {
   returns: structuredClone(returnsSeed) as ReturnManifest[],
   governorates: structuredClone(governoratesSeed) as Governorate[],
   cashRequests: structuredClone(cashRequestsSeed) as CashRequest[],
+  cities: structuredClone(citiesSeed) as City[],
+  districts: structuredClone(districtsSeed) as District[],
+  zones: structuredClone(zonesSeed) as Zone[],
+  clientRates: structuredClone(clientRatesSeed) as ClientShippingRate[],
+  awbCodes: structuredClone(awbCodesSeed) as AwbCode[],
 };
 
 /* ---------- Seed extras for the ops queues ----------

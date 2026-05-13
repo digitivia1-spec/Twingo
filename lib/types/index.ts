@@ -11,3 +11,8 @@ export * from './stock';
 export * from './price';
 export * from './return';
 export * from './cash-request';
+export * from './city';
+export * from './district';
+export * from './zone';
+export * from './client-rate';
+export * from './awb';

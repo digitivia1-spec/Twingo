@@ -1,0 +1,19 @@
+[
+  { "id": "dist_zamalek", "code": "ZMK", "name": { "ar": "الزمالك", "en": "Zamalek" }, "city_id": "city_cairo", "is_active": true },
+  { "id": "dist_downtown", "code": "DTC", "name": { "ar": "وسط البلد", "en": "Downtown" }, "city_id": "city_cairo", "is_active": true },
+  { "id": "dist_garden_city", "code": "GDC", "name": { "ar": "جاردن سيتي", "en": "Garden City" }, "city_id": "city_cairo", "is_active": true },
+  { "id": "dist_tagamoa_1", "code": "TG1", "name": { "ar": "التجمع الأول", "en": "First Settlement" }, "city_id": "city_new_cairo", "is_active": true },
+  { "id": "dist_tagamoa_5", "code": "TG5", "name": { "ar": "التجمع الخامس", "en": "Fifth Settlement" }, "city_id": "city_new_cairo", "is_active": true },
+  { "id": "dist_rehab", "code": "REH", "name": { "ar": "الرحاب", "en": "Rehab City" }, "city_id": "city_new_cairo", "is_active": true },
+  { "id": "dist_maadi_old", "code": "MAO", "name": { "ar": "المعادي القديمة", "en": "Old Maadi" }, "city_id": "city_maadi", "is_active": true },
+  { "id": "dist_maadi_new", "code": "MAN", "name": { "ar": "المعادي الجديدة", "en": "New Maadi" }, "city_id": "city_maadi", "is_active": true },
+  { "id": "dist_nasr_1", "code": "NS1", "name": { "ar": "الحي الأول", "en": "First District" }, "city_id": "city_nasr", "is_active": true },
+  { "id": "dist_nasr_7", "code": "NS7", "name": { "ar": "الحي السابع", "en": "Seventh District" }, "city_id": "city_nasr", "is_active": true },
+  { "id": "dist_nasr_10", "code": "N10", "name": { "ar": "الحي العاشر", "en": "Tenth District" }, "city_id": "city_nasr", "is_active": true },
+  { "id": "dist_october_7", "code": "OC7", "name": { "ar": "الحي السابع أكتوبر", "en": "7th District (October)" }, "city_id": "city_october", "is_active": true },
+  { "id": "dist_october_12", "code": "O12", "name": { "ar": "الحي 12 أكتوبر", "en": "12th District (October)" }, "city_id": "city_october", "is_active": true },
+  { "id": "dist_dreamland", "code": "DRM", "name": { "ar": "دريم لاند", "en": "Dreamland" }, "city_id": "city_october", "is_active": true },
+  { "id": "dist_sz_1", "code": "SZ1", "name": { "ar": "الحي الأول الشيخ زايد", "en": "Zayed 1st District" }, "city_id": "city_sheikh_zayed", "is_active": true },
+  { "id": "dist_smouha_1", "code": "SM1", "name": { "ar": "فيكتور عمانوئيل", "en": "Victor Emanuel" }, "city_id": "city_smouha", "is_active": true },
+  { "id": "dist_montaza_1", "code": "MT1", "name": { "ar": "المنتزه أول", "en": "Montaza 1" }, "city_id": "city_montaza", "is_active": true }
+]

@@ -147,3 +147,18 @@ export const CASH_REQUEST_STATUSES = [
   'paid',
 ] as const;
 export type CashRequestStatus = (typeof CASH_REQUEST_STATUSES)[number];
+
+/**
+ * AWB pool lifecycle:
+ *  available — newly generated, not yet bound to anything
+ *  reserved — held for a specific pickup-to-be (soft lock)
+ *  used     — bound to an active pickup
+ *  voided   — pulled from circulation (typo / printing error)
+ */
+export const AWB_STATUSES = [
+  'available',
+  'reserved',
+  'used',
+  'voided',
+] as const;
+export type AwbStatus = (typeof AWB_STATUSES)[number];

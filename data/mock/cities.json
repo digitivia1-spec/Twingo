@@ -1,0 +1,14 @@
+[
+  { "id": "city_cairo", "code": "CAI", "name": { "ar": "القاهرة", "en": "Cairo" }, "governorate_id": "gov_c", "is_active": true, "display_order": 1 },
+  { "id": "city_new_cairo", "code": "NCA", "name": { "ar": "القاهرة الجديدة", "en": "New Cairo" }, "governorate_id": "gov_c", "is_active": true, "display_order": 2 },
+  { "id": "city_heliopolis", "code": "HEL", "name": { "ar": "مصر الجديدة", "en": "Heliopolis" }, "governorate_id": "gov_c", "is_active": true, "display_order": 3 },
+  { "id": "city_maadi", "code": "MAA", "name": { "ar": "المعادي", "en": "Maadi" }, "governorate_id": "gov_c", "is_active": true, "display_order": 4 },
+  { "id": "city_nasr", "code": "NSR", "name": { "ar": "مدينة نصر", "en": "Nasr City" }, "governorate_id": "gov_c", "is_active": true, "display_order": 5 },
+  { "id": "city_giza_city", "code": "GZA", "name": { "ar": "الجيزة", "en": "Giza" }, "governorate_id": "gov_gz", "is_active": true, "display_order": 1 },
+  { "id": "city_october", "code": "OCT", "name": { "ar": "6 أكتوبر", "en": "6 October" }, "governorate_id": "gov_gz", "is_active": true, "display_order": 2 },
+  { "id": "city_sheikh_zayed", "code": "SHZ", "name": { "ar": "الشيخ زايد", "en": "Sheikh Zayed" }, "governorate_id": "gov_gz", "is_active": true, "display_order": 3 },
+  { "id": "city_dokki", "code": "DKI", "name": { "ar": "الدقي", "en": "Dokki" }, "governorate_id": "gov_gz", "is_active": true, "display_order": 4 },
+  { "id": "city_alex_city", "code": "ALX", "name": { "ar": "الإسكندرية", "en": "Alexandria" }, "governorate_id": "gov_alx", "is_active": true, "display_order": 1 },
+  { "id": "city_smouha", "code": "SMO", "name": { "ar": "سموحة", "en": "Smouha" }, "governorate_id": "gov_alx", "is_active": true, "display_order": 2 },
+  { "id": "city_montaza", "code": "MTZ", "name": { "ar": "المنتزه", "en": "Montaza" }, "governorate_id": "gov_alx", "is_active": true, "display_order": 3 }
+]
