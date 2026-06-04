@@ -19,7 +19,13 @@ module.exports = {
         // with "localhost:3000" as the canonical host when behind Nginx.
         HOSTNAME: '0.0.0.0',
         NEXT_PUBLIC_DEFAULT_LOCALE: 'ar',
-        NEXT_PUBLIC_DATA_SOURCE: 'mock',
+        // Phase 3: run against Supabase. Keeps server-runtime process.env
+        // consistent with the build-time inlined values. The service-role key
+        // is NOT set here — it's provided at runtime via .env.local (secret).
+        NEXT_PUBLIC_DATA_SOURCE: 'supabase',
+        NEXT_PUBLIC_SUPABASE_URL: 'https://opqjsrmbivifjuhcjctt.supabase.co',
+        NEXT_PUBLIC_SUPABASE_ANON_KEY:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wcWpzcm1iaXZpZmp1aGNqY3R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Nzk0ODgsImV4cCI6MjA5NjE1NTQ4OH0.DtbGSinutJz9X5hLC5TQz8erwVKNaH3M6TwfQvryeCA',
         NEXT_PUBLIC_ENABLE_FEEDBACK: 'true',
         // Fixes Next.js 15 "https://localhost:3000" self-fetch bug when
         // running behind an HTTPS-terminating reverse proxy (Nginx + Certbot).
