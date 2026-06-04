@@ -1,20 +1,31 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import { DataTable, type DataTableColumn } from '@/components/shared/DataTable';
 import { FilterBar } from '@/components/shared/FilterBar';
 import { KpiCard } from '@/components/shared/KpiCard';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select } from '@/components/ui/select';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { PayoutModal } from './PayoutModal';
 import { codDues } from '@/lib/api/cod-dues';
 import { clients } from '@/lib/api/clients';
 import type { CodDue } from '@/lib/types/cod-due';
 import type { Client } from '@/lib/types/client';
+import { PAYMENT_METHODS, type PaymentMethod } from '@/lib/types/enums';
 import { formatEgp } from '@/lib/format/currency';
 import { formatDate } from '@/lib/format/date';
 import { formatEgyptianMobile } from '@/lib/format/phone';
@@ -24,15 +35,39 @@ import { pickLocale } from '@/lib/utils';
 export function CodList() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
+  const qc = useQueryClient();
   const [search, setSearch] = useState('');
   const [payingFor, setPayingFor] = useState<{
     due: CodDue;
     client: Client | null;
   } | null>(null);
+  const [scheduling, setScheduling] = useState<CodDue | null>(null);
+  const [schedDate, setSchedDate] = useState('');
+  const [schedMethod, setSchedMethod] = useState<PaymentMethod>('bank_transfer');
 
   const { data: dues, isLoading } = useQuery({
     queryKey: ['cod-dues'],
     queryFn: () => codDues.list(),
+  });
+
+  useEffect(() => {
+    if (scheduling) {
+      setSchedDate(scheduling.scheduled_payout_date ?? '');
+      setSchedMethod(scheduling.payment_method ?? 'bank_transfer');
+    }
+  }, [scheduling]);
+
+  const scheduleMutation = useMutation({
+    mutationFn: () =>
+      scheduling
+        ? codDues.schedule(scheduling.id, schedDate, schedMethod)
+        : Promise.reject(new Error('No due selected')),
+    onSuccess: () => {
+      toast.success(t('cod.schedule.scheduled'));
+      qc.invalidateQueries({ queryKey: ['cod-dues'] });
+      setScheduling(null);
+    },
+    onError: (err: Error) => toast.error(err.message),
   });
   const { data: clientsList } = useQuery({
     queryKey: ['clients'],
@@ -138,22 +173,36 @@ export function CodList() {
     {
       id: 'action',
       header: t('cod.columns.action'),
+      width: '170px',
       cell: (d) =>
         d.status !== 'paid' ? (
-          <FeedbackPin elementId="cod.row.pay">
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={() =>
-                setPayingFor({
-                  due: d,
-                  client: clientMap.get(d.client_id) ?? null,
-                })
-              }
-            >
-              {t('cod.actions.pay')}
-            </Button>
-          </FeedbackPin>
+          <div className="flex items-center gap-1">
+            {d.status !== 'scheduled' && (
+              <FeedbackPin elementId="cod.row.schedule">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => setScheduling(d)}
+                >
+                  {t('cod.actions.schedule')}
+                </Button>
+              </FeedbackPin>
+            )}
+            <FeedbackPin elementId="cod.row.pay">
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() =>
+                  setPayingFor({
+                    due: d,
+                    client: clientMap.get(d.client_id) ?? null,
+                  })
+                }
+              >
+                {t('cod.actions.pay')}
+              </Button>
+            </FeedbackPin>
+          </div>
         ) : (
           <span className="text-[11px] text-success font-semibold">
             {t('cod.actions.paid')}
@@ -212,6 +261,59 @@ export function CodList() {
         client={payingFor?.client ?? null}
         onClose={() => setPayingFor(null)}
       />
+
+      <Dialog
+        open={!!scheduling}
+        onOpenChange={(o) => !o && setScheduling(null)}
+        className="max-w-[440px]"
+      >
+        <DialogHeader>
+          <DialogTitle>{t('cod.schedule.title')}</DialogTitle>
+        </DialogHeader>
+        {scheduling && (
+          <div className="space-y-3">
+            <p className="text-xs text-fg-muted">
+              <span className="font-mono">{scheduling.code}</span> ·{' '}
+              {formatEgp(scheduling.net_amount_due, locale)}
+            </p>
+            <div>
+              <Label required>{t('cod.schedule.date')}</Label>
+              <Input
+                type="date"
+                value={schedDate}
+                onChange={(e) => setSchedDate(e.target.value)}
+                dir="ltr"
+              />
+            </div>
+            <div>
+              <Label required>{t('cod.schedule.method')}</Label>
+              <Select
+                value={schedMethod}
+                onChange={(e) => setSchedMethod(e.target.value as PaymentMethod)}
+              >
+                {PAYMENT_METHODS.map((m) => (
+                  <option key={m} value={m}>
+                    {t(`paymentMethods.${m}` as const)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
+        )}
+        <DialogFooter>
+          <Button variant="ghost" size="md" onClick={() => setScheduling(null)}>
+            {t('common.cancel')}
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            disabled={!schedDate || scheduleMutation.isPending}
+            onClick={() => scheduleMutation.mutate()}
+          >
+            {t('cod.schedule.submit')}
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </>
   );
 }

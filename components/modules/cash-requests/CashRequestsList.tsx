@@ -24,6 +24,7 @@ import { Select } from '@/components/ui/select';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { cashRequests } from '@/lib/api/cash-requests';
 import { clients } from '@/lib/api/clients';
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import type { CashRequest } from '@/lib/types/cash-request';
 import type { Client } from '@/lib/types/client';
 import {
@@ -46,13 +47,13 @@ const TONE: Record<
   rejected: 'danger',
   paid: 'success',
 };
-const REVIEWER = 'u_finance_lead';
 const THIS_MONTH = new Date().toISOString().slice(0, 7); // YYYY-MM
 
 export function CashRequestsList() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const qc = useQueryClient();
+  const { data: me } = useCurrentUser();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<CashRequestStatus | 'all'>(
     'all',
@@ -79,8 +80,10 @@ export function CashRequestsList() {
   }, [clientList]);
 
   const approve = useMutation({
-    mutationFn: (id: string) =>
-      cashRequests.approve(id, { approved_by: REVIEWER }),
+    mutationFn: (id: string) => {
+      if (!me?.id) throw new Error('Loading your account — try again.');
+      return cashRequests.approve(id, { approved_by: me.id });
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['cash-requests'] });
       toast.success(t('cashRequests.approved'));
@@ -90,8 +93,10 @@ export function CashRequestsList() {
   });
 
   const reject = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      cashRequests.reject(id, { rejected_by: REVIEWER, reason }),
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => {
+      if (!me?.id) throw new Error('Loading your account — try again.');
+      return cashRequests.reject(id, { rejected_by: me.id, reason });
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['cash-requests'] });
       toast.success(t('cashRequests.rejected'));
@@ -107,12 +112,14 @@ export function CashRequestsList() {
       id: string;
       method: PaymentMethod;
       reference: string;
-    }) =>
-      cashRequests.markPaid(input.id, {
-        paid_by: REVIEWER,
+    }) => {
+      if (!me?.id) throw new Error('Loading your account — try again.');
+      return cashRequests.markPaid(input.id, {
+        paid_by: me.id,
         payment_method: input.method,
         payment_reference: input.reference || undefined,
-      }),
+      });
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['cash-requests'] });
       toast.success(t('cashRequests.payModal.paid'));

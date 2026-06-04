@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { clients } from '@/lib/api/clients';
 import { pickups } from '@/lib/api/pickups';
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import type { Client } from '@/lib/types/client';
 import type { Pickup } from '@/lib/types/pickup';
 import { formatEgp } from '@/lib/format/currency';
@@ -30,12 +31,12 @@ import type { Locale } from '@/lib/i18n/config';
 import { pickLocale } from '@/lib/utils';
 
 const TODAY = new Date().toISOString().slice(0, 10);
-const REVIEWER = 'u_ops_reviewer'; // Mock — wire to current-user once auth lands.
 
 export function NewOrdersList() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const qc = useQueryClient();
+  const { data: me } = useCurrentUser();
   const [search, setSearch] = useState('');
   const [rejecting, setRejecting] = useState<Pickup | null>(null);
   const [rejectReason, setRejectReason] = useState('');
@@ -62,7 +63,10 @@ export function NewOrdersList() {
   }, [clientList]);
 
   const approve = useMutation({
-    mutationFn: (id: string) => pickups.approveReview(id, REVIEWER),
+    mutationFn: (id: string) => {
+      if (!me?.id) throw new Error('Loading your account — try again.');
+      return pickups.approveReview(id, me.id);
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['pickups-pending-review'] });
       qc.invalidateQueries({ queryKey: ['pickups-all'] });
@@ -73,8 +77,10 @@ export function NewOrdersList() {
   });
 
   const reject = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      pickups.rejectReview(id, REVIEWER, reason),
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => {
+      if (!me?.id) throw new Error('Loading your account — try again.');
+      return pickups.rejectReview(id, me.id, reason);
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['pickups-pending-review'] });
       toast.success(t('newOrders.rejectModal.rejected'));

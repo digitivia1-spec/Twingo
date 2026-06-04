@@ -35,6 +35,28 @@
     "userInitial": "ن",
     "searchPlaceholder": "بحث…"
   },
+  "notifications": {
+    "title": "الإشعارات",
+    "needsAttention": "يحتاج إجراء",
+    "recent": "آخر النشاط",
+    "empty": "لا يوجد نشاط حديث",
+    "status": {
+      "pending": "قيد الانتظار",
+      "pending_review": "بانتظار المراجعة",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض",
+      "paid": "مدفوع",
+      "scheduled": "مجدول",
+      "disputed": "متنازع عليه",
+      "dispatched": "تم الإرسال",
+      "out_for_delivery": "خرج للتسليم",
+      "delivered": "تم التسليم",
+      "partially_delivered": "تسليم جزئي",
+      "returned": "مرتجع",
+      "cancelled": "ملغي",
+      "refused": "مرفوض الاستلام"
+    }
+  },
   "locale": {
     "switchTo": "EN",
     "switchLabel": "تغيير اللغة"
@@ -400,6 +422,13 @@
       "sendWhatsapp": "إرسال تأكيد واتساب للعميل",
       "whatsappPreview": "معاينة رسالة الواتساب",
       "paid": "تم السداد + إرسال الواتساب ✓"
+    },
+    "schedule": {
+      "title": "جدولة السداد",
+      "date": "تاريخ السداد",
+      "method": "طريقة الدفع",
+      "submit": "جدولة",
+      "scheduled": "تمت جدولة السداد ✓"
     }
   },
   "stock": {

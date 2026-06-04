@@ -35,6 +35,28 @@
     "userInitial": "N",
     "searchPlaceholder": "Search…"
   },
+  "notifications": {
+    "title": "Notifications",
+    "needsAttention": "Needs attention",
+    "recent": "Recent activity",
+    "empty": "No recent activity",
+    "status": {
+      "pending": "Pending",
+      "pending_review": "Awaiting review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "paid": "Paid",
+      "scheduled": "Scheduled",
+      "disputed": "Disputed",
+      "dispatched": "Dispatched",
+      "out_for_delivery": "Out for delivery",
+      "delivered": "Delivered",
+      "partially_delivered": "Partial",
+      "returned": "Returned",
+      "cancelled": "Cancelled",
+      "refused": "Refused"
+    }
+  },
   "locale": {
     "switchTo": "عربي",
     "switchLabel": "Change language"
@@ -400,6 +422,13 @@
       "sendWhatsapp": "Send WhatsApp confirmation to client",
       "whatsappPreview": "WhatsApp message preview",
       "paid": "Paid + WhatsApp sent ✓"
+    },
+    "schedule": {
+      "title": "Schedule payout",
+      "date": "Payout date",
+      "method": "Payment method",
+      "submit": "Schedule",
+      "scheduled": "Payout scheduled ✓"
     }
   },
   "stock": {
