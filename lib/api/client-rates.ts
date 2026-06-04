@@ -1,6 +1,7 @@
 import type { ClientShippingRate } from '@/lib/types/client-rate';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, nowIso, store } from './_store';
+import { getSupabase, nowIso as sbNow, unwrapMaybe, unwrapRows } from './_supabase';
 
 export interface ClientRateFilters {
   client_id?: string;
@@ -47,9 +48,36 @@ const mock: ClientRateRepository = {
 };
 
 const supabase: ClientRateRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async toggleActive() { throw NOT_IMPLEMENTED; },
+  async list(filters = {}) {
+    const sb = getSupabase();
+    let q = sb.from('client_shipping_rates').select('*');
+    if (filters.client_id) q = q.eq('client_id', filters.client_id);
+    if (filters.from_governorate_id) q = q.eq('from_governorate_id', filters.from_governorate_id);
+    if (filters.to_governorate_id) q = q.eq('to_governorate_id', filters.to_governorate_id);
+    if (typeof filters.is_active === 'boolean') q = q.eq('is_active', filters.is_active);
+    return unwrapRows<ClientShippingRate>(
+      await q.order('created_at', { ascending: false }),
+    );
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<ClientShippingRate>(
+      await sb.from('client_shipping_rates').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+  async toggleActive(id, is_active) {
+    const sb = getSupabase();
+    const r = unwrapMaybe<ClientShippingRate>(
+      await sb
+        .from('client_shipping_rates')
+        .update({ is_active, updated_at: sbNow() })
+        .eq('id', id)
+        .select('*')
+        .maybeSingle(),
+    );
+    if (!r) throw new Error(`Rate not found: ${id}`);
+    return r;
+  },
 };
 
 export const clientRates: ClientRateRepository =

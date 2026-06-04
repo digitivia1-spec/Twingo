@@ -1,7 +1,32 @@
 import type { CashRequestStatus, PaymentMethod } from '@/lib/types/enums';
 import type { CashRequest } from '@/lib/types/cash-request';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, nowIso, store } from './_store';
+import { getSupabase, nowIso as sbNow, unwrapMaybe, unwrapOne, unwrapRows } from './_supabase';
+
+async function fetchCashRequest(id: string): Promise<CashRequest> {
+  const sb = getSupabase();
+  const r = unwrapMaybe<CashRequest>(
+    await sb.from('cash_requests').select('*').eq('id', id).maybeSingle(),
+  );
+  if (!r) throw new Error(`Cash request not found: ${id}`);
+  return r;
+}
+
+async function updateCashRequest(
+  id: string,
+  patch: Partial<CashRequest>,
+): Promise<CashRequest> {
+  const sb = getSupabase();
+  return unwrapOne<CashRequest>(
+    await sb
+      .from('cash_requests')
+      .update({ ...patch, updated_at: sbNow() })
+      .eq('id', id)
+      .select('*')
+      .single(),
+  );
+}
 
 export interface CashRequestFilters {
   status?: CashRequestStatus[];
@@ -100,11 +125,54 @@ const mock: CashRequestRepository = {
 };
 
 const supabase: CashRequestRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async approve() { throw NOT_IMPLEMENTED; },
-  async reject() { throw NOT_IMPLEMENTED; },
-  async markPaid() { throw NOT_IMPLEMENTED; },
+  async list(filters = {}) {
+    const sb = getSupabase();
+    let q = sb.from('cash_requests').select('*');
+    if (filters.status && filters.status.length > 0) q = q.in('status', filters.status);
+    if (filters.client_id) q = q.eq('client_id', filters.client_id);
+    if (filters.search) {
+      const n = filters.search.replace(/[(),*]/g, ' ').trim();
+      q = q.or(`code.ilike.*${n}*,client_id.ilike.*${n}*`);
+    }
+    return unwrapRows<CashRequest>(await q.order('created_at', { ascending: false }));
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<CashRequest>(
+      await sb.from('cash_requests').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+  async approve(id, input) {
+    const r = await fetchCashRequest(id);
+    if (r.status !== 'pending') throw new Error(`Cannot approve a request in status "${r.status}"`);
+    return updateCashRequest(id, {
+      status: 'approved',
+      approved_at: sbNow(),
+      approved_by: input.approved_by,
+    });
+  },
+  async reject(id, input) {
+    const r = await fetchCashRequest(id);
+    if (r.status !== 'pending') throw new Error(`Cannot reject a request in status "${r.status}"`);
+    return updateCashRequest(id, {
+      status: 'rejected',
+      rejection_reason: input.reason,
+      approved_by: input.rejected_by,
+    });
+  },
+  async markPaid(id, input) {
+    const r = await fetchCashRequest(id);
+    if (r.status !== 'approved') {
+      throw new Error(`Mark-paid requires an approved request — current: "${r.status}"`);
+    }
+    return updateCashRequest(id, {
+      status: 'paid',
+      paid_at: sbNow(),
+      paid_by: input.paid_by,
+      payment_reference: input.payment_reference,
+      cod_due_id: input.cod_due_id,
+    });
+  },
 };
 
 export const cashRequests: CashRequestRepository =

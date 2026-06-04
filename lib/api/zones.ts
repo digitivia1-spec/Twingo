@@ -1,6 +1,7 @@
 import type { Zone } from '@/lib/types/zone';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, store } from './_store';
+import { getSupabase, sanitizeSearch, unwrapMaybe, unwrapRows } from './_supabase';
 
 export interface ZoneRepository {
   list(filter?: {
@@ -40,8 +41,24 @@ const mock: ZoneRepository = {
 };
 
 const supabase: ZoneRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
+  async list(filter) {
+    const sb = getSupabase();
+    let q = sb.from('zones').select('*');
+    if (filter?.branch_id) q = q.contains('branch_ids', [filter.branch_id]);
+    if (filter?.governorate_id) q = q.contains('governorate_ids', [filter.governorate_id]);
+    if (typeof filter?.is_active === 'boolean') q = q.eq('is_active', filter.is_active);
+    if (filter?.search) {
+      const n = sanitizeSearch(filter.search);
+      q = q.or(`name->>ar.ilike.*${n}*,name->>en.ilike.*${n}*,code.ilike.*${n}*`);
+    }
+    return unwrapRows<Zone>(await q);
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<Zone>(
+      await sb.from('zones').select('*').eq('id', id).maybeSingle(),
+    );
+  },
 };
 
 export const zones: ZoneRepository =

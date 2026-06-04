@@ -1,6 +1,7 @@
 import type { Branch } from '@/lib/types/branch';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, store } from './_store';
+import { getSupabase, nowIso, unwrapMaybe, unwrapRows } from './_supabase';
 
 export interface BranchRepository {
   list(): Promise<Branch[]>;
@@ -24,9 +25,29 @@ const mock: BranchRepository = {
 };
 
 const supabase: BranchRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async update() { throw NOT_IMPLEMENTED; },
+  async list() {
+    const sb = getSupabase();
+    return unwrapRows<Branch>(await sb.from('branches').select('*').order('code'));
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<Branch>(
+      await sb.from('branches').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+  async update(id, patch) {
+    const sb = getSupabase();
+    const row = unwrapMaybe<Branch>(
+      await sb
+        .from('branches')
+        .update({ ...patch, updated_at: nowIso() })
+        .eq('id', id)
+        .select('*')
+        .maybeSingle(),
+    );
+    if (!row) throw new Error(`Branch not found: ${id}`);
+    return row;
+  },
 };
 
 export const branches: BranchRepository =

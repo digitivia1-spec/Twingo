@@ -1,6 +1,7 @@
 import type { Governorate } from '@/lib/types/governorate';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, store } from './_store';
+import { getSupabase, unwrapOne, unwrapRows } from './_supabase';
 
 export interface GovernorateRepository {
   list(): Promise<Governorate[]>;
@@ -22,8 +23,23 @@ const mock: GovernorateRepository = {
 };
 
 const supabase: GovernorateRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async toggleActive() { throw NOT_IMPLEMENTED; },
+  async list() {
+    const sb = getSupabase();
+    return unwrapRows<Governorate>(
+      await sb.from('governorates').select('*').order('display_order'),
+    );
+  },
+  async toggleActive(id, is_active) {
+    const sb = getSupabase();
+    return unwrapOne<Governorate>(
+      await sb
+        .from('governorates')
+        .update({ is_active })
+        .eq('id', id)
+        .select('*')
+        .single(),
+    );
+  },
 };
 
 export const governorates: GovernorateRepository =

@@ -1,6 +1,7 @@
 import type { PriceListEntry } from '@/lib/types/price';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, store } from './_store';
+import { getSupabase, unwrapRows } from './_supabase';
 
 export interface PriceFilters {
   from_governorate_id?: string;
@@ -27,7 +28,13 @@ const mock: PriceRepository = {
 };
 
 const supabase: PriceRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
+  async list(filters = {}) {
+    const sb = getSupabase();
+    let q = sb.from('price_list_entries').select('*');
+    if (filters.from_governorate_id) q = q.eq('from_governorate_id', filters.from_governorate_id);
+    if (filters.to_governorate_id) q = q.eq('to_governorate_id', filters.to_governorate_id);
+    return unwrapRows<PriceListEntry>(await q);
+  },
 };
 
 export const prices: PriceRepository =

@@ -1,7 +1,22 @@
 import type { CodStatus, PaymentMethod } from '@/lib/types/enums';
 import type { CodDue } from '@/lib/types/cod-due';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, nowIso, store } from './_store';
+import { getSupabase, nowIso as sbNow, unwrapMaybe, unwrapRows } from './_supabase';
+
+async function updateCodDue(id: string, patch: Partial<CodDue>): Promise<CodDue> {
+  const sb = getSupabase();
+  const d = unwrapMaybe<CodDue>(
+    await sb
+      .from('cod_dues')
+      .update({ ...patch, updated_at: sbNow() })
+      .eq('id', id)
+      .select('*')
+      .maybeSingle(),
+  );
+  if (!d) throw new Error(`COD due not found: ${id}`);
+  return d;
+}
 
 export interface CodDueFilters {
   status?: CodStatus[];
@@ -88,11 +103,46 @@ const mock: CodDueRepository = {
 };
 
 const supabase: CodDueRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async schedule() { throw NOT_IMPLEMENTED; },
-  async payOut() { throw NOT_IMPLEMENTED; },
-  async dispute() { throw NOT_IMPLEMENTED; },
+  async list(filters = {}) {
+    const sb = getSupabase();
+    let q = sb.from('cod_dues').select('*');
+    if (filters.status && filters.status.length > 0) q = q.in('status', filters.status);
+    if (filters.client_id) q = q.eq('client_id', filters.client_id);
+    if (filters.date_from) q = q.gte('accrual_period_start', filters.date_from);
+    if (filters.date_to) q = q.lte('accrual_period_end', filters.date_to);
+    if (typeof filters.amount_min === 'number') q = q.gte('net_amount_due', filters.amount_min);
+    if (typeof filters.amount_max === 'number') q = q.lte('net_amount_due', filters.amount_max);
+    if (filters.payment_method) q = q.eq('payment_method', filters.payment_method);
+    return unwrapRows<CodDue>(await q.order('created_at', { ascending: false }));
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<CodDue>(
+      await sb.from('cod_dues').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+  async schedule(id, payout_date, method) {
+    return updateCodDue(id, {
+      status: 'scheduled',
+      scheduled_payout_date: payout_date,
+      payment_method: method,
+    });
+  },
+  async payOut(id, input) {
+    return updateCodDue(id, {
+      status: 'paid',
+      payment_method: input.payment_method,
+      payment_reference: input.payment_reference,
+      paid_at: sbNow(),
+      paid_by: input.paid_by,
+      ...(input.send_whatsapp
+        ? { whatsapp_sent_at: sbNow(), whatsapp_template_used: 'cod_payout_confirmation_ar' }
+        : {}),
+    });
+  },
+  async dispute(id, reason) {
+    return updateCodDue(id, { status: 'disputed', deductions_notes: reason });
+  },
 };
 
 export const codDues: CodDueRepository =

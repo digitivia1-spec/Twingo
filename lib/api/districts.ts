@@ -1,6 +1,7 @@
 import type { District } from '@/lib/types/district';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, store } from './_store';
+import { getSupabase, sanitizeSearch, unwrapMaybe, unwrapRows } from './_supabase';
 
 export interface DistrictRepository {
   list(filter?: {
@@ -35,8 +36,23 @@ const mock: DistrictRepository = {
 };
 
 const supabase: DistrictRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
+  async list(filter) {
+    const sb = getSupabase();
+    let q = sb.from('districts').select('*');
+    if (filter?.city_id) q = q.eq('city_id', filter.city_id);
+    if (typeof filter?.is_active === 'boolean') q = q.eq('is_active', filter.is_active);
+    if (filter?.search) {
+      const n = sanitizeSearch(filter.search);
+      q = q.or(`name->>ar.ilike.*${n}*,name->>en.ilike.*${n}*,code.ilike.*${n}*`);
+    }
+    return unwrapRows<District>(await q);
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<District>(
+      await sb.from('districts').select('*').eq('id', id).maybeSingle(),
+    );
+  },
 };
 
 export const districts: DistrictRepository =
