@@ -529,6 +529,39 @@
     "status": {
       "active": "Active",
       "inactive": "Inactive"
+    },
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameEn": "Name (English)",
+      "email": "Email",
+      "phone": "Phone",
+      "password": "Password",
+      "passwordHint": "At least 8 characters",
+      "role": "Role",
+      "branch": "Branch",
+      "noBranch": "No branch (HQ / all)",
+      "driverCode": "Driver code",
+      "vehicleType": "Vehicle"
+    },
+    "manage": {
+      "addStaff": "Add staff",
+      "addTitle": "Add staff member",
+      "editTitle": "Edit staff member",
+      "resetPassword": "Reset password",
+      "resetPasswordTitle": "Reset password",
+      "resetPasswordSubmit": "Set new password",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "created": "Staff member created ✓",
+      "updated": "Staff member updated ✓",
+      "deactivated": "Account deactivated",
+      "activated": "Account activated",
+      "passwordReset": "Password updated ✓",
+      "errors": {
+        "nameRequired": "Name is required.",
+        "emailRequired": "Email is required.",
+        "passwordShort": "Password must be at least 8 characters."
+      }
     }
   },
   "drivers": {

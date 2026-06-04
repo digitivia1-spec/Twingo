@@ -529,6 +529,39 @@
     "status": {
       "active": "نشط",
       "inactive": "متوقف"
+    },
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameEn": "الاسم (إنجليزي)",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "password": "كلمة المرور",
+      "passwordHint": "٨ أحرف على الأقل",
+      "role": "الدور",
+      "branch": "الفرع",
+      "noBranch": "بدون فرع (المقر / الكل)",
+      "driverCode": "كود المندوب",
+      "vehicleType": "المركبة"
+    },
+    "manage": {
+      "addStaff": "إضافة موظف",
+      "addTitle": "إضافة موظف",
+      "editTitle": "تعديل موظف",
+      "resetPassword": "إعادة تعيين كلمة المرور",
+      "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+      "resetPasswordSubmit": "تعيين كلمة مرور جديدة",
+      "deactivate": "إيقاف",
+      "activate": "تفعيل",
+      "created": "تم إنشاء الموظف ✓",
+      "updated": "تم تحديث الموظف ✓",
+      "deactivated": "تم إيقاف الحساب",
+      "activated": "تم تفعيل الحساب",
+      "passwordReset": "تم تحديث كلمة المرور ✓",
+      "errors": {
+        "nameRequired": "الاسم مطلوب.",
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "passwordShort": "كلمة المرور يجب أن تكون ٨ أحرف على الأقل."
+      }
     }
   },
   "drivers": {

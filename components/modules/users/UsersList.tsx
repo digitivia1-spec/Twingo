@@ -1,13 +1,19 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import { KeyRound, Pencil, Plus, Power } from 'lucide-react';
 import { DataTable, type DataTableColumn } from '@/components/shared/DataTable';
 import { FilterBar, FilterPill } from '@/components/shared/FilterBar';
 import { KpiCard } from '@/components/shared/KpiCard';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { FeedbackPin } from '@/components/feedback/FeedbackPin';
+import { UserEditModal } from './UserEditModal';
+import { ResetPasswordModal } from './ResetPasswordModal';
 import { branches } from '@/lib/api/branches';
 import { users } from '@/lib/api/users';
 import { USER_ROLES, type UserRole } from '@/lib/types/enums';
@@ -30,8 +36,14 @@ const ROLE_TONE: Record<UserRole, 'success' | 'warning' | 'danger' | 'info' | 'n
 export function UsersList() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
+  const qc = useQueryClient();
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
+  const [editing, setEditing] = useState<{ open: boolean; user: User | null }>({
+    open: false,
+    user: null,
+  });
+  const [resetTarget, setResetTarget] = useState<User | null>(null);
 
   const { data: list, isLoading } = useQuery({
     queryKey: ['users-all'],
@@ -40,6 +52,22 @@ export function UsersList() {
   const { data: branchList } = useQuery({
     queryKey: ['branches'],
     queryFn: () => branches.list(),
+  });
+  const { data: currentUser } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => users.getCurrent(),
+  });
+  const canManage =
+    currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
+
+  const toggleActive = useMutation({
+    mutationFn: (u: User) =>
+      u.is_active ? users.deactivate(u.id) : users.reactivate(u.id),
+    onSuccess: (u) => {
+      toast.success(u.is_active ? t('users.manage.activated') : t('users.manage.deactivated'));
+      qc.invalidateQueries({ queryKey: ['users-all'] });
+    },
+    onError: (err: Error) => toast.error(err.message),
   });
 
   const branchMap = useMemo(() => {
@@ -115,6 +143,47 @@ export function UsersList() {
       ),
       width: '90px',
     },
+    ...(canManage
+      ? [
+          {
+            id: 'actions',
+            header: t('common.actions'),
+            width: '210px',
+            cell: (u: User) => (
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setEditing({ open: true, user: u })}
+                  title={t('common.edit')}
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  {t('common.edit')}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setResetTarget(u)}
+                  title={t('users.manage.resetPassword')}
+                >
+                  <KeyRound className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={toggleActive.isPending || u.id === currentUser?.id}
+                  onClick={() => toggleActive.mutate(u)}
+                  title={u.is_active ? t('users.manage.deactivate') : t('users.manage.activate')}
+                >
+                  <Power
+                    className={`h-3.5 w-3.5 ${u.is_active ? 'text-danger' : 'text-success'}`}
+                  />
+                </Button>
+              </div>
+            ),
+          } as DataTableColumn<User>,
+        ]
+      : []),
   ];
 
   return (
@@ -123,6 +192,20 @@ export function UsersList() {
         elementId="users"
         title={t('users.title')}
         subtitle={t('users.subtitle')}
+        actions={
+          canManage ? (
+            <FeedbackPin elementId="users.header.add">
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => setEditing({ open: true, user: null })}
+              >
+                <Plus className="h-3.5 w-3.5" />
+                {t('users.manage.addStaff')}
+              </Button>
+            </FeedbackPin>
+          ) : undefined
+        }
       />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -172,6 +255,20 @@ export function UsersList() {
         isLoading={isLoading}
         rowKey={(r) => r.id}
       />
+
+      {canManage && (
+        <>
+          <UserEditModal
+            open={editing.open}
+            user={editing.user}
+            onClose={() => setEditing({ open: false, user: null })}
+          />
+          <ResetPasswordModal
+            user={resetTarget}
+            onClose={() => setResetTarget(null)}
+          />
+        </>
+      )}
     </>
   );
 }
