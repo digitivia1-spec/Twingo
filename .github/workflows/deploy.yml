@@ -105,6 +105,11 @@ jobs:
           # Only touches the rebuilt .next/cache and oversized rotated logs.
           $SSH "$USER@$HOST" 'rm -rf /var/www/twingo-erp/.next/cache 2>/dev/null; find /var/log/twingo-erp -type f -name "*.log" -size +50M -delete 2>/dev/null; true' || true
 
+          # Free RAM during transfer. The VPS is small (~3.9G, no swap); the
+          # rsync receiver gets OOM-killed mid-stream while the app is running.
+          # Stop the app first — the "Restart PM2 on VPS" step starts it again.
+          $SSH "$USER@$HOST" 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; pm2 stop twingo-erp 2>/dev/null; true' || true
+
           # Resilient transfer: resume partial files, keep the SSH session
           # alive, and retry transient drops with backoff.
           n=0
