@@ -26,47 +26,66 @@ import { ORDER_TYPES, type OrderType } from '@/lib/types/enums';
 import { EGYPTIAN_MOBILE_REGEX, toE164 } from '@/lib/format/phone';
 import { parseEgpToPiasters } from '@/lib/format/currency';
 import { formatInt } from '@/lib/format/numbers';
+import {
+  downloadCsvTemplate,
+  downloadXlsxTemplate,
+  isImportableFile,
+  parseSpreadsheet,
+} from '@/lib/import/spreadsheet';
+import { buildLookup, pickColumn } from '@/lib/import/resolve';
 import type { Locale } from '@/lib/i18n/config';
 
 /**
- * Bulk pickup import — CSV-based, matches the legacy tool's pattern.
+ * Bulk pickup import — accepts .csv / .xlsx / .xls.
  *
- * Columns (case-insensitive, order-sensitive but extras tolerated):
- *   client_id, branch_id, order_type, recipient_name, recipient_phone,
- *   governorate_id, city, district, street, landmark, weight_kg,
- *   pieces_count, cod_amount, shipping_fee, description, reference_code,
- *   is_fragile, allow_open_package, internal_notes
- *
- * Validation is local (in the browser) so the user can preview and fix
- * before any rows hit the API. Invalid rows are not submitted; valid
- * rows go through pickups.create one at a time so per-row errors surface.
+ * Columns are matched case-insensitively and a few friendly aliases are
+ * accepted. Client, branch and governorate may be given by slug id, code,
+ * or (bilingual) name — they're resolved against the live directory before
+ * any row hits the API. Validation runs locally so the user can preview and
+ * fix problems first; only valid rows are submitted, one at a time, so
+ * per-row failures surface.
  */
+
+const TEMPLATE_HEADERS = [
+  'client',
+  'branch',
+  'order_type',
+  'recipient_name',
+  'recipient_phone',
+  'governorate',
+  'city',
+  'district',
+  'street',
+  'landmark',
+  'weight_kg',
+  'pieces_count',
+  'cod_amount',
+  'shipping_fee',
+  'description',
+  'reference_code',
+  'is_fragile',
+  'allow_open_package',
+  'internal_notes',
+];
+
+const TEMPLATE_ROWS: (string | number)[][] = [
+  ['Ahmed Store', 'Cairo HQ', 'forward', 'Sara Mohamed', '01012345678', 'Cairo', 'Cairo', 'Zamalek', '26 July St', 'Near Marriott', 1.2, 1, 150, 55, 'Running shoes', 'REF-001', 'false', 'true', ''],
+  ['Nour Fashion', 'Cairo HQ', 'exchange', 'Mahmoud Ali', '01112345679', 'Cairo', 'Cairo', 'Nasr City', 'Makram Ebeid', '', 0.5, 1, 0, 40, 'Dress size exchange', 'REF-002', 'false', 'true', 'Size swap'],
+  ['Tech Hub', 'October Branch', 'forward', 'Heba Adel', '01212345680', 'Giza', '6 October', '12th District', 'Plaza 23', 'Behind Dandy Mall', 0.4, 1, 290, 75, 'Bluetooth headset', 'REF-003', 'true', 'false', 'Fragile electronics'],
+];
 
 interface ParsedRow {
   raw: Record<string, string>;
   lineNumber: number;
   errors: string[];
   valid: boolean;
+  // Resolved slug ids (when resolution succeeded).
+  resolved: {
+    client_id?: string;
+    branch_id?: string;
+    governorate_id?: string;
+  };
 }
-
-const REQUIRED_COLUMNS = [
-  'client_id',
-  'branch_id',
-  'recipient_name',
-  'recipient_phone',
-  'governorate_id',
-  'city',
-  'district',
-  'street',
-  'weight_kg',
-  'pieces_count',
-  'description',
-] as const;
-
-const SAMPLE_CSV = `client_id,branch_id,order_type,recipient_name,recipient_phone,governorate_id,city,district,street,landmark,weight_kg,pieces_count,cod_amount,shipping_fee,description,reference_code,is_fragile,allow_open_package,internal_notes
-cl_ahmed_store,br_cairo_hq,forward,Sara Mohamed,01012345678,gov_c,Cairo,Zamalek,26 July St,Near Marriott,1.2,1,150,55,Running shoes,REF-001,false,true,
-cl_nour_fashion,br_cairo_hq,exchange,Mahmoud Ali,01112345679,gov_c,Cairo,Nasr City,Makram Ebeid,,0.5,1,0,40,Dress size exchange,REF-002,false,true,Size swap
-cl_tech_hub,br_october,forward,Heba Adel,01212345680,gov_gz,6 October,12th District,Plaza 23,Behind Dandy Mall,0.4,1,290,75,Bluetooth headset,REF-003,true,false,Fragile electronics`;
 
 export function PickupImport() {
   const t = useTranslations();
@@ -76,6 +95,7 @@ export function PickupImport() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [parsing, setParsing] = useState(false);
 
   const { data: clientList } = useQuery({
     queryKey: ['clients-all'],
@@ -90,161 +110,139 @@ export function PickupImport() {
     queryFn: () => governorates.list(),
   });
 
-  const validIds = useMemo(
+  const lookups = useMemo(
     () => ({
-      clients: new Set((clientList ?? []).map((c) => c.id)),
-      branches: new Set((branchList ?? []).map((b) => b.id)),
-      governorates: new Set((govList ?? []).map((g) => g.id)),
+      client: buildLookup(clientList ?? [], (c) => [
+        c.name.ar,
+        c.name.en,
+        c.business_name?.ar,
+        c.business_name?.en,
+        c.phone_primary,
+      ]),
+      branch: buildLookup(branchList ?? [], (b) => [b.name.ar, b.name.en, b.code]),
+      governorate: buildLookup(govList ?? [], (g) => [g.name.ar, g.name.en, g.code]),
     }),
     [clientList, branchList, govList],
   );
 
-  /** Parse a single CSV cell — strips quotes, handles escaped quotes. */
-  function parseCell(s: string): string {
-    let v = s.trim();
-    if (v.startsWith('"') && v.endsWith('"')) {
-      v = v.slice(1, -1).replace(/""/g, '"');
-    }
-    return v;
-  }
-
-  /** Naive but correct enough CSV parser for our use case. */
-  function parseCsv(text: string): { headers: string[]; rows: string[][] } {
-    const lines = text
-      .split(/\r?\n/)
-      .map((l) => l.trim())
-      .filter(Boolean);
-    if (lines.length === 0) return { headers: [], rows: [] };
-    const split = (line: string): string[] => {
-      const out: string[] = [];
-      let cur = '';
-      let inQuote = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (inQuote) {
-          if (ch === '"' && line[i + 1] === '"') {
-            cur += '"';
-            i++;
-          } else if (ch === '"') {
-            inQuote = false;
-          } else {
-            cur += ch;
-          }
-        } else if (ch === ',') {
-          out.push(cur);
-          cur = '';
-        } else if (ch === '"' && cur === '') {
-          inQuote = true;
-        } else {
-          cur += ch;
-        }
-      }
-      out.push(cur);
-      return out.map((s) => s.trim());
-    };
-    const headers = split(lines[0]!).map((h) => h.toLowerCase());
-    const rows = lines
-      .slice(1)
-      .map((l) => split(l).map((c) => parseCell(c)));
-    return { headers, rows };
-  }
-
-  function validateRow(record: Record<string, string>): string[] {
+  function validateRow(record: Record<string, string>): {
+    errors: string[];
+    resolved: ParsedRow['resolved'];
+  } {
     const errors: string[] = [];
+    const resolved: ParsedRow['resolved'] = {};
 
-    for (const col of REQUIRED_COLUMNS) {
-      if (!record[col] || record[col].trim() === '') {
-        errors.push(`Missing ${col}`);
-      }
-    }
+    const clientRaw = pickColumn(record, 'client', 'client_id', 'merchant');
+    const branchRaw = pickColumn(record, 'branch', 'branch_id');
+    const govRaw = pickColumn(record, 'governorate', 'governorate_id', 'province');
+    const recipientName = pickColumn(record, 'recipient_name', 'recipient');
+    const phone = pickColumn(record, 'recipient_phone', 'phone');
+    const city = pickColumn(record, 'city');
+    const district = pickColumn(record, 'district');
+    const street = pickColumn(record, 'street', 'address');
+    const description = pickColumn(record, 'description', 'item');
+    const weight = pickColumn(record, 'weight_kg', 'weight');
+    const pieces = pickColumn(record, 'pieces_count', 'pieces');
+    const cod = pickColumn(record, 'cod_amount', 'cod');
+    const orderType = pickColumn(record, 'order_type', 'type');
 
-    if (record.client_id && !validIds.clients.has(record.client_id)) {
-      errors.push(`Unknown client_id ${record.client_id}`);
-    }
-    if (record.branch_id && !validIds.branches.has(record.branch_id)) {
-      errors.push(`Unknown branch_id ${record.branch_id}`);
-    }
-    if (
-      record.governorate_id &&
-      !validIds.governorates.has(record.governorate_id)
-    ) {
-      errors.push(`Unknown governorate_id ${record.governorate_id}`);
-    }
-
-    if (
-      record.order_type &&
-      !ORDER_TYPES.includes(record.order_type as OrderType)
-    ) {
-      errors.push(`Invalid order_type ${record.order_type}`);
+    if (!clientRaw) errors.push(t('pickup.import.fieldErrors.missingClient'));
+    else {
+      const c = lookups.client(clientRaw);
+      if (!c) errors.push(t('pickup.import.fieldErrors.unknownClient', { value: clientRaw }));
+      else resolved.client_id = c.id;
     }
 
-    if (record.recipient_phone) {
-      const clean = record.recipient_phone.replace(/[\s-]/g, '');
-      if (!EGYPTIAN_MOBILE_REGEX.test(clean)) {
-        errors.push(`Invalid phone ${record.recipient_phone}`);
-      }
+    if (!branchRaw) errors.push(t('pickup.import.fieldErrors.missingBranch'));
+    else {
+      const b = lookups.branch(branchRaw);
+      if (!b) errors.push(t('pickup.import.fieldErrors.unknownBranch', { value: branchRaw }));
+      else resolved.branch_id = b.id;
     }
 
-    if (record.weight_kg) {
-      const w = Number(record.weight_kg);
+    if (!govRaw) errors.push(t('pickup.import.fieldErrors.missingGovernorate'));
+    else {
+      const g = lookups.governorate(govRaw);
+      if (!g) errors.push(t('pickup.import.fieldErrors.unknownGovernorate', { value: govRaw }));
+      else resolved.governorate_id = g.id;
+    }
+
+    if (!recipientName) errors.push(t('pickup.import.fieldErrors.missingRecipient'));
+    if (!city) errors.push(t('pickup.import.fieldErrors.missingCity'));
+    if (!district) errors.push(t('pickup.import.fieldErrors.missingDistrict'));
+    if (!street) errors.push(t('pickup.import.fieldErrors.missingStreet'));
+    if (!description) errors.push(t('pickup.import.fieldErrors.missingDescription'));
+
+    if (!phone) errors.push(t('pickup.import.fieldErrors.missingPhone'));
+    else if (!EGYPTIAN_MOBILE_REGEX.test(phone.replace(/[\s-]/g, ''))) {
+      errors.push(t('pickup.import.fieldErrors.invalidPhone', { value: phone }));
+    }
+
+    if (!weight) errors.push(t('pickup.import.fieldErrors.missingWeight'));
+    else {
+      const w = Number(weight);
       if (!Number.isFinite(w) || w <= 0)
-        errors.push(`Invalid weight_kg ${record.weight_kg}`);
+        errors.push(t('pickup.import.fieldErrors.invalidWeight', { value: weight }));
     }
 
-    if (record.pieces_count) {
-      const p = Number(record.pieces_count);
+    if (!pieces) errors.push(t('pickup.import.fieldErrors.missingPieces'));
+    else {
+      const p = Number(pieces);
       if (!Number.isFinite(p) || !Number.isInteger(p) || p <= 0)
-        errors.push(`Invalid pieces_count ${record.pieces_count}`);
+        errors.push(t('pickup.import.fieldErrors.invalidPieces', { value: pieces }));
     }
 
-    if (record.cod_amount && parseEgpToPiasters(record.cod_amount) === null) {
-      errors.push(`Invalid cod_amount ${record.cod_amount}`);
+    if (orderType && !ORDER_TYPES.includes(orderType as OrderType)) {
+      errors.push(t('pickup.import.fieldErrors.invalidOrderType', { value: orderType }));
     }
 
-    return errors;
+    if (cod && parseEgpToPiasters(cod) === null) {
+      errors.push(t('pickup.import.fieldErrors.invalidCod', { value: cod }));
+    }
+
+    return { errors, resolved };
   }
 
   async function handleFile(file: File) {
+    if (!isImportableFile(file)) {
+      toast.error(t('pickup.import.errors.unsupportedFile'));
+      return;
+    }
     setFileName(file.name);
-    const text = await file.text();
-    const { headers, rows: data } = parseCsv(text);
-    if (headers.length === 0) {
-      toast.error(t('pickup.import.errors.emptyFile'));
-      return;
-    }
-    const missing = REQUIRED_COLUMNS.filter((c) => !headers.includes(c));
-    if (missing.length > 0) {
-      toast.error(
-        `${t('pickup.import.errors.missingColumns')}: ${missing.join(', ')}`,
-      );
-      return;
-    }
-    const parsed: ParsedRow[] = data.map((cells, idx) => {
-      const record: Record<string, string> = {};
-      headers.forEach((h, i) => {
-        record[h] = cells[i] ?? '';
+    setParsing(true);
+    try {
+      const { headers, rows: data } = await parseSpreadsheet(file);
+      if (headers.length === 0 || data.length === 0) {
+        toast.error(t('pickup.import.errors.emptyFile'));
+        setRows([]);
+        return;
+      }
+      const parsed: ParsedRow[] = data.map((record, idx) => {
+        const { errors, resolved } = validateRow(record);
+        return {
+          raw: record,
+          lineNumber: idx + 2, // +2: header row + 1-indexed display
+          errors,
+          valid: errors.length === 0,
+          resolved,
+        };
       });
-      const errors = validateRow(record);
-      return {
-        raw: record,
-        lineNumber: idx + 2, // +2 to account for header + 1-indexed display
-        errors,
-        valid: errors.length === 0,
-      };
-    });
-    setRows(parsed);
-    const validCount = parsed.filter((r) => r.valid).length;
-    if (validCount === parsed.length) {
-      toast.success(
-        t('pickup.import.parsedAllValid', { count: validCount }),
-      );
-    } else {
-      toast.warning(
-        t('pickup.import.parsedWithErrors', {
-          valid: validCount,
-          total: parsed.length,
-        }),
-      );
+      setRows(parsed);
+      const validCount = parsed.filter((r) => r.valid).length;
+      if (validCount === parsed.length) {
+        toast.success(t('pickup.import.parsedAllValid', { count: validCount }));
+      } else {
+        toast.warning(
+          t('pickup.import.parsedWithErrors', {
+            valid: validCount,
+            total: parsed.length,
+          }),
+        );
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
+    } finally {
+      setParsing(false);
     }
   }
 
@@ -256,38 +254,47 @@ export function PickupImport() {
       for (const row of validRows) {
         try {
           const r = row.raw;
+          const recipientName = pickColumn(r, 'recipient_name', 'recipient');
+          const city = pickColumn(r, 'city');
+          const district = pickColumn(r, 'district');
+          const street = pickColumn(r, 'street', 'address');
+          const landmark = pickColumn(r, 'landmark');
           const created_pk = await pickups.create({
-            client_id: r.client_id!,
-            branch_id: r.branch_id!,
-            order_type: (r.order_type || 'forward') as OrderType,
+            client_id: row.resolved.client_id!,
+            branch_id: row.resolved.branch_id!,
+            order_type: (pickColumn(r, 'order_type', 'type') || 'forward') as OrderType,
             submission_source: 'csv_import',
             recipient: {
-              name: { ar: r.recipient_name!, en: r.recipient_name! },
-              phone_primary: toE164(r.recipient_phone!),
+              name: { ar: recipientName, en: recipientName },
+              phone_primary: toE164(pickColumn(r, 'recipient_phone', 'phone')),
             },
             delivery_address: {
-              governorate_id: r.governorate_id!,
-              city: r.city!,
-              district: r.district!,
-              street: r.street!,
-              landmark: r.landmark || undefined,
-              full_address_ar: [r.street, r.district, r.city, r.landmark]
+              governorate_id: row.resolved.governorate_id!,
+              city,
+              district,
+              street,
+              landmark: landmark || undefined,
+              full_address_ar: [street, district, city, landmark]
                 .filter(Boolean)
                 .join('، '),
-              full_address_en: [r.street, r.district, r.city, r.landmark]
+              full_address_en: [street, district, city, landmark]
                 .filter(Boolean)
                 .join(', '),
             },
-            description: { ar: r.description!, en: r.description! },
-            weight_kg: Number(r.weight_kg),
-            pieces_count: Number(r.pieces_count),
-            is_fragile: r.is_fragile?.toLowerCase() === 'true',
+            description: (() => {
+              const d = pickColumn(r, 'description', 'item');
+              return { ar: d, en: d };
+            })(),
+            weight_kg: Number(pickColumn(r, 'weight_kg', 'weight')),
+            pieces_count: Number(pickColumn(r, 'pieces_count', 'pieces')),
+            is_fragile: /^(true|yes|1)$/i.test(pickColumn(r, 'is_fragile', 'fragile')),
             allow_open_package:
-              r.allow_open_package?.toLowerCase() !== 'false',
-            cod_amount: parseEgpToPiasters(r.cod_amount || '0') ?? 0,
-            shipping_fee: parseEgpToPiasters(r.shipping_fee || '0') ?? 0,
-            reference_code: r.reference_code || undefined,
-            internal_notes: r.internal_notes || undefined,
+              !/^(false|no|0)$/i.test(pickColumn(r, 'allow_open_package', 'open_package')),
+            cod_amount: parseEgpToPiasters(pickColumn(r, 'cod_amount', 'cod') || '0') ?? 0,
+            shipping_fee:
+              parseEgpToPiasters(pickColumn(r, 'shipping_fee', 'shipping') || '0') ?? 0,
+            reference_code: pickColumn(r, 'reference_code', 'reference') || undefined,
+            internal_notes: pickColumn(r, 'internal_notes', 'notes') || undefined,
           });
           created.push(created_pk.code);
         } catch (e) {
@@ -302,9 +309,7 @@ export function PickupImport() {
     onSuccess: ({ created, failed }) => {
       qc.invalidateQueries({ queryKey: ['pickups'] });
       if (failed.length === 0) {
-        toast.success(
-          t('pickup.import.imported', { count: created.length }),
-        );
+        toast.success(t('pickup.import.imported', { count: created.length }));
         router.push(`/${locale === 'ar' ? '' : locale + '/'}pickup`);
       } else {
         toast.warning(
@@ -317,20 +322,6 @@ export function PickupImport() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
-
-  function downloadSample() {
-    const blob = new Blob([SAMPLE_CSV], {
-      type: 'text/csv;charset=utf-8',
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'twingo-pickup-sample.csv';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
 
   const validCount = rows.filter((r) => r.valid).length;
   const errorCount = rows.length - validCount;
@@ -364,28 +355,50 @@ export function PickupImport() {
               <input
                 ref={fileInput}
                 type="file"
-                accept=".csv,text/csv"
+                accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
                 className="hidden"
                 onChange={(e) => {
                   const f = e.target.files?.[0];
                   if (f) handleFile(f);
+                  e.target.value = '';
                 }}
               />
               <Button
                 variant="primary"
+                disabled={parsing}
                 onClick={() => fileInput.current?.click()}
               >
                 <Upload className="h-3.5 w-3.5" />
-                {t('pickup.import.upload')}
+                {parsing ? t('common.loading') : t('pickup.import.upload')}
               </Button>
-              <Button variant="secondary" onClick={downloadSample}>
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  downloadXlsxTemplate(
+                    'twingo-pickup-template.xlsx',
+                    TEMPLATE_HEADERS,
+                    TEMPLATE_ROWS,
+                  )
+                }
+              >
                 <Download className="h-3.5 w-3.5" />
-                {t('pickup.import.downloadSample')}
+                {t('pickup.import.downloadTemplateXlsx')}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  downloadCsvTemplate(
+                    'twingo-pickup-template.csv',
+                    TEMPLATE_HEADERS,
+                    TEMPLATE_ROWS,
+                  )
+                }
+              >
+                <Download className="h-3.5 w-3.5" />
+                {t('pickup.import.downloadTemplateCsv')}
               </Button>
               {fileName && (
-                <span className="text-[11px] text-fg-muted">
-                  {fileName}
-                </span>
+                <span className="text-[11px] text-fg-muted">{fileName}</span>
               )}
             </div>
           </CardContent>
@@ -474,17 +487,17 @@ export function PickupImport() {
                             </span>
                           )}
                         </td>
-                        <td className="px-3 py-2 font-mono text-fg-muted">
-                          {r.raw.client_id ?? '—'}
+                        <td className="px-3 py-2 text-fg-muted">
+                          {pickColumn(r.raw, 'client', 'client_id', 'merchant') || '—'}
                         </td>
                         <td className="px-3 py-2">
-                          {r.raw.recipient_name ?? '—'}
+                          {pickColumn(r.raw, 'recipient_name', 'recipient') || '—'}
                         </td>
                         <td className="px-3 py-2 font-mono">
-                          {r.raw.recipient_phone ?? '—'}
+                          {pickColumn(r.raw, 'recipient_phone', 'phone') || '—'}
                         </td>
-                        <td className="px-3 py-2 font-mono text-fg-muted">
-                          {r.raw.governorate_id ?? '—'}
+                        <td className="px-3 py-2 text-fg-muted">
+                          {pickColumn(r.raw, 'governorate', 'governorate_id', 'province') || '—'}
                         </td>
                         <td className="px-3 py-2">
                           {r.errors.length === 0 ? (

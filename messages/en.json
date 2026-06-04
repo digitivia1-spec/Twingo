@@ -61,6 +61,7 @@
     "filter": "Filter",
     "columns": "Columns",
     "addNew": "New",
+    "import": "Import",
     "viewDetails": "Details",
     "required": "Required",
     "optional": "Optional",
@@ -221,11 +222,13 @@
     },
     "import": {
       "title": "Bulk pickup import",
-      "subtitle": "Upload a CSV — validation runs locally before any rows hit the API.",
-      "uploadTitle": "CSV file",
-      "uploadHint": "First row must be the header. Required columns: client_id, branch_id, recipient_name, recipient_phone, governorate_id, city, district, street, weight_kg, pieces_count, description.",
-      "upload": "Upload CSV",
+      "subtitle": "Upload an Excel (.xlsx) or CSV file — validation runs locally before any rows hit the API.",
+      "uploadTitle": "Excel / CSV file",
+      "uploadHint": "First row must be the header. Required columns: client, branch, recipient_name, recipient_phone, governorate, city, district, street, weight_kg, pieces_count, description. Client, branch and governorate accept a name, code, or id.",
+      "upload": "Upload file",
       "downloadSample": "Download sample",
+      "downloadTemplateXlsx": "Excel template",
+      "downloadTemplateCsv": "CSV template",
       "parsedAllValid": "Parsed {count} rows — all valid ✓",
       "parsedWithErrors": "Parsed {valid}/{total} valid rows",
       "imported": "Imported {count} pickups ✓",
@@ -250,7 +253,73 @@
       },
       "errors": {
         "emptyFile": "The file is empty or unreadable.",
-        "missingColumns": "Missing required columns"
+        "missingColumns": "Missing required columns",
+        "unsupportedFile": "Unsupported file — use .xlsx, .xls or .csv."
+      },
+      "fieldErrors": {
+        "missingClient": "Missing client",
+        "unknownClient": "Unknown client \"{value}\"",
+        "missingBranch": "Missing branch",
+        "unknownBranch": "Unknown branch \"{value}\"",
+        "missingGovernorate": "Missing governorate",
+        "unknownGovernorate": "Unknown governorate \"{value}\"",
+        "missingRecipient": "Missing recipient_name",
+        "missingCity": "Missing city",
+        "missingDistrict": "Missing district",
+        "missingStreet": "Missing street",
+        "missingDescription": "Missing description",
+        "missingPhone": "Missing recipient_phone",
+        "invalidPhone": "Invalid phone \"{value}\"",
+        "missingWeight": "Missing weight_kg",
+        "invalidWeight": "Invalid weight_kg \"{value}\"",
+        "missingPieces": "Missing pieces_count",
+        "invalidPieces": "Invalid pieces_count \"{value}\"",
+        "invalidOrderType": "Invalid order_type \"{value}\"",
+        "invalidCod": "Invalid cod_amount \"{value}\""
+      }
+    },
+    "clientsImport": {
+      "title": "Bulk client import",
+      "subtitle": "Upload an Excel (.xlsx) or CSV file of merchants — validation runs locally before any rows are created.",
+      "uploadTitle": "Excel / CSV file",
+      "uploadHint": "First row must be the header. Required columns: name, phone, branch. Optional: name_en, business_name, phone_secondary, email, payment_method, payment_frequency, address_governorate, address_city, address_district, address_street, tax_number, commercial_register, notes. Branch accepts a name, code, or id.",
+      "upload": "Upload file",
+      "downloadTemplateXlsx": "Excel template",
+      "downloadTemplateCsv": "CSV template",
+      "parsedAllValid": "Parsed {count} rows — all valid ✓",
+      "parsedWithErrors": "Parsed {valid}/{total} valid rows",
+      "imported": "Imported {count} clients ✓",
+      "importedPartial": "Imported {ok}, failed {failed}",
+      "submit": "Import {count} clients",
+      "summary": {
+        "parsed": "Rows parsed",
+        "valid": "Valid",
+        "errors": "With errors"
+      },
+      "previewTitle": "Preview",
+      "preview": {
+        "status": "Status",
+        "name": "Name",
+        "phone": "Phone",
+        "branch": "Branch",
+        "errors": "Errors",
+        "ok": "OK",
+        "fail": "Failed",
+        "truncated": "Showing first {shown} of {total} rows."
+      },
+      "errors": {
+        "emptyFile": "The file is empty or unreadable.",
+        "unsupportedFile": "Unsupported file — use .xlsx, .xls or .csv."
+      },
+      "fieldErrors": {
+        "missingName": "Missing name",
+        "missingPhone": "Missing phone",
+        "invalidPhone": "Invalid phone \"{value}\"",
+        "missingBranch": "Missing branch",
+        "unknownBranch": "Unknown branch \"{value}\"",
+        "invalidEmail": "Invalid email \"{value}\"",
+        "invalidPaymentMethod": "Invalid payment_method \"{value}\"",
+        "invalidPaymentFrequency": "Invalid payment_frequency \"{value}\""
       }
     }
   },
