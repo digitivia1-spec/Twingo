@@ -26,13 +26,17 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  LogOut,
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { usePathname } from '@/lib/i18n/routing';
 import { Link } from '@/lib/i18n/routing';
 import { useUi } from '@/lib/state/ui';
 import { cn } from '@/lib/utils';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
+import { getSupabase } from '@/lib/api/_supabase';
+import { DATA_SOURCE } from '@/lib/api/source';
 
 const NAV = [
   { key: 'dashboard', href: '/', icon: Home },
@@ -131,6 +135,7 @@ export function Sidebar() {
 
       <div className="border-t border-[#1e293b] p-2 space-y-1">
         <LocaleToggle collapsed={sidebarCollapsed} />
+        <LogoutButton collapsed={sidebarCollapsed} />
         <button
           type="button"
           onClick={toggleSidebar}
@@ -146,6 +151,31 @@ export function Sidebar() {
         </button>
       </div>
     </aside>
+  );
+}
+
+function LogoutButton({ collapsed }: { collapsed: boolean }) {
+  const router = useRouter();
+  const locale = useLocale();
+  if (DATA_SOURCE !== 'supabase') return null;
+  async function logout() {
+    try {
+      await getSupabase().auth.signOut();
+    } finally {
+      router.replace(locale === 'en' ? '/en/login' : '/login');
+    }
+  }
+  return (
+    <button
+      type="button"
+      onClick={logout}
+      className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1e293b] px-2.5 py-1.5 text-[11px] font-bold text-white/80 hover:bg-red-600/80 hover:text-white"
+      aria-label={locale === 'en' ? 'Sign out' : 'تسجيل الخروج'}
+      title={locale === 'en' ? 'Sign out' : 'تسجيل الخروج'}
+    >
+      <LogOut className="h-4 w-4" />
+      {!collapsed && <span>{locale === 'en' ? 'Sign out' : 'خروج'}</span>}
+    </button>
   );
 }
 

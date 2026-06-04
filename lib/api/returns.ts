@@ -1,6 +1,7 @@
 import type { ReturnManifest } from '@/lib/types/return';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, store } from './_store';
+import { getSupabase, unwrapMaybe, unwrapRows } from './_supabase';
 
 export interface ReturnRepository {
   list(): Promise<ReturnManifest[]>;
@@ -21,8 +22,18 @@ const mock: ReturnRepository = {
 };
 
 const supabase: ReturnRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
+  async list() {
+    const sb = getSupabase();
+    return unwrapRows<ReturnManifest>(
+      await sb.from('return_manifests').select('*').order('created_at', { ascending: false }),
+    );
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<ReturnManifest>(
+      await sb.from('return_manifests').select('*').eq('id', id).maybeSingle(),
+    );
+  },
 };
 
 export const returns: ReturnRepository =

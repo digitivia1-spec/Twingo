@@ -1,7 +1,14 @@
 import type { ClientApprovalStatus } from '@/lib/types/enums';
 import type { Client } from '@/lib/types/client';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, nowIso, store } from './_store';
+import {
+  getSupabase,
+  nowIso as sbNow,
+  sanitizeSearch,
+  unwrapMaybe,
+  unwrapRows,
+} from './_supabase';
 
 /**
  * A client is treated as approved if `approval_status` is missing
@@ -73,10 +80,69 @@ const mock: ClientRepository = {
 };
 
 const supabase: ClientRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async approve() { throw NOT_IMPLEMENTED; },
-  async reject() { throw NOT_IMPLEMENTED; },
+  async list(filter) {
+    const sb = getSupabase();
+    let q = sb.from('clients').select('*').is('deleted_at', null);
+    // A null approval_status is treated as 'approved' (legacy/seed rows).
+    const wanted = filter?.approval_status ?? 'approved';
+    if (wanted === 'approved') {
+      q = q.or('approval_status.is.null,approval_status.eq.approved');
+    } else {
+      q = q.eq('approval_status', wanted);
+    }
+    if (filter?.branch_id) q = q.eq('preferred_branch_id', filter.branch_id);
+    if (filter?.search) {
+      const n = sanitizeSearch(filter.search);
+      q = q.or(
+        `name->>ar.ilike.*${n}*,name->>en.ilike.*${n}*,phone_primary.ilike.*${n}*`,
+      );
+    }
+    return unwrapRows<Client>(await q.order('created_at', { ascending: false }));
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<Client>(
+      await sb.from('clients').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+  async approve(id, approved_by) {
+    const sb = getSupabase();
+    const c = unwrapMaybe<Client>(
+      await sb
+        .from('clients')
+        .update({
+          approval_status: 'approved',
+          approved_at: sbNow(),
+          approved_by,
+          is_active: true,
+          updated_at: sbNow(),
+        })
+        .eq('id', id)
+        .select('*')
+        .maybeSingle(),
+    );
+    if (!c) throw new Error(`Client not found: ${id}`);
+    return c;
+  },
+  async reject(id, rejected_by, reason) {
+    const sb = getSupabase();
+    const c = unwrapMaybe<Client>(
+      await sb
+        .from('clients')
+        .update({
+          approval_status: 'rejected',
+          approved_by: rejected_by,
+          rejection_reason: reason,
+          is_active: false,
+          updated_at: sbNow(),
+        })
+        .eq('id', id)
+        .select('*')
+        .maybeSingle(),
+    );
+    if (!c) throw new Error(`Client not found: ${id}`);
+    return c;
+  },
 };
 
 export const clients: ClientRepository =

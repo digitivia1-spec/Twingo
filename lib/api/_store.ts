@@ -4,6 +4,7 @@
  * mock repository methods. Refreshing the page resets the store (acceptable
  * for the Phase 1 demo).
  */
+import { DATA_SOURCE } from './source';
 import branchesSeed from '@/data/mock/branches.json';
 import usersSeed from '@/data/mock/users.json';
 import clientsSeed from '@/data/mock/clients.json';
@@ -70,7 +71,9 @@ export const store = {
  */
 
 // 1. Merchants pending verification — surface in /clients/pending.
-store.clients.push(
+// Only injected in mock mode; in supabase mode the real DB carries these rows.
+if (DATA_SOURCE === 'mock')
+  store.clients.push(
   {
     id: 'cl_pending_zenith',
     name: { ar: 'زينيث ستور', en: 'Zenith Store' },
@@ -265,7 +268,7 @@ const pendingReviewSamples: Pickup[] = [
     updated_at: '2026-05-10T09:20:00Z',
   },
 ];
-store.pickups.unshift(...pendingReviewSamples);
+if (DATA_SOURCE === 'mock') store.pickups.unshift(...pendingReviewSamples);
 
 export function nowIso(): string {
   return new Date().toISOString();

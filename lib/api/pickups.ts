@@ -6,8 +6,16 @@ import type {
 } from '@/lib/types/enums';
 import type { Pickup, PickupReasonCode } from '@/lib/types/pickup';
 import type { Paginated } from '@/lib/types/shared';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, nextSequence, nowIso, store } from './_store';
+import {
+  getSupabase,
+  nowIso as sbNow,
+  unwrapMaybe,
+  unwrapOne,
+  unwrapRows,
+} from './_supabase';
+import type { PickupStatusEvent } from '@/lib/types/pickup';
 
 export interface PickupFilters {
   status?: OrderStatus[];
@@ -278,17 +286,261 @@ const mock: PickupRepository = {
   },
 };
 
+async function fetchPickup(id: string): Promise<Pickup> {
+  const sb = getSupabase();
+  const p = unwrapMaybe<Pickup>(
+    await sb.from('pickups').select('*').eq('id', id).maybeSingle(),
+  );
+  if (!p) throw new Error(`Pickup not found: ${id}`);
+  return p;
+}
+
+/** Append a status event to the jsonb history AND the normalized mirror table. */
+async function pushEvent(
+  pickup: Pickup,
+  event: PickupStatusEvent,
+): Promise<PickupStatusEvent[]> {
+  const sb = getSupabase();
+  await sb.from('pickup_status_events').insert({
+    pickup_id: pickup.id,
+    status: event.status,
+    timestamp: event.timestamp,
+    user_id: event.user_id ?? null,
+    note: event.note ?? null,
+    reason_code: event.reason_code ?? null,
+  });
+  return [...(pickup.status_history ?? []), event];
+}
+
 const supabase: PickupRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async create() { throw NOT_IMPLEMENTED; },
-  async update() { throw NOT_IMPLEMENTED; },
-  async dispatch() { throw NOT_IMPLEMENTED; },
-  async cancel() { throw NOT_IMPLEMENTED; },
-  async changeStatus() { throw NOT_IMPLEMENTED; },
-  async approveReview() { throw NOT_IMPLEMENTED; },
-  async rejectReview() { throw NOT_IMPLEMENTED; },
-  async softDelete() { throw NOT_IMPLEMENTED; },
+  async list(filters = {}) {
+    const sb = getSupabase();
+    let q = sb.from('pickups').select('*', { count: 'exact' }).is('deleted_at', null);
+
+    const requestedReview = filters.review_status ?? 'default';
+    if (requestedReview === 'default' || requestedReview === 'approved') {
+      q = q.or('review_status.is.null,review_status.eq.approved');
+    } else if (requestedReview !== 'all') {
+      q = q.eq('review_status', requestedReview);
+    }
+
+    if (filters.status && filters.status.length > 0) q = q.in('status', filters.status);
+    if (filters.order_type && filters.order_type.length > 0) {
+      if (filters.order_type.includes('forward')) {
+        q = q.or(`order_type.is.null,order_type.in.(${filters.order_type.join(',')})`);
+      } else {
+        q = q.in('order_type', filters.order_type);
+      }
+    }
+    if (filters.branch_id) q = q.eq('branch_id', filters.branch_id);
+    if (filters.client_id) q = q.eq('client_id', filters.client_id);
+    if (filters.driver_id) q = q.eq('driver_id', filters.driver_id);
+    if (filters.reference_code) q = q.eq('reference_code', filters.reference_code);
+    if (filters.date_from) q = q.gte('created_at', filters.date_from);
+    if (filters.date_to) q = q.lte('created_at', filters.date_to);
+    if (filters.last_activity_from) q = q.gte('updated_at', filters.last_activity_from);
+    if (filters.collection === 'collected') q = q.eq('status', 'delivered');
+    if (filters.collection === 'not_collected') q = q.neq('status', 'delivered');
+    if (filters.search) {
+      const n = filters.search.replace(/[(),*]/g, ' ').trim();
+      q = q.or(
+        `code.ilike.*${n}*,recipient->>phone_primary.ilike.*${n}*,recipient->name->>ar.ilike.*${n}*,recipient->name->>en.ilike.*${n}*`,
+      );
+    }
+
+    const sortBy = (filters.sort_by ?? 'created_at') as string;
+    q = q.order(sortBy, { ascending: filters.sort_dir === 'asc' });
+
+    const page = filters.page ?? 1;
+    const pageSize = filters.page_size ?? 25;
+    q = q.range((page - 1) * pageSize, page * pageSize - 1);
+
+    const res = await q;
+    const rows = unwrapRows<Pickup>(res);
+    return { rows, total: res.count ?? rows.length, page, page_size: pageSize };
+  },
+
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<Pickup>(
+      await sb.from('pickups').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+
+  async create(input) {
+    const sb = getSupabase();
+    const status = input.status ?? 'pending';
+    const initial: PickupStatusEvent = { status, timestamp: sbNow() };
+    const row = unwrapOne<Pickup>(
+      await sb
+        .from('pickups')
+        .insert({ ...input, status, status_history: [initial] })
+        .select('*')
+        .single(),
+    );
+    await sb.from('pickup_status_events').insert({
+      pickup_id: row.id,
+      status,
+      timestamp: initial.timestamp,
+    });
+    return row;
+  },
+
+  async update(id, patch) {
+    const sb = getSupabase();
+    const p = unwrapMaybe<Pickup>(
+      await sb
+        .from('pickups')
+        .update({ ...patch, updated_at: sbNow() })
+        .eq('id', id)
+        .select('*')
+        .maybeSingle(),
+    );
+    if (!p) throw new Error(`Pickup not found: ${id}`);
+    return p;
+  },
+
+  async dispatch(id, vehicle, driver_id, user_id) {
+    const sb = getSupabase();
+    const pickup = await fetchPickup(id);
+    if (pickup.status !== 'pending') {
+      throw new Error(
+        `Cannot dispatch pickup in status "${pickup.status}" — must be pending.`,
+      );
+    }
+    const ts = sbNow();
+    const history = await pushEvent(pickup, { status: 'dispatched', timestamp: ts, user_id });
+    return unwrapOne<Pickup>(
+      await sb
+        .from('pickups')
+        .update({
+          status: 'dispatched',
+          vehicle_type: vehicle,
+          driver_id,
+          dispatched_at: ts,
+          updated_at: ts,
+          status_history: history,
+        })
+        .eq('id', id)
+        .select('*')
+        .single(),
+    );
+  },
+
+  async cancel(id, reason, user_id) {
+    const sb = getSupabase();
+    const pickup = await fetchPickup(id);
+    const ts = sbNow();
+    const history = await pushEvent(pickup, {
+      status: 'cancelled',
+      timestamp: ts,
+      user_id,
+      note: reason,
+    });
+    return unwrapOne<Pickup>(
+      await sb
+        .from('pickups')
+        .update({ status: 'cancelled', updated_at: ts, status_history: history })
+        .eq('id', id)
+        .select('*')
+        .single(),
+    );
+  },
+
+  async changeStatus(id, next, input) {
+    const sb = getSupabase();
+    const pickup = await fetchPickup(id);
+    if (pickup.status === next) {
+      throw new Error(`Pickup ${pickup.code} is already in status "${next}".`);
+    }
+    const ts = sbNow();
+    const history = await pushEvent(pickup, {
+      status: next,
+      timestamp: ts,
+      user_id: input.user_id,
+      reason_code: input.reason_code,
+      note: input.note,
+    });
+    const patch: Partial<Pickup> = {
+      status: next,
+      updated_at: ts,
+      status_history: history,
+    };
+    if (next === 'delivered') patch.delivered_at = ts;
+    return unwrapOne<Pickup>(
+      await sb.from('pickups').update(patch).eq('id', id).select('*').single(),
+    );
+  },
+
+  async approveReview(id, reviewed_by) {
+    const sb = getSupabase();
+    const pickup = await fetchPickup(id);
+    if (pickup.review_status !== 'pending_review') {
+      throw new Error(
+        `Pickup ${id} is not pending review (current: ${pickup.review_status ?? 'approved'}).`,
+      );
+    }
+    const ts = sbNow();
+    const history = await pushEvent(pickup, {
+      status: pickup.status,
+      timestamp: ts,
+      user_id: reviewed_by,
+      note: 'Approved by ops',
+    });
+    return unwrapOne<Pickup>(
+      await sb
+        .from('pickups')
+        .update({
+          review_status: 'approved',
+          reviewed_at: ts,
+          reviewed_by,
+          updated_at: ts,
+          status_history: history,
+        })
+        .eq('id', id)
+        .select('*')
+        .single(),
+    );
+  },
+
+  async rejectReview(id, reviewed_by, reason) {
+    const sb = getSupabase();
+    const pickup = await fetchPickup(id);
+    if (pickup.review_status !== 'pending_review') {
+      throw new Error(
+        `Pickup ${id} is not pending review (current: ${pickup.review_status ?? 'approved'}).`,
+      );
+    }
+    const ts = sbNow();
+    const history = await pushEvent(pickup, {
+      status: 'cancelled',
+      timestamp: ts,
+      user_id: reviewed_by,
+      note: `Rejected by ops: ${reason}`,
+    });
+    return unwrapOne<Pickup>(
+      await sb
+        .from('pickups')
+        .update({
+          review_status: 'rejected',
+          reviewed_at: ts,
+          reviewed_by,
+          rejection_reason: reason,
+          status: 'cancelled',
+          updated_at: ts,
+          status_history: history,
+        })
+        .eq('id', id)
+        .select('*')
+        .single(),
+    );
+  },
+
+  async softDelete(id) {
+    const sb = getSupabase();
+    const res = await sb.from('pickups').update({ deleted_at: sbNow() }).eq('id', id);
+    if (res.error) throw new Error(res.error.message);
+  },
 };
 
 export const pickups: PickupRepository =

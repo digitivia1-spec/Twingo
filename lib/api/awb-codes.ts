@@ -1,7 +1,9 @@
 import type { AwbStatus } from '@/lib/types/enums';
 import type { AwbCode } from '@/lib/types/awb';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import type { Branch } from '@/lib/types/branch';
+import { DATA_SOURCE } from './source';
 import { latency, nowIso, store } from './_store';
+import { getSupabase, nowIso as sbNow, unwrapMaybe, unwrapOne, unwrapRows } from './_supabase';
 
 export interface AwbFilters {
   branch_id?: string;
@@ -117,11 +119,113 @@ const mock: AwbRepository = {
 };
 
 const supabase: AwbRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async reserveOne() { throw NOT_IMPLEMENTED; },
-  async voidOne() { throw NOT_IMPLEMENTED; },
-  async generateBatch() { throw NOT_IMPLEMENTED; },
+  async list(filters = {}) {
+    const sb = getSupabase();
+    let q = sb.from('awb_codes').select('*');
+    if (filters.branch_id) q = q.eq('branch_id', filters.branch_id);
+    if (filters.status && filters.status.length > 0) q = q.in('status', filters.status);
+    if (filters.search) {
+      const n = filters.search.replace(/[(),*]/g, ' ').trim();
+      q = q.ilike('code', `*${n}*`);
+    }
+    return unwrapRows<AwbCode>(await q.order('sequence', { ascending: false }));
+  },
+
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<AwbCode>(
+      await sb.from('awb_codes').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+
+  async reserveOne(branch_id, reserved_by, reserved_for_pickup_id) {
+    const sb = getSupabase();
+    const available = unwrapMaybe<AwbCode>(
+      await sb
+        .from('awb_codes')
+        .select('*')
+        .eq('branch_id', branch_id)
+        .eq('status', 'available')
+        .order('sequence', { ascending: true })
+        .limit(1)
+        .maybeSingle(),
+    );
+    if (!available) {
+      throw new Error(
+        `No available AWB codes for branch ${branch_id} — generate a new batch.`,
+      );
+    }
+    return unwrapOne<AwbCode>(
+      await sb
+        .from('awb_codes')
+        .update({
+          status: 'reserved',
+          reserved_at: sbNow(),
+          reserved_by,
+          reserved_for_pickup_id,
+          updated_at: sbNow(),
+        })
+        .eq('id', available.id)
+        .select('*')
+        .single(),
+    );
+  },
+
+  async voidOne(id, voided_by, reason) {
+    const sb = getSupabase();
+    const awb = unwrapMaybe<AwbCode>(
+      await sb.from('awb_codes').select('*').eq('id', id).maybeSingle(),
+    );
+    if (!awb) throw new Error(`AWB not found: ${id}`);
+    if (awb.status === 'used') throw new Error(`Cannot void a used AWB (${awb.code}).`);
+    if (awb.status === 'voided') throw new Error(`AWB ${awb.code} is already voided.`);
+    return unwrapOne<AwbCode>(
+      await sb
+        .from('awb_codes')
+        .update({
+          status: 'voided',
+          voided_at: sbNow(),
+          voided_by,
+          voided_reason: reason,
+          updated_at: sbNow(),
+        })
+        .eq('id', id)
+        .select('*')
+        .single(),
+    );
+  },
+
+  async generateBatch({ branch_id, count, generated_by }) {
+    if (count <= 0 || count > 5000) {
+      throw new Error('Batch count must be between 1 and 5000.');
+    }
+    const sb = getSupabase();
+    const branch = unwrapMaybe<Branch>(
+      await sb.from('branches').select('*').eq('id', branch_id).maybeSingle(),
+    );
+    if (!branch) throw new Error(`Branch not found: ${branch_id}`);
+
+    const existing = unwrapRows<{ sequence: number }>(
+      await sb.from('awb_codes').select('sequence').eq('branch_id', branch_id),
+    );
+    const last = existing.reduce((m, a) => Math.max(m, a.sequence), 0);
+    const start = last + 1;
+    const ts = sbNow();
+    const batchId = `batch_${branch.code.toLowerCase()}_${ts}`;
+    const next = Array.from({ length: count }, (_, i) => {
+      const seq = start + i;
+      return {
+        id: `awb_${seq}`,
+        code: `${branch.code}-${seq}`,
+        sequence: seq,
+        branch_id,
+        status: 'available' as const,
+        batch_id: batchId,
+        generated_by,
+      };
+    });
+    return unwrapRows<AwbCode>(await sb.from('awb_codes').insert(next).select('*'));
+  },
 };
 
 export const awbCodes: AwbRepository =

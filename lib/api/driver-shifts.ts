@@ -1,7 +1,29 @@
 import type { FinanceStatus } from '@/lib/types/enums';
 import type { DriverShift } from '@/lib/types/driver-shift';
-import { DATA_SOURCE, NOT_IMPLEMENTED } from './source';
+import { DATA_SOURCE } from './source';
 import { latency, nowIso, store } from './_store';
+import { getSupabase, nowIso as sbNow, unwrapMaybe, unwrapOne, unwrapRows } from './_supabase';
+
+async function fetchShift(id: string): Promise<DriverShift> {
+  const sb = getSupabase();
+  const s = unwrapMaybe<DriverShift>(
+    await sb.from('driver_shifts').select('*').eq('id', id).maybeSingle(),
+  );
+  if (!s) throw new Error(`Shift not found: ${id}`);
+  return s;
+}
+
+async function updateShift(id: string, patch: Partial<DriverShift>): Promise<DriverShift> {
+  const sb = getSupabase();
+  return unwrapOne<DriverShift>(
+    await sb
+      .from('driver_shifts')
+      .update({ ...patch, updated_at: sbNow() })
+      .eq('id', id)
+      .select('*')
+      .single(),
+  );
+}
 
 export interface DriverShiftFilters {
   status?: FinanceStatus[];
@@ -98,12 +120,50 @@ const mock: DriverShiftRepository = {
 };
 
 const supabase: DriverShiftRepository = {
-  async list() { throw NOT_IMPLEMENTED; },
-  async getById() { throw NOT_IMPLEMENTED; },
-  async reconcile() { throw NOT_IMPLEMENTED; },
-  async approve() { throw NOT_IMPLEMENTED; },
-  async payOut() { throw NOT_IMPLEMENTED; },
-  async dispute() { throw NOT_IMPLEMENTED; },
+  async list(filters = {}) {
+    const sb = getSupabase();
+    let q = sb.from('driver_shifts').select('*');
+    if (filters.status && filters.status.length > 0) q = q.in('status', filters.status);
+    if (filters.branch_id) q = q.eq('branch_id', filters.branch_id);
+    if (filters.driver_id) q = q.eq('driver_id', filters.driver_id);
+    if (filters.date_from) q = q.gte('shift_date', filters.date_from);
+    if (filters.date_to) q = q.lte('shift_date', filters.date_to);
+    return unwrapRows<DriverShift>(await q.order('shift_date', { ascending: false }));
+  },
+  async getById(id) {
+    const sb = getSupabase();
+    return unwrapMaybe<DriverShift>(
+      await sb.from('driver_shifts').select('*').eq('id', id).maybeSingle(),
+    );
+  },
+  async reconcile(id, input) {
+    const s = await fetchShift(id);
+    if (s.status !== 'pending') throw new Error(`Shift already in status "${s.status}".`);
+    return updateShift(id, {
+      actual_cash: input.actual_cash,
+      variance: input.actual_cash - s.expected_cash,
+      variance_reason: input.variance_reason,
+      notes: input.notes,
+      reconciled_at: sbNow(),
+      reconciled_by: input.reconciled_by,
+      status: 'reconciled',
+    });
+  },
+  async approve(id, approved_by) {
+    const s = await fetchShift(id);
+    if (s.status !== 'reconciled') throw new Error(`Shift not reconciled. Current: ${s.status}`);
+    if (approved_by === s.reconciled_by)
+      throw new Error('Dual-control: approver must differ from reconciler.');
+    return updateShift(id, { approved_at: sbNow(), approved_by, status: 'approved' });
+  },
+  async payOut(id, paid_out_by) {
+    const s = await fetchShift(id);
+    if (s.status !== 'approved') throw new Error(`Shift not approved. Current: ${s.status}`);
+    return updateShift(id, { paid_out_at: sbNow(), paid_out_by, status: 'paid_out' });
+  },
+  async dispute(id, reason) {
+    return updateShift(id, { status: 'disputed', dispute_reason: reason });
+  },
 };
 
 export const driverShifts: DriverShiftRepository =
