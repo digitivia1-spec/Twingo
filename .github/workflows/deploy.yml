@@ -95,38 +95,35 @@ jobs:
         run: |
           USER=$(echo "$VPS_USER" | tr -d '[:space:]')
           HOST=$(echo "$VPS_HOST" | tr -d '[:space:]')
-          SSH="ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=20"
 
-          # Diagnostics — a full disk or OOM on the VPS is the usual cause of
-          # rsync "connection unexpectedly closed" (remote process killed).
-          $SSH "$USER@$HOST" 'echo "== disk =="; df -h /var/www 2>/dev/null || df -h /; echo "== mem =="; free -m 2>/dev/null || true' || true
+          # IMPORTANT: use a SINGLE multiplexed SSH connection for everything.
+          # The VPS rate-limits SSH (ufw limit / fail2ban) — opening several
+          # connections per run was getting the runner IP dropped, surfacing as
+          # "port 22: Connection timed out" (0 bytes). ControlMaster makes the
+          # remote command + rsync share one TCP connection.
+          CTRL="$HOME/.ssh/cm-twingo.sock"
+          SSHOPTS="-i $HOME/.ssh/id_deploy -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ServerAliveCountMax=6 -o ConnectTimeout=30 -o ControlMaster=auto -o ControlPath=$CTRL -o ControlPersist=180"
+          SSH="ssh $SSHOPTS"
+          cleanup() { ssh $SSHOPTS -O exit "$USER@$HOST" 2>/dev/null || true; }
+          trap cleanup EXIT
 
-          # Reclaim space from the previous deploy so the transfer has room.
-          # Only touches the rebuilt .next/cache and oversized rotated logs.
-          $SSH "$USER@$HOST" 'rm -rf /var/www/twingo-erp/.next/cache 2>/dev/null; find /var/log/twingo-erp -type f -name "*.log" -size +50M -delete 2>/dev/null; true' || true
+          # One round-trip on the shared connection: diagnostics + free disk +
+          # stop the app so the rsync receiver doesn't get OOM-killed (the box
+          # is ~3.9G with no swap). The app is restarted by the next step.
+          $SSH "$USER@$HOST" '
+            echo "== disk =="; df -h / | tail -1;
+            echo "== mem =="; free -m | sed -n 1,3p;
+            rm -rf /var/www/twingo-erp/.next/cache 2>/dev/null || true;
+            find /var/log/twingo-erp -type f -name "*.log" -size +50M -delete 2>/dev/null || true;
+            export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh";
+            pm2 stop twingo-erp 2>/dev/null || true;
+            true'
 
-          # Free RAM during transfer. The VPS is small (~3.9G, no swap); the
-          # rsync receiver gets OOM-killed mid-stream while the app is running.
-          # Stop the app first — the "Restart PM2 on VPS" step starts it again.
-          $SSH "$USER@$HOST" 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; pm2 stop twingo-erp 2>/dev/null; true' || true
-
-          # Resilient transfer: resume partial files, keep the SSH session
-          # alive, and retry transient drops with backoff.
-          n=0
-          until [ "$n" -ge 3 ]; do
-            if rsync -az --delete --delete-delay --partial --timeout=180 \
-                 --exclude '.next/cache' \
-                 -e "$SSH" \
-                 deploy-out/ "$USER@$HOST:/var/www/twingo-erp/"; then
-              echo "rsync completed"
-              exit 0
-            fi
-            n=$((n + 1))
-            echo "rsync attempt $n failed; retrying in $((n * 10))s…"
-            sleep $((n * 10))
-          done
-          echo "rsync failed after 3 attempts"
-          exit 12
+          # Transfer over the SAME connection. --partial resumes if interrupted.
+          rsync -az --delete --delete-delay --partial --timeout=300 \
+            --exclude '.next/cache' \
+            -e "$SSH" \
+            deploy-out/ "$USER@$HOST:/var/www/twingo-erp/"
 
       - name: Copy .env.local to VPS (if provided via secret)
         env:
