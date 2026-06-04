@@ -90,7 +90,33 @@ jobs:
         run: |
           USER=$(echo "$VPS_USER" | tr -d '[:space:]')
           HOST=$(echo "$VPS_HOST" | tr -d '[:space:]')
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no" deploy-out/ "$USER@$HOST:/var/www/twingo-erp/"
+          SSH="ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=20"
+
+          # Diagnostics — a full disk or OOM on the VPS is the usual cause of
+          # rsync "connection unexpectedly closed" (remote process killed).
+          $SSH "$USER@$HOST" 'echo "== disk =="; df -h /var/www 2>/dev/null || df -h /; echo "== mem =="; free -m 2>/dev/null || true' || true
+
+          # Reclaim space from the previous deploy so the transfer has room.
+          # Only touches the rebuilt .next/cache and oversized rotated logs.
+          $SSH "$USER@$HOST" 'rm -rf /var/www/twingo-erp/.next/cache 2>/dev/null; find /var/log/twingo-erp -type f -name "*.log" -size +50M -delete 2>/dev/null; true' || true
+
+          # Resilient transfer: resume partial files, keep the SSH session
+          # alive, and retry transient drops with backoff.
+          n=0
+          until [ "$n" -ge 3 ]; do
+            if rsync -az --delete --delete-delay --partial --timeout=180 \
+                 --exclude '.next/cache' \
+                 -e "$SSH" \
+                 deploy-out/ "$USER@$HOST:/var/www/twingo-erp/"; then
+              echo "rsync completed"
+              exit 0
+            fi
+            n=$((n + 1))
+            echo "rsync attempt $n failed; retrying in $((n * 10))s…"
+            sleep $((n * 10))
+          done
+          echo "rsync failed after 3 attempts"
+          exit 12
 
       - name: Copy .env.local to VPS (if provided via secret)
         env:
