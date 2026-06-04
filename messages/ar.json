@@ -61,6 +61,7 @@
     "filter": "تصفية",
     "columns": "الأعمدة",
     "addNew": "إضافة",
+    "import": "استيراد",
     "viewDetails": "التفاصيل",
     "required": "مطلوب",
     "optional": "اختياري",
@@ -221,11 +222,13 @@
     },
     "import": {
       "title": "استيراد بوليصات بالجملة",
-      "subtitle": "ارفع ملف CSV — التحقق يتم محلياً قبل إرسال أي بيانات للخادم.",
-      "uploadTitle": "ملف CSV",
-      "uploadHint": "أول صف هو العناوين. الأعمدة الأساسية: client_id, branch_id, recipient_name, recipient_phone, governorate_id, city, district, street, weight_kg, pieces_count, description.",
+      "subtitle": "ارفع ملف Excel (.xlsx) أو CSV — التحقق يتم محلياً قبل إرسال أي بيانات للخادم.",
+      "uploadTitle": "ملف Excel / CSV",
+      "uploadHint": "أول صف هو العناوين. الأعمدة الأساسية: client, branch, recipient_name, recipient_phone, governorate, city, district, street, weight_kg, pieces_count, description. يمكن كتابة العميل والفرع والمحافظة بالاسم أو الكود أو المعرّف.",
       "upload": "رفع ملف",
       "downloadSample": "تحميل نموذج",
+      "downloadTemplateXlsx": "نموذج Excel",
+      "downloadTemplateCsv": "نموذج CSV",
       "parsedAllValid": "تمت قراءة {count} صف — كلها صحيحة ✓",
       "parsedWithErrors": "تمت قراءة {valid}/{total} صف صحيح",
       "imported": "تم استيراد {count} بوليصة ✓",
@@ -250,7 +253,73 @@
       },
       "errors": {
         "emptyFile": "الملف فارغ أو غير قابل للقراءة.",
-        "missingColumns": "أعمدة أساسية مفقودة"
+        "missingColumns": "أعمدة أساسية مفقودة",
+        "unsupportedFile": "نوع ملف غير مدعوم — استخدم .xlsx أو .xls أو .csv."
+      },
+      "fieldErrors": {
+        "missingClient": "العميل مفقود",
+        "unknownClient": "عميل غير معروف \"{value}\"",
+        "missingBranch": "الفرع مفقود",
+        "unknownBranch": "فرع غير معروف \"{value}\"",
+        "missingGovernorate": "المحافظة مفقودة",
+        "unknownGovernorate": "محافظة غير معروفة \"{value}\"",
+        "missingRecipient": "اسم المستلم مفقود",
+        "missingCity": "المدينة مفقودة",
+        "missingDistrict": "الحي مفقود",
+        "missingStreet": "الشارع مفقود",
+        "missingDescription": "الوصف مفقود",
+        "missingPhone": "هاتف المستلم مفقود",
+        "invalidPhone": "هاتف غير صحيح \"{value}\"",
+        "missingWeight": "الوزن مفقود",
+        "invalidWeight": "وزن غير صحيح \"{value}\"",
+        "missingPieces": "عدد القطع مفقود",
+        "invalidPieces": "عدد قطع غير صحيح \"{value}\"",
+        "invalidOrderType": "نوع طلب غير صحيح \"{value}\"",
+        "invalidCod": "مبلغ تحصيل غير صحيح \"{value}\""
+      }
+    },
+    "clientsImport": {
+      "title": "استيراد عملاء بالجملة",
+      "subtitle": "ارفع ملف Excel (.xlsx) أو CSV بالتجار — التحقق يتم محلياً قبل إنشاء أي سجل.",
+      "uploadTitle": "ملف Excel / CSV",
+      "uploadHint": "أول صف هو العناوين. الأعمدة الأساسية: name, phone, branch. اختيارية: name_en, business_name, phone_secondary, email, payment_method, payment_frequency, address_governorate, address_city, address_district, address_street, tax_number, commercial_register, notes. يمكن كتابة الفرع بالاسم أو الكود أو المعرّف.",
+      "upload": "رفع ملف",
+      "downloadTemplateXlsx": "نموذج Excel",
+      "downloadTemplateCsv": "نموذج CSV",
+      "parsedAllValid": "تمت قراءة {count} صف — كلها صحيحة ✓",
+      "parsedWithErrors": "تمت قراءة {valid}/{total} صف صحيح",
+      "imported": "تم استيراد {count} عميل ✓",
+      "importedPartial": "نجح {ok}، فشل {failed}",
+      "submit": "استيراد {count} عميل",
+      "summary": {
+        "parsed": "صفوف مقروءة",
+        "valid": "صحيحة",
+        "errors": "بها أخطاء"
+      },
+      "previewTitle": "معاينة",
+      "preview": {
+        "status": "الحالة",
+        "name": "الاسم",
+        "phone": "الهاتف",
+        "branch": "الفرع",
+        "errors": "الأخطاء",
+        "ok": "صحيح",
+        "fail": "خطأ",
+        "truncated": "عرض أول {shown} من إجمالي {total} صف."
+      },
+      "errors": {
+        "emptyFile": "الملف فارغ أو غير قابل للقراءة.",
+        "unsupportedFile": "نوع ملف غير مدعوم — استخدم .xlsx أو .xls أو .csv."
+      },
+      "fieldErrors": {
+        "missingName": "الاسم مفقود",
+        "missingPhone": "الهاتف مفقود",
+        "invalidPhone": "هاتف غير صحيح \"{value}\"",
+        "missingBranch": "الفرع مفقود",
+        "unknownBranch": "فرع غير معروف \"{value}\"",
+        "invalidEmail": "بريد غير صحيح \"{value}\"",
+        "invalidPaymentMethod": "طريقة دفع غير صحيحة \"{value}\"",
+        "invalidPaymentFrequency": "دورية دفع غير صحيحة \"{value}\""
       }
     }
   },

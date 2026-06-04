@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Mail, MapPin, Package, Wallet } from 'lucide-react';
+import { Mail, MapPin, Package, Upload, Wallet } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { DataTable, type DataTableColumn } from '@/components/shared/DataTable';
@@ -9,6 +9,7 @@ import { FilterBar, FilterPill } from '@/components/shared/FilterBar';
 import { KpiCard } from '@/components/shared/KpiCard';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { Link } from '@/lib/i18n/routing';
 import { branches } from '@/lib/api/branches';
@@ -234,6 +235,16 @@ export function ClientsList() {
         elementId="clients"
         title={t('clients.title')}
         subtitle={t('clients.subtitle')}
+        actions={
+          <FeedbackPin elementId="clients.header.import">
+            <Link href="clients/import">
+              <Button variant="secondary" size="md">
+                <Upload className="h-3.5 w-3.5" />
+                {t('common.import')}
+              </Button>
+            </Link>
+          </FeedbackPin>
+        }
       />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">

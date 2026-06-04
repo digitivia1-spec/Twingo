@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Plus, Upload } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -246,14 +246,24 @@ export function PickupList() {
         title={t('pickup.title')}
         subtitle={t('pickup.subtitle')}
         actions={
-          <FeedbackPin elementId="pickup.header.addNew">
-            <Link href="pickup/new">
-              <Button variant="primary" size="md">
-                <Plus className="h-3.5 w-3.5" />
-                {t('common.addNew')}
-              </Button>
-            </Link>
-          </FeedbackPin>
+          <div className="flex items-center gap-2">
+            <FeedbackPin elementId="pickup.header.import">
+              <Link href="pickup/import">
+                <Button variant="secondary" size="md">
+                  <Upload className="h-3.5 w-3.5" />
+                  {t('common.import')}
+                </Button>
+              </Link>
+            </FeedbackPin>
+            <FeedbackPin elementId="pickup.header.addNew">
+              <Link href="pickup/new">
+                <Button variant="primary" size="md">
+                  <Plus className="h-3.5 w-3.5" />
+                  {t('common.addNew')}
+                </Button>
+              </Link>
+            </FeedbackPin>
+          </div>
         }
       />
 

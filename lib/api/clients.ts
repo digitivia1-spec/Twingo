@@ -19,6 +19,35 @@ export function effectiveApprovalStatus(c: Client): ClientApprovalStatus {
   return c.approval_status ?? 'approved';
 }
 
+export type ClientCreateInput = Pick<
+  Client,
+  'name' | 'phone_primary' | 'pickup_address' | 'preferred_branch_id' | 'payment_terms'
+> &
+  Partial<
+    Pick<
+      Client,
+      | 'business_name'
+      | 'phone_secondary'
+      | 'email'
+      | 'tax_number'
+      | 'commercial_register'
+      | 'notes'
+      | 'is_active'
+      | 'approval_status'
+    >
+  >;
+
+/** Build a stable-ish slug PK from the client's English (fallback Arabic) name. */
+function genClientId(name: { ar: string; en: string }): string {
+  const base = (name.en || name.ar || 'client')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 24);
+  const suffix = Math.random().toString(36).slice(2, 6);
+  return `cl_${base || 'client'}_${suffix}`;
+}
+
 export interface ClientRepository {
   list(filter?: {
     search?: string;
@@ -26,6 +55,7 @@ export interface ClientRepository {
     approval_status?: ClientApprovalStatus;
   }): Promise<Client[]>;
   getById(id: string): Promise<Client | null>;
+  create(input: ClientCreateInput): Promise<Client>;
   approve(id: string, approved_by: string): Promise<Client>;
   reject(id: string, rejected_by: string, reason: string): Promise<Client>;
 }
@@ -56,6 +86,30 @@ const mock: ClientRepository = {
   },
   async getById(id) {
     return latency(store.clients.find((c) => c.id === id) ?? null);
+  },
+  async create(input) {
+    const client: Client = {
+      business_name: input.business_name,
+      phone_secondary: input.phone_secondary,
+      email: input.email,
+      tax_number: input.tax_number,
+      commercial_register: input.commercial_register,
+      notes: input.notes,
+      name: input.name,
+      phone_primary: input.phone_primary,
+      pickup_address: input.pickup_address,
+      preferred_branch_id: input.preferred_branch_id,
+      payment_terms: input.payment_terms,
+      id: genClientId(input.name),
+      total_orders: 0,
+      total_cod_owed: 0,
+      is_active: input.is_active ?? true,
+      approval_status: input.approval_status ?? 'approved',
+      created_at: nowIso(),
+      updated_at: nowIso(),
+    };
+    store.clients.unshift(client);
+    return latency(client);
   },
   async approve(id, approved_by) {
     const c = store.clients.find((x) => x.id === id);
@@ -104,6 +158,37 @@ const supabase: ClientRepository = {
     return unwrapMaybe<Client>(
       await sb.from('clients').select('*').eq('id', id).maybeSingle(),
     );
+  },
+  async create(input) {
+    const sb = getSupabase();
+    const row = unwrapMaybe<Client>(
+      await sb
+        .from('clients')
+        .insert({
+          id: genClientId(input.name),
+          name: input.name,
+          business_name: input.business_name ?? null,
+          phone_primary: input.phone_primary,
+          phone_secondary: input.phone_secondary ?? null,
+          email: input.email ?? null,
+          pickup_address: input.pickup_address,
+          preferred_branch_id: input.preferred_branch_id,
+          payment_terms: input.payment_terms,
+          tax_number: input.tax_number ?? null,
+          commercial_register: input.commercial_register ?? null,
+          notes: input.notes ?? null,
+          total_orders: 0,
+          total_cod_owed: 0,
+          is_active: input.is_active ?? true,
+          approval_status: input.approval_status ?? 'approved',
+          created_at: sbNow(),
+          updated_at: sbNow(),
+        })
+        .select('*')
+        .maybeSingle(),
+    );
+    if (!row) throw new Error('Client insert failed');
+    return row;
   },
   async approve(id, approved_by) {
     const sb = getSupabase();
