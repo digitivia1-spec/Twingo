@@ -48,3 +48,9 @@ next-env.d.ts
 # legacy demo artefacts (not committed)
 files.zip
 files/
+
+# build-time artefacts (generated in CI, see deploy.yml)
+# Fonts are downloaded during build; only the .gitkeep placeholder is tracked.
+public/fonts/**/*.woff2
+# Lockfile is regenerated on install (CI uses --no-frozen-lockfile).
+pnpm-lock.yaml
