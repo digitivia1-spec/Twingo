@@ -15,7 +15,12 @@ jobs:
 
     env:
       NEXT_PUBLIC_DEFAULT_LOCALE: ar
-      NEXT_PUBLIC_DATA_SOURCE: mock
+      # Phase 3: build against the real Supabase backend. NEXT_PUBLIC_* are
+      # inlined at build time, so they must be present here (not just in the
+      # runtime .env.local). The anon key is a public, RLS-gated client key.
+      NEXT_PUBLIC_DATA_SOURCE: supabase
+      NEXT_PUBLIC_SUPABASE_URL: https://opqjsrmbivifjuhcjctt.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wcWpzcm1iaXZpZmp1aGNqY3R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Nzk0ODgsImV4cCI6MjA5NjE1NTQ4OH0.DtbGSinutJz9X5hLC5TQz8erwVKNaH3M6TwfQvryeCA
       NEXT_PUBLIC_ENABLE_FEEDBACK: 'true'
       NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
       # Intentionally NOT passing SENTRY_AUTH_TOKEN here — the Sentry build
