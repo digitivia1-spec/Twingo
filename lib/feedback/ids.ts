@@ -189,6 +189,20 @@ export const FEEDBACK_IDS = [
   'provinces.table.col.code',
   'provinces.table.col.coverage',
   'provinces.row.toggle',
+
+  // phase 3b: import, user management, notifications, guided tour
+  'topbar.notifications',
+  'sidebar.tour',
+  'pickup.header.import',
+  'pickup.import.controls',
+  'pickup.import.preview',
+  'clients.header.import',
+  'clients.import.controls',
+  'clients.import.preview',
+  'users.header.add',
+  'users.editForm',
+  'users.editForm.submit',
+  'users.resetPasswordForm',
 ] as const;
 
 export type FeedbackId = (typeof FEEDBACK_IDS)[number] | (string & {});

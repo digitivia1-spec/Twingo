@@ -7,7 +7,6 @@ import { Link } from '@/lib/i18n/routing';
 import { Dropdown } from '@/components/ui/dropdown';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { activity, type ActivityKind } from '@/lib/api/activity';
-import { formatDateTime } from '@/lib/format/date';
 import type { Locale } from '@/lib/i18n/config';
 
 const KIND_ICON: Record<ActivityKind, typeof Package> = {

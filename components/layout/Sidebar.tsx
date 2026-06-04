@@ -27,6 +27,7 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
+  Compass,
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -134,6 +135,7 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-[#1e293b] p-2 space-y-1">
+        <TourButton collapsed={sidebarCollapsed} />
         <LocaleToggle collapsed={sidebarCollapsed} />
         <LogoutButton collapsed={sidebarCollapsed} />
         <button
@@ -151,6 +153,26 @@ export function Sidebar() {
         </button>
       </div>
     </aside>
+  );
+}
+
+function TourButton({ collapsed }: { collapsed: boolean }) {
+  const locale = useLocale();
+  const startTour = useUi((s) => s.startTour);
+  const label = locale === 'en' ? 'Take a tour' : 'جولة إرشادية';
+  return (
+    <FeedbackPin elementId="sidebar.tour" className="block">
+      <button
+        type="button"
+        onClick={startTour}
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1e293b] px-2.5 py-1.5 text-[11px] font-bold text-white/80 hover:bg-primary-600 hover:text-white"
+        aria-label={label}
+        title={label}
+      >
+        <Compass className="h-4 w-4" />
+        {!collapsed && <span>{label}</span>}
+      </button>
+    </FeedbackPin>
   );
 }
 
