@@ -102,7 +102,7 @@ jobs:
           HOST=$(echo "$VPS_HOST" | tr -d '[:space:]')
           n=0
           until [ "$n" -ge 3 ]; do
-            if ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no -o BatchMode=yes \
+            if ssh -4 -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no -o BatchMode=yes \
                  -o ConnectTimeout=15 "$USER@$HOST" 'echo ok' 2>/tmp/ssh_err; then
               echo "✓ VPS reachable on :22"
               exit 0
@@ -122,7 +122,11 @@ jobs:
         run: |
           USER=$(echo "$VPS_USER" | tr -d '[:space:]')
           HOST=$(echo "$VPS_HOST" | tr -d '[:space:]')
-          SSH="ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=20"
+          # -4 forces IPv4: a hostname with an AAAA record makes the runner try
+          # IPv6 first, which the VPS firewall/sshd often doesn't accept → a 20s
+          # timeout that only "works" when IPv4 happens to be tried. This is the
+          # usual cause of intermittent "works 1 in 10" rsync timeouts.
+          SSH="ssh -4 -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=20"
 
           # Diagnostics — a full disk or OOM on the VPS is the usual cause of
           # rsync "connection unexpectedly closed" (remote process killed).
@@ -159,7 +163,7 @@ jobs:
           USER=$(echo "$VPS_USER" | tr -d '[:space:]')
           HOST=$(echo "$VPS_HOST" | tr -d '[:space:]')
           if [ -n "$VPS_ENV_LOCAL" ]; then
-            echo "$VPS_ENV_LOCAL" | ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no "$USER@$HOST" "cat > /var/www/twingo-erp/.env.local && chmod 600 /var/www/twingo-erp/.env.local"
+            echo "$VPS_ENV_LOCAL" | ssh -4 -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no "$USER@$HOST" "cat > /var/www/twingo-erp/.env.local && chmod 600 /var/www/twingo-erp/.env.local"
             echo ".env.local written"
           else
             echo "VPS_ENV_LOCAL secret not set — skipping"
@@ -172,7 +176,7 @@ jobs:
         run: |
           USER=$(echo "$VPS_USER" | tr -d '[:space:]')
           HOST=$(echo "$VPS_HOST" | tr -d '[:space:]')
-          ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no "$USER@$HOST" 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; cd /var/www/twingo-erp && (pm2 reload twingo-erp || pm2 start ecosystem.config.js) && pm2 save'
+          ssh -4 -i ~/.ssh/id_deploy -o StrictHostKeyChecking=no "$USER@$HOST" 'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; cd /var/www/twingo-erp && (pm2 reload twingo-erp || pm2 start ecosystem.config.js) && pm2 save'
 
       - name: Cleanup SSH key
         if: always()
