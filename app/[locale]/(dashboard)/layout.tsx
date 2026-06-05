@@ -1,5 +1,6 @@
 import { Sidebar } from '@/components/layout/Sidebar';
 import { AuthGate } from '@/components/auth/AuthGate';
+import { GuidedTour } from '@/components/tour/GuidedTour';
 
 // Every dashboard route reads URL query params (branch, status, page, etc).
 // Mark the whole segment as dynamic so Next.js doesn't try to prerender
@@ -19,6 +20,7 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+      <GuidedTour />
     </AuthGate>
   );
 }

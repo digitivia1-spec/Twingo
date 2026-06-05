@@ -35,6 +35,28 @@
     "userInitial": "N",
     "searchPlaceholder": "Search…"
   },
+  "notifications": {
+    "title": "Notifications",
+    "needsAttention": "Needs attention",
+    "recent": "Recent activity",
+    "empty": "No recent activity",
+    "status": {
+      "pending": "Pending",
+      "pending_review": "Awaiting review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "paid": "Paid",
+      "scheduled": "Scheduled",
+      "disputed": "Disputed",
+      "dispatched": "Dispatched",
+      "out_for_delivery": "Out for delivery",
+      "delivered": "Delivered",
+      "partially_delivered": "Partial",
+      "returned": "Returned",
+      "cancelled": "Cancelled",
+      "refused": "Refused"
+    }
+  },
   "locale": {
     "switchTo": "عربي",
     "switchLabel": "Change language"
@@ -400,6 +422,13 @@
       "sendWhatsapp": "Send WhatsApp confirmation to client",
       "whatsappPreview": "WhatsApp message preview",
       "paid": "Paid + WhatsApp sent ✓"
+    },
+    "schedule": {
+      "title": "Schedule payout",
+      "date": "Payout date",
+      "method": "Payment method",
+      "submit": "Schedule",
+      "scheduled": "Payout scheduled ✓"
     }
   },
   "stock": {
@@ -529,6 +558,39 @@
     "status": {
       "active": "Active",
       "inactive": "Inactive"
+    },
+    "form": {
+      "nameAr": "Name (Arabic)",
+      "nameEn": "Name (English)",
+      "email": "Email",
+      "phone": "Phone",
+      "password": "Password",
+      "passwordHint": "At least 8 characters",
+      "role": "Role",
+      "branch": "Branch",
+      "noBranch": "No branch (HQ / all)",
+      "driverCode": "Driver code",
+      "vehicleType": "Vehicle"
+    },
+    "manage": {
+      "addStaff": "Add staff",
+      "addTitle": "Add staff member",
+      "editTitle": "Edit staff member",
+      "resetPassword": "Reset password",
+      "resetPasswordTitle": "Reset password",
+      "resetPasswordSubmit": "Set new password",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "created": "Staff member created ✓",
+      "updated": "Staff member updated ✓",
+      "deactivated": "Account deactivated",
+      "activated": "Account activated",
+      "passwordReset": "Password updated ✓",
+      "errors": {
+        "nameRequired": "Name is required.",
+        "emailRequired": "Email is required.",
+        "passwordShort": "Password must be at least 8 characters."
+      }
     }
   },
   "drivers": {

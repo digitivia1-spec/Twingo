@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useUi } from '@/lib/state/ui';
 import { BranchSelector } from '@/components/shared/BranchSelector';
+import { NotificationsBell } from '@/components/layout/NotificationsBell';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 
 export function Topbar({ title }: { title: string }) {
@@ -30,6 +31,8 @@ export function Topbar({ title }: { title: string }) {
       <FeedbackPin elementId="topbar.branchSelector">
         <BranchSelector />
       </FeedbackPin>
+
+      <NotificationsBell />
 
       <FeedbackPin elementId="topbar.userAvatar">
         <div

@@ -35,6 +35,28 @@
     "userInitial": "ن",
     "searchPlaceholder": "بحث…"
   },
+  "notifications": {
+    "title": "الإشعارات",
+    "needsAttention": "يحتاج إجراء",
+    "recent": "آخر النشاط",
+    "empty": "لا يوجد نشاط حديث",
+    "status": {
+      "pending": "قيد الانتظار",
+      "pending_review": "بانتظار المراجعة",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض",
+      "paid": "مدفوع",
+      "scheduled": "مجدول",
+      "disputed": "متنازع عليه",
+      "dispatched": "تم الإرسال",
+      "out_for_delivery": "خرج للتسليم",
+      "delivered": "تم التسليم",
+      "partially_delivered": "تسليم جزئي",
+      "returned": "مرتجع",
+      "cancelled": "ملغي",
+      "refused": "مرفوض الاستلام"
+    }
+  },
   "locale": {
     "switchTo": "EN",
     "switchLabel": "تغيير اللغة"
@@ -400,6 +422,13 @@
       "sendWhatsapp": "إرسال تأكيد واتساب للعميل",
       "whatsappPreview": "معاينة رسالة الواتساب",
       "paid": "تم السداد + إرسال الواتساب ✓"
+    },
+    "schedule": {
+      "title": "جدولة السداد",
+      "date": "تاريخ السداد",
+      "method": "طريقة الدفع",
+      "submit": "جدولة",
+      "scheduled": "تمت جدولة السداد ✓"
     }
   },
   "stock": {
@@ -529,6 +558,39 @@
     "status": {
       "active": "نشط",
       "inactive": "متوقف"
+    },
+    "form": {
+      "nameAr": "الاسم (عربي)",
+      "nameEn": "الاسم (إنجليزي)",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "password": "كلمة المرور",
+      "passwordHint": "٨ أحرف على الأقل",
+      "role": "الدور",
+      "branch": "الفرع",
+      "noBranch": "بدون فرع (المقر / الكل)",
+      "driverCode": "كود المندوب",
+      "vehicleType": "المركبة"
+    },
+    "manage": {
+      "addStaff": "إضافة موظف",
+      "addTitle": "إضافة موظف",
+      "editTitle": "تعديل موظف",
+      "resetPassword": "إعادة تعيين كلمة المرور",
+      "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+      "resetPasswordSubmit": "تعيين كلمة مرور جديدة",
+      "deactivate": "إيقاف",
+      "activate": "تفعيل",
+      "created": "تم إنشاء الموظف ✓",
+      "updated": "تم تحديث الموظف ✓",
+      "deactivated": "تم إيقاف الحساب",
+      "activated": "تم تفعيل الحساب",
+      "passwordReset": "تم تحديث كلمة المرور ✓",
+      "errors": {
+        "nameRequired": "الاسم مطلوب.",
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "passwordShort": "كلمة المرور يجب أن تكون ٨ أحرف على الأقل."
+      }
     }
   },
   "drivers": {

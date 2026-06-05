@@ -20,6 +20,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { branches } from '@/lib/api/branches';
 import { clients } from '@/lib/api/clients';
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import type { Branch } from '@/lib/types/branch';
 import type { Client } from '@/lib/types/client';
 import { formatDateTime } from '@/lib/format/date';
@@ -29,12 +30,12 @@ import { pickLocale } from '@/lib/utils';
 
 const TODAY = new Date().toISOString().slice(0, 10);
 const WEEK_AGO = new Date(Date.now() - 7 * 86400 * 1000).toISOString();
-const REVIEWER = 'u_ops_reviewer';
 
 export function PendingClientsList() {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const qc = useQueryClient();
+  const { data: me } = useCurrentUser();
   const [search, setSearch] = useState('');
   const [rejecting, setRejecting] = useState<Client | null>(null);
   const [rejectReason, setRejectReason] = useState('');
@@ -55,7 +56,10 @@ export function PendingClientsList() {
   }, [branchList]);
 
   const approve = useMutation({
-    mutationFn: (id: string) => clients.approve(id, REVIEWER),
+    mutationFn: (id: string) => {
+      if (!me?.id) throw new Error('Loading your account — try again.');
+      return clients.approve(id, me.id);
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['clients-pending'] });
       qc.invalidateQueries({ queryKey: ['clients-all'] });
@@ -66,8 +70,10 @@ export function PendingClientsList() {
   });
 
   const reject = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      clients.reject(id, REVIEWER, reason),
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => {
+      if (!me?.id) throw new Error('Loading your account — try again.');
+      return clients.reject(id, me.id, reason);
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['clients-pending'] });
       toast.success(t('pendingClients.rejectModal.rejected'));

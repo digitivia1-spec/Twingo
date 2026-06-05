@@ -17,6 +17,7 @@ import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { FeedbackPin } from '@/components/feedback/FeedbackPin';
 import { codDues } from '@/lib/api/cod-dues';
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import { PAYMENT_METHODS, type PaymentMethod } from '@/lib/types/enums';
 import type { CodDue } from '@/lib/types/cod-due';
 import type { Client } from '@/lib/types/client';
@@ -38,6 +39,7 @@ export function PayoutModal({
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const qc = useQueryClient();
+  const { data: me } = useCurrentUser();
   const [method, setMethod] = useState<PaymentMethod>('bank_transfer');
   const [reference, setReference] = useState('');
   const [amountStr, setAmountStr] = useState('');
@@ -53,7 +55,7 @@ export function PayoutModal({
             amount:
               parseEgpToPiasters(amountStr) ??
               (due?.net_amount_due ?? 0),
-            paid_by: 'u_nour_finance',
+            paid_by: me?.id ?? '',
             send_whatsapp: sendWhatsapp,
             notes,
           })
