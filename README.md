@@ -154,20 +154,21 @@ Business rules enforced in the mock layer (will migrate to Postgres CHECK constr
 
 ## Deployment brief — what you (Nagui) need to do outside this repo
 
-This repo is **deploy-ready** — the only things it can't do from inside a session are (1) provisioning a VPS and (2) editing DNS at a registrar. Here's the minimal sequence. Total time ≈ 75 min, one-time cost ≈ €4.56/month.
+This repo is **deploy-ready** — the only things it can't do from inside a session are (1) provisioning a VPS and (2) editing DNS at a registrar. Here's the minimal sequence.
 
-### A · Provision the Hetzner CX22 VPS (~15 min)
+> ### ⚙️ Current infrastructure (read this first)
+> **The live VPS is on Hostinger, not Hetzner.** The walkthrough below was originally written for Hetzner; the provider-agnostic parts (DNS, Nginx, SSL, stack install, GitHub secrets, runtime env) still apply, but the provisioning/firewall/SSH specifics are Hostinger now:
+> - **Host:** `srv1611023.hstgr.cloud` (Debian), managed in **hPanel** (`hpanel.hostinger.com/vps/...`).
+> - **Firewall:** hPanel → VPS → **Security → Firewall**. It **drops all inbound by default**, so there must be explicit `Accept TCP` rules for **22 / 80 / 443** (Source `0.0.0.0/0`). There is **no IPv6 (`::/0`) accept rule**, so SSH must use IPv4 — the deploy workflow forces `ssh -4`.
+> - **SSH auth:** key-based. The deploy key's **public** half must live in the VPS user's `~/.ssh/authorized_keys` (add it via the hPanel **Terminal**; the hPanel "SSH keys" panel can be flaky). A `Connection timed out` = firewall/reachability; `Permission denied (publickey)` = key not installed.
+> - **Deploy trigger:** `Deploy to VPS` runs on **push to `main`** (or manual dispatch). It builds, runs an SSH reachability preflight (fails fast with a checklist if `:22` is unreachable), rsyncs `deploy-out/` to `/var/www/twingo-erp`, writes `.env.local` from the `VPS_ENV_LOCAL` secret, and `pm2 reload`s.
 
-1. Sign in at **https://console.hetzner.cloud**.
-2. **Settings → Security → SSH Keys → Add SSH key.** Paste the output of `cat ~/.ssh/id_ed25519_hetzner.pub` (generate one with `ssh-keygen -t ed25519 -C "digitivia-demo" -f ~/.ssh/id_ed25519_hetzner` if you don't have one yet). Name it `nagui-laptop`.
-3. **New project → `digitivia-demos` → Add server** with:
-   - Location: **Nuremberg (nbg1)** — ~70ms RTT to Cairo (Germany; similar latency to Falkenstein, negligible for back-office ERP)
-   - Image: **Debian 12**
-   - Type: **Shared vCPU → CX22** (€3.80/mo, 2 vCPU / 4 GB / 40 GB SSD / 20 TB traffic)
-   - SSH keys: ✓ the one you just added
-   - Backups: **Enable** (+20% → €4.56/mo total)
-   - Name: `digitivia-demos-01`
-4. Note the **public IPv4 and IPv6**. You'll need them in the next two steps.
+### A · Provision the Hostinger VPS (~15 min)
+
+1. In **hPanel → VPS**, the live box is `srv1611023.hstgr.cloud` (Debian). For a fresh box, create a VPS plan and pick Debian 12.
+2. **Security → Firewall:** add `Accept TCP` rules for **22 / 80 / 443** with Source `0.0.0.0/0` (the default policy drops everything). Keep the trailing `Drop Any` rule last.
+3. **SSH key:** put the deploy key's public half into the box's `~/.ssh/authorized_keys` via the hPanel **Terminal** (`mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '<pubkey>' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys`). Add your personal key too for manual access.
+4. Note the **public IPv4** (Settings → IP address) — that's the `VPS_HOST` secret.
 
 ### B · DNS on OVH (~5 min to add, 10–30 min to propagate)
 
@@ -177,10 +178,10 @@ This repo is **deploy-ready** — the only things it can't do from inside a sess
    | Field | Value |
    |---|---|
    | Sub-domain | `twingo-demo` |
-   | Target | `YOUR_HETZNER_IPv4` |
+   | Target | `YOUR_VPS_IPv4` |
    | TTL | `60` |
 
-3. **Add an entry** → `AAAA` record with `YOUR_HETZNER_IPv6`, same sub-domain, TTL 60.
+3. (Optional) `AAAA` record with `YOUR_VPS_IPv6`, same sub-domain, TTL 60 — **only if** you also add `Accept` firewall rules for 80/443 on `::/0`; the Hostinger firewall drops IPv6 by default, so otherwise skip the AAAA record to avoid dead IPv6 web traffic.
 4. Wait 5–10 min, then verify:
    ```bash
    dig twingo-demo.digitivia.com +short
@@ -195,7 +196,7 @@ SSH in as `root` first, create a non-root user, disable root SSH. The exact comm
 
 - `nagui` user with sudo + your SSH key
 - Root SSH disabled, password auth disabled
-- UFW allowing only 22 / 80 / 443
+- Network firewall: on Hostinger this is the **hPanel firewall** (default-drop; Accept 22/80/443 on `0.0.0.0/0`) — a host-level UFW is optional/redundant. If you do run UFW, keep its rules in sync with the hPanel ones.
 - `fail2ban` running
 - `unattended-upgrades` enabled
 
@@ -253,9 +254,9 @@ Go to `https://github.com/<org>/Twingo/settings/secrets/actions` and add:
 
 | Name | Value |
 |---|---|
-| `VPS_HOST` | Your Hetzner IPv4 |
-| `VPS_USER` | `nagui` |
-| `VPS_SSH_KEY` | Contents of a deploy-only SSH key (generate with `ssh-keygen -t ed25519 -C "gh-deploy"`, then `ssh-copy-id -i deploy_key.pub nagui@HETZNER_IP`) |
+| `VPS_HOST` | Your Hostinger IPv4 (hPanel → Settings → IP address) |
+| `VPS_USER` | the VPS user the deploy key is installed under (e.g. `root` or `nagui`) |
+| `VPS_SSH_KEY` | The **private** half of a deploy-only key (generate with `ssh-keygen -t ed25519 -C "gh-deploy" -f deploy_key`, then paste `deploy_key.pub` into the VPS `~/.ssh/authorized_keys` via the hPanel Terminal). A `Permission denied` in CI means this isn't installed on the box. |
 | `NEXT_PUBLIC_SENTRY_DSN` | From Sentry |
 | `SENTRY_ORG` | e.g. `digitivia` |
 | `SENTRY_ORG` | `digitivia-pt` |

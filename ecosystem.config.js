@@ -1,4 +1,4 @@
-// PM2 config for the Hetzner VPS.
+// PM2 config for the Hostinger VPS (srv1611023.hstgr.cloud).
 // Deployed as /var/www/twingo-erp/ecosystem.config.js.
 
 module.exports = {
