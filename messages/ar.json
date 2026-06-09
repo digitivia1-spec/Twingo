@@ -653,7 +653,8 @@
       "manager": "مدير",
       "warehouse": "مخزن",
       "driver": "مندوب",
-      "finance": "حسابات"
+      "finance": "حسابات",
+      "support": "دعم العملاء"
     },
     "status": {
       "active": "نشط",
