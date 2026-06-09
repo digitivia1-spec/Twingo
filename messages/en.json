@@ -653,7 +653,8 @@
       "manager": "Manager",
       "warehouse": "Warehouse",
       "driver": "Driver",
-      "finance": "Finance"
+      "finance": "Finance",
+      "support": "Customer support"
     },
     "status": {
       "active": "Active",

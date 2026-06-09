@@ -20,7 +20,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const MANAGER_ROLES = ['super_admin', 'admin'] as const;
-const VALID_ROLES = ['super_admin', 'admin', 'manager', 'warehouse', 'driver', 'finance'];
+const VALID_ROLES = ['super_admin', 'admin', 'manager', 'warehouse', 'driver', 'finance', 'support'];
 
 /** A near-permanent ban used to lock out a deactivated login. */
 const BAN_FOREVER = '876600h'; // ~100 years

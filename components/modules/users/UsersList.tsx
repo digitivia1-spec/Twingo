@@ -31,6 +31,7 @@ const ROLE_TONE: Record<UserRole, 'success' | 'warning' | 'danger' | 'info' | 'n
   warehouse: 'neutral',
   driver: 'success',
   finance: 'info',
+  support: 'info',
 };
 
 export function UsersList() {
