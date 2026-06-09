@@ -23,7 +23,7 @@ free -h   # expect a "Swap: 2.0Gi" line
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-apt-get install -y nodejs nginx certbot python3-certbot-nginx
+apt-get install -y nodejs nginx certbot python3-certbot-nginx rsync
 npm install -g pm2
 mkdir -p /var/www/twingo-erp /var/log/twingo-erp
 node -v && pm2 -v   # expect v20.x + a pm2 version, both from /usr/bin
