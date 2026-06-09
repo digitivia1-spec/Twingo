@@ -90,9 +90,10 @@ jobs:
 
       # Fail fast (and clearly) when the VPS can't be reached on :22, instead
       # of grinding ~4 min through rsync retries. The usual cause is a
-      # network/firewall/host issue (rotating GitHub runner IP vs a Hetzner
-      # Cloud Firewall allow-list, a fail2ban/recidive ban, or an OOM'd box) —
-      # NOT the app build, which has already passed by this point.
+      # network/firewall/host issue (the Hostinger hPanel firewall drops all
+      # inbound by default — port 22 needs an explicit Accept rule — a
+      # fail2ban ban, or an OOM'd box) — NOT the app build, which has already
+      # passed by this point.
       - name: VPS reachability preflight
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -111,8 +112,9 @@ jobs:
             echo "preflight attempt $n failed:"; sed 's/^/    /' /tmp/ssh_err 2>/dev/null || true
             [ "$n" -lt 3 ] && sleep 5
           done
-          echo "::error title=VPS unreachable::SSH to the VPS on port 22 timed out after 3 attempts (~50s). This is a network/firewall/host issue, not the app build (Typecheck + Build already passed)."
-          echo "::error::Check: Hetzner Cloud Firewall inbound :22 (GitHub runner IPs rotate per run), 'fail2ban-client status sshd', sshd running, and the box isn't OOM. See PR #4 notes."
+          echo "::error title=VPS SSH preflight failed::Could not SSH to the VPS on port 22 after 3 attempts — see the per-attempt error above. (The app build already passed.)"
+          echo "::error:: 'Connection timed out' → firewall/host: open TCP :22 in the Hostinger hPanel firewall (Source 0.0.0.0/0; it drops all inbound by default), and check fail2ban / sshd."
+          echo "::error:: 'Permission denied (publickey)' → key/user: the VPS_SSH_KEY public half must be in VPS_USER's ~/.ssh/authorized_keys, and VPS_USER must match that account. See README 'Deployment brief'."
           exit 1
 
       - name: Rsync to VPS
