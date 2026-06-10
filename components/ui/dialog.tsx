@@ -46,7 +46,7 @@ export function Dialog({
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 animate-fadeIn"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-3 animate-fadeIn sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
@@ -58,7 +58,7 @@ export function Dialog({
       <div
         ref={ref}
         className={cn(
-          'relative z-10 w-full max-w-[600px] rounded-[var(--radius)] bg-surface p-6 shadow-lg',
+          'relative z-10 max-h-[90dvh] w-full max-w-[600px] overflow-y-auto rounded-[var(--radius)] bg-surface p-4 shadow-lg sm:p-6',
           className,
         )}
       >

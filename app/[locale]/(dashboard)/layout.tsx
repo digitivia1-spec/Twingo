@@ -1,4 +1,5 @@
 import { Sidebar } from '@/components/layout/Sidebar';
+import { SidebarBackdrop } from '@/components/layout/SidebarBackdrop';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { GuidedTour } from '@/components/tour/GuidedTour';
 
@@ -16,6 +17,7 @@ export default function DashboardLayout({
     <AuthGate>
       <div className="flex h-dvh w-full overflow-hidden">
         <Sidebar />
+        <SidebarBackdrop />
         <main className="flex flex-1 flex-col overflow-hidden min-w-0">
           {children}
         </main>

@@ -29,6 +29,7 @@ import {
   LogOut,
   Compass,
 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { usePathname } from '@/lib/i18n/routing';
@@ -69,13 +70,35 @@ export function Sidebar() {
   const t = useTranslations();
   const locale = useLocale();
   const pathname = usePathname();
-  const { sidebarCollapsed, toggleSidebar } = useUi();
+  const { sidebarCollapsed, toggleSidebar, drawerOpen, closeDrawer } = useUi();
+
+  // Mobile drawer: close on navigation and on Escape.
+  useEffect(() => {
+    closeDrawer();
+  }, [pathname, closeDrawer]);
+
+  useEffect(() => {
+    if (!drawerOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeDrawer();
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [drawerOpen, closeDrawer]);
 
   return (
     <aside
       className={cn(
-        'flex flex-col bg-primary-900 text-white shrink-0 transition-[width] duration-200 ease-out',
-        sidebarCollapsed ? 'w-[58px]' : 'w-[220px]',
+        'z-50 flex flex-col bg-primary-900 text-white',
+        // Mobile (<md): fixed off-canvas drawer that slides in from the
+        // inline-start edge. RTL-aware via logical `start` + rtl: transform.
+        'fixed inset-y-0 start-0 w-[240px] max-w-[82vw] transition-transform duration-200 ease-out',
+        drawerOpen
+          ? 'translate-x-0'
+          : '-translate-x-full rtl:translate-x-full',
+        // Desktop (md+): in-flow flex child with the collapse width toggle.
+        'md:static md:max-w-none md:translate-x-0 md:shrink-0 md:rtl:translate-x-0 md:transition-[width]',
+        sidebarCollapsed ? 'md:w-[58px]' : 'md:w-[220px]',
       )}
       aria-label="Sidebar"
     >
@@ -141,7 +164,7 @@ export function Sidebar() {
         <button
           type="button"
           onClick={toggleSidebar}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1e293b] px-2.5 py-1.5 text-[11px] font-bold text-white/80 hover:bg-[#334155] hover:text-white"
+          className="hidden w-full items-center justify-center gap-2 rounded-lg bg-[#1e293b] px-2.5 py-1.5 text-[11px] font-bold text-white/80 hover:bg-[#334155] hover:text-white md:flex"
           aria-label="Collapse sidebar"
         >
           {sidebarCollapsed ? (
