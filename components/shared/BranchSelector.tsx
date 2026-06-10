@@ -46,11 +46,11 @@ export function BranchSelector() {
       trigger={
         <button
           type="button"
-          className="flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1 text-[11px] font-bold text-primary-700 hover:bg-primary-100"
+          className="flex min-w-0 items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1 text-[11px] font-bold text-primary-700 hover:bg-primary-100"
           aria-label={t('branchLabel')}
         >
-          <Building2 className="h-3.5 w-3.5" />
-          <span>{label}</span>
+          <Building2 className="h-3.5 w-3.5 shrink-0" />
+          <span className="max-w-[28vw] truncate sm:max-w-none">{label}</span>
         </button>
       }
       align="end"

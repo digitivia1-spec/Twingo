@@ -29,7 +29,7 @@ export function FilterBar({
         className,
       )}
     >
-      <FeedbackPin elementId={`${elementId}.search`} className="flex-1 min-w-[220px]">
+      <FeedbackPin elementId={`${elementId}.search`} className="flex-1 min-w-[160px] sm:min-w-[220px]">
         <div className="relative">
           <Search className="pointer-events-none absolute start-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle" />
           <Input

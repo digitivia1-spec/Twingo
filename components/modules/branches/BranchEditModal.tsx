@@ -84,7 +84,7 @@ export function BranchEditModal({
           <DialogTitle>{t('branches.editTitle')}</DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <FeedbackPin elementId="branches.editForm.nameAr">
             <div>
               <Label required>{t('branches.form.nameAr')}</Label>

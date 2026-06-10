@@ -125,7 +125,7 @@ export function PayoutModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <FeedbackPin elementId="cod.payModal.method">
               <div>
                 <Label required>{t('cod.payout.method')}</Label>

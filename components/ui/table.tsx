@@ -59,7 +59,7 @@ export const TableHead = React.forwardRef<
     ref={ref}
     scope="col"
     className={cn(
-      'px-3.5 py-2.5 text-start text-[11px] font-bold uppercase text-fg-muted',
+      'whitespace-nowrap px-3.5 py-2.5 text-start text-[11px] font-bold uppercase text-fg-muted',
       'ltr:tracking-wide',
       className,
     )}
